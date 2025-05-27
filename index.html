@@ -3,44 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawtektado - Pet Care Companion</title>
+    <title>My Portfolio - PetAgent & DashZing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Lighter gray background */
-            color: #374151; /* Default text color: gray-700 */
+            background-color: #e5e7eb; /* gray-200 for overall page background */
+            color: #374151; 
         }
+        .app-switcher {
+            background-color: #1f2937; /* gray-800 */
+            color: white;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .app-switcher button {
+            background-color: #4b5563; /* gray-600 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* 6px */
+            margin: 0 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        .app-switcher button:hover, .app-switcher button.active-app {
+            background-color: #3b82f6; /* blue-500 */
+        }
+
+        /* Pawtektado specific styles (can be further namespaced if needed) */
+        #pawtektadoAppContainer { background-color: #f3f4f6; } /* Original Pawtektado bg */
+        
+        /* DashZing specific styles */
+        #dashZingAppContainer { background-color: #f9fafb; } /* Slightly different bg for DashZing */
+        #dashZingAppContainer .tab-button.active { border-color: #10b981; color: #10b981; } /* Emerald for DashZing active tabs */
+        #dashZingAppContainer .btn-primary { background-color: #10b981; color: white; } /* Emerald for DashZing primary buttons */
+        #dashZingAppContainer .btn-primary:hover { background-color: #059669; }
+        #dashZingAppContainer .text-theme-600 { color: #059669; } /* Emerald-700 */
+        #dashZingAppContainer .text-theme-700 { color: #047857; } /* Emerald-800 */
+        #dashZingAppContainer .border-theme-500 { border-color: #10b981; }
+        #dashZingAppContainer .focus\:border-theme-500:focus { border-color: #10b981; }
+        #dashZingAppContainer .focus\:ring-theme-500:focus { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3); }
+
+
         .tab-button {
             transition: all 0.3s ease;
             border-bottom-width: 3px;
             border-color: transparent;
-            padding: 0.75rem 0.5rem; /* Adjusted padding for more tabs */
-            font-size: 0.8rem; /* Adjusted font size */
+            padding: 0.75rem 0.5rem; 
+            font-size: 0.8rem; 
         }
-        @media (min-width: 768px) { /* md breakpoint */
-            .tab-button {
-                padding: 0.75rem 1rem;
-                font-size: 0.875rem; /* sm */
-            }
+        @media (min-width: 768px) { 
+            .tab-button { padding: 0.75rem 1rem; font-size: 0.875rem; }
         }
-        .tab-button.active {
-            border-color: #3b82f6; /* Blue-500 */
-            color: #3b82f6;
-        }
-        .tab-button:hover {
-            background-color: #e5e7eb; /* gray-200 */
-            color: #1f2937; /* gray-800 */
-        }
+        /* Default active tab for Pawtektado */
+        #pawtektadoAppContainer .tab-button.active { border-color: #3b82f6; color: #3b82f6;}
+
+        .tab-button:hover { background-color: #e5e7eb; color: #1f2937; }
         .card {
-            background-color: white;
-            border-radius: 0.75rem; /* 12px */
-            box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.07), 0 2px 8px -1px rgba(0, 0, 0, 0.04);
+            background-color: white; border-radius: 0.75rem; 
+            box-shadow: 0 4px 12px -1px rgba(0,0,0,0.07), 0 2px 8px -1px rgba(0,0,0,0.04);
             transition: box-shadow 0.3s ease;
         }
-        .card:hover:not(.non-interactive-card) { /* Add non-interactive-card class to cards that shouldn't have hover zoom */
-            box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.07), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+        .card:hover:not(.non-interactive-card) { 
+            box-shadow: 0 10px 20px -3px rgba(0,0,0,0.07), 0 4px 10px -2px rgba(0,0,0,0.04);
         }
         .modal { display: none; }
         .modal.show { display: flex; }
@@ -62,8 +92,10 @@
             transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;
             box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
         }
-        .btn-primary { background-color: #3b82f6; color: white; }
-        .btn-primary:hover { background-color: #2563eb; }
+        /* Default primary for Pawtektado */
+        #pawtektadoAppContainer .btn-primary { background-color: #3b82f6; color: white; }
+        #pawtektadoAppContainer .btn-primary:hover { background-color: #2563eb; }
+
         .btn-secondary { background-color: #e5e7eb; color: #374151; }
         .btn-secondary:hover { background-color: #d1d5db; }
         .btn-danger { background-color: #ef4444; color: white; }
@@ -76,826 +108,1023 @@
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .input-field:focus {
-            outline: none; border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-        }
+        /* Default focus for Pawtektado */
+        #pawtektadoAppContainer .input-field:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
+        
         .empty-state-icon { width: 4rem; height: 4rem; color: #9ca3af; margin-bottom: 1rem; }
         .modal-content {
-            background-color: white; padding: 1.5rem; border-radius: 0.75rem; /* 12px */
+            background-color: white; padding: 1.5rem; border-radius: 0.75rem;
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            width: 100%; max-width: 500px; /* Default max-width for modals */
+            width: 100%; max-width: 500px; 
             max-height: 90vh; overflow-y: auto;
         }
     </style>
 </head>
-<body class="text-gray-700">
-    <div class="container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl">
-        <header class="text-center mb-10">
-            <div class="inline-flex items-center justify-center bg-blue-500 p-3 rounded-full mb-4 shadow-lg">
-                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 14.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25S16.19 13.25 15.5 13.25h-6.5c-.69 0-1.25.56-1.25 1.25zM9 10.75s.5-1 1.5-1 1.5 1 1.5 1M13.5 10.75s.5-1 1.5-1 1.5 1 1.5 1"></path></svg>
-            </div>
-            <h1 class="text-4xl md:text-5xl font-bold text-blue-600">Pawtektado</h1>
-            <p class="text-gray-500 mt-3 text-lg">Your Pet Care Companion. Manage needs, bookings, and history with ease.</p>
-        </header>
-
-        <nav class="mb-10 bg-white p-1 md:p-2 rounded-lg shadow-md">
-            <div class="flex border-b border-gray-200 flex-wrap justify-center">
-                <button id="tabMyPets" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none active inline-flex items-center justify-center" onclick="showSection('myPetsSection')">
-                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                    My Pets
-                </button>
-                <button id="tabMissingPets" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('missingPetsSection')">
-                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                    Missing
-                </button>
-                <button id="tabPetEvents" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('petEventsSection')">
-                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
-                    Events
-                </button>
-                 <button id="tabAdoption" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('adoptionSection')">
-                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg>
-                    Adoption
-                </button>
-                <button id="tabBookings" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('bookingsSection')">
-                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
-                    Bookings
-                </button>
-                <button id="tabPetHistory" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('petHistorySection')">
-                     <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
-                    History
-                </button>
-                <button id="tabDiscountsPromos" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('discountsPromosSection')">
-                     <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
-                    Promos
-                </button>
-                <button id="tabProviders" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('providersSection')">
-                     <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    Providers
-                </button>
-            </div>
-        </nav>
-
-        <section id="myPetsSection" class="space-y-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold text-gray-800">My Beloved Pets</h2>
-                <button id="openAddPetModalButton" class="btn btn-primary">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Add New Pet
-                </button>
-            </div>
-            <div id="petsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
-            <div id="noPetsMessage" class="text-center py-10 card hidden">
-                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-                <p class="text-gray-500 text-lg">You haven't added any pets yet.</p>
-                <button class="btn btn-primary mt-4" onclick="document.getElementById('openAddPetModalButton').click()">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Add Your First Pet
-                </button>
-            </div>
-        </section>
-        
-        <div id="addPetModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div class="modal-content">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                    <h2 class="text-2xl font-semibold text-gray-800">Introduce a New Friend</h2>
-                    <button id="closeAddPetModalButton" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button>
-                </div>
-                <form id="addPetForm" class="space-y-6">
-                    <div>
-                        <label for="petName" class="block text-sm font-medium text-gray-600">Pet's Name</label>
-                        <input type="text" id="petName" name="petName" required class="input-field">
-                    </div>
-                    <div>
-                        <label for="petBreed" class="block text-sm font-medium text-gray-600">Breed / Species</label>
-                        <input type="text" id="petBreed" name="petBreed" required class="input-field">
-                    </div>
-                    <div>
-                        <label for="petAge" class="block text-sm font-medium text-gray-600">Age (e.g., 2 years, 5 months)</label>
-                        <input type="text" id="petAge" name="petAge" class="input-field">
-                    </div>
-                    <div>
-                        <label for="petPhoto" class="block text-sm font-medium text-gray-600">Photo URL (Optional)</label>
-                        <input type="url" id="petPhoto" name="petPhoto" placeholder="https://example.com/your-pet.jpg" class="input-field">
-                    </div>
-                    <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" id="cancelAddPetButton" class="btn btn-secondary">Cancel</button>
-                        <button type="submit" class="btn btn-primary">
-                            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Add This Pet
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-
-        <section id="petDetailsSection" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center p-4 z-50 modal backdrop-blur-sm">
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto card non-interactive-card">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                    <h2 id="detailsPetName" class="text-3xl font-bold text-blue-600"></h2>
-                    <button onclick="closePetDetails()" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="md:col-span-1">
-                        <img id="detailsPetPhoto" src="https://placehold.co/400x400/e2e8f0/94a3b8?text=Pet+Photo" alt="Pet Photo" class="rounded-lg object-cover w-full h-auto aspect-square mb-3 shadow-md">
-                        <p class="text-gray-600"><strong class="text-gray-700">Breed:</strong> <span id="detailsPetBreed"></span></p>
-                        <p class="text-gray-600"><strong class="text-gray-700">Age:</strong> <span id="detailsPetAge"></span></p>
-                    </div>
-                    <div class="md:col-span-2 space-y-4">
-                        <div>
-                            <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-                                <svg class="icon-md text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                                Needs & Reminders
-                            </h3>
-                            <div id="needsList" class="space-y-3 max-h-64 overflow-y-auto pr-2 bg-gray-50 p-3 rounded-lg border border-gray-200"></div>
-                            <p id="noNeedsMessage" class="text-gray-500 text-sm hidden p-4 text-center">No needs recorded yet. Add one below!</p>
-                        </div>
-                        <form id="addNeedForm" class="space-y-4 border-t border-gray-200 pt-4">
-                            <input type="hidden" id="currentPetId">
-                            <h4 class="text-lg font-semibold text-gray-700">Add New Need/Reminder</h4>
-                            <div>
-                                <label for="needDescription" class="block text-sm font-medium text-gray-600">Description</label>
-                                <input type="text" id="needDescription" required class="input-field">
-                            </div>
-                            <div>
-                                <label for="needDate" class="block text-sm font-medium text-gray-600">Date & Time</label>
-                                <input type="datetime-local" id="needDate" required class="input-field">
-                            </div>
-                             <div>
-                                <label for="needProvider" class="block text-sm font-medium text-gray-600">Service Provider (Optional)</label>
-                                <select id="needProvider" class="input-field">
-                                    <option value="">None (General Reminder)</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-success w-full">
-                                <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                                Add Need
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                 <button onclick="handleDeletePet()" id="deletePetButton" class="btn btn-danger w-full mt-4">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    Delete This Pet
-                 </button>
-            </div>
-        </section>
-
-        <section id="missingPetsSection" class="hidden space-y-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold text-gray-800">Missing Pets</h2>
-                <button class="btn btn-primary" onclick="showMessageModal('Report Missing Pet form would appear here.', 'info')">
-                     <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    Report Missing Pet
-                </button>
-            </div>
-            <div id="missingPetsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            <div id="noMissingPetsMessage" class="text-center py-10 card hidden">
-                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <p class="text-gray-500 text-lg">No missing pets reported currently. We hope it stays this way!</p>
-            </div>
-        </section>
-
-        <section id="petEventsSection" class="hidden space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Upcoming Pet Events</h2>
-            <div id="petEventsListContainer" class="space-y-4"></div>
-            <div id="noPetEventsMessage" class="text-center py-10 card hidden">
-                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <p class="text-gray-500 text-lg">No upcoming pet events listed at the moment. Check back soon!</p>
-            </div>
-        </section>
-
-        <section id="discountsPromosSection" class="hidden space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Pet Store Discounts & Promos</h2>
-            <div id="discountsPromosListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            <div id="noDiscountsPromosMessage" class="text-center py-10 card hidden">
-                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                <p class="text-gray-500 text-lg">No discounts or promos available right now. Stay tuned!</p>
-            </div>
-        </section>
-
-        <section id="adoptionSection" class="hidden space-y-6">
-             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-semibold text-gray-800">Adopt a Friend</h2>
-                <button class="btn btn-success" onclick="showMessageModal('Feature to list a pet for adoption would be here.', 'info')">
-                     <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                    List for Adoption
-                </button>
-            </div>
-            <div id="adoptionListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="noAdoptionMessage" class="text-center py-10 card hidden">
-                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                <p class="text-gray-500 text-lg">No pets listed for adoption currently. Many furry friends are waiting in shelters!</p>
-            </div>
-        </section>
-        <section id="bookingsSection" class="hidden space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Upcoming Bookings</h2>
-            <div id="bookingsListContainer" class="space-y-4"></div>
-            <div id="noBookingsMessage" class="text-center py-10 card hidden">
-                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <p class="text-gray-500 text-lg">No current bookings found.</p>
-            </div>
-        </section>
-
-        <section id="petHistorySection" class="hidden space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Pet Care History</h2>
-            <div id="petHistoryListContainer" class="space-y-4"></div>
-            <div id="noHistoryMessage" class="text-center py-10 card hidden">
-                 <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <p class="text-gray-500 text-lg">No pet history found yet.</p>
-            </div>
-        </section>
-
-        <section id="providersSection" class="hidden space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Find Service Providers</h2>
-            <p class="text-sm text-gray-500 mb-6 -mt-4">Connect with local vets and pet service providers. (Sample Data)</p>
-            <div id="providersListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-        </section>
-
-
-        <div id="messageModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card non-interactive-card">
-                <div id="messageModalIconContainer" class="mx-auto mb-4"></div>
-                <p id="modalMessageText" class="text-lg text-gray-700 mb-6"></p>
-                <button onclick="closeMessageModal()" class="btn btn-primary w-1/2">OK</button>
-            </div>
-        </div>
-        <div id="confirmationModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card non-interactive-card">
-                <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                <p id="confirmationMessageText" class="text-lg text-gray-700 mb-6"></p>
-                <div class="flex justify-center space-x-4">
-                    <button id="confirmActionButton" class="btn btn-danger flex-1">Confirm</button>
-                    <button id="cancelActionButton" class="btn btn-secondary flex-1">Cancel</button>
-                </div>
-            </div>
-        </div>
-
+<body>
+    <div class="app-switcher">
+        <h1 class="text-xl font-bold mb-2">My Portfolio</h1>
+        <button id="switchToPawtektadoBtn" class="active-app">Pawtektado Pet Agent</button>
+        <button id="switchToDashZingBtn">DashZing Task Tracker</button>
     </div>
 
-    <footer class="text-center py-10 mt-16 border-t border-gray-200 bg-white">
-        <p class="text-gray-500 text-sm">&copy; <span id="currentYear"></span> Pawtektado. Happy Pets, Happy Life!</p>
-        <p class="text-xs text-gray-400 mt-1">Crafted with ❤️ for our furry friends.</p>
-    </footer>
+    <div id="pawtektadoAppContainer">
+        <div class="container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl">
+            <header class="text-center mb-10">
+                <div class="inline-flex items-center justify-center bg-blue-500 p-3 rounded-full mb-4 shadow-lg">
+                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 14.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25S16.19 13.25 15.5 13.25h-6.5c-.69 0-1.25.56-1.25 1.25zM9 10.75s.5-1 1.5-1 1.5 1 1.5 1M13.5 10.75s.5-1 1.5-1 1.5 1 1.5 1"></path></svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-blue-600">Pawtektado</h1>
+                <p class="text-gray-500 mt-3 text-lg">Your Pet Care Agent Manage needs, bookings, and history with ease.</p>
+            </header>
+
+            <nav class="mb-10 bg-white p-1 md:p-2 rounded-lg shadow-md">
+                <div class="flex border-b border-gray-200 flex-wrap justify-center">
+                    <button id="tabMyPets" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none active inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('myPetsSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        My Pets
+                    </button>
+                    <button id="tabMissingPets" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('missingPetsSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                        Missing
+                    </button>
+                    <button id="tabPetEvents" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('petEventsSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        Events
+                    </button>
+                     <button id="tabAdoption" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('adoptionSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg>
+                        Adoption
+                    </button>
+                    <button id="tabBookings" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('bookingsSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        Bookings
+                    </button>
+                    <button id="tabPetHistory" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('petHistorySection')">
+                         <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                        History
+                    </button>
+                    <button id="tabDiscountsPromos" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('discountsPromosSection')">
+                         <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                        Promos
+                    </button>
+                    <button id="tabProviders" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="pawtektadoApp.showSection('providersSection')">
+                         <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        Providers
+                    </button>
+                </div>
+            </nav>
+
+            <section id="myPetsSection" class="space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-semibold text-gray-800">My Beloved Pets</h2>
+                    <button id="openAddPetModalButton" class="btn btn-primary">
+                        <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Add New Pet
+                    </button>
+                </div>
+                <div id="petsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="noPetsMessage" class="text-center py-10 card hidden">
+                    <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                    <p class="text-gray-500 text-lg">You haven't added any pets yet.</p>
+                    <button class="btn btn-primary mt-4" onclick="document.getElementById('openAddPetModalButton').click()">
+                        <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Add Your First Pet
+                    </button>
+                </div>
+            </section>
+            
+            <div id="addPetModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
+                <div class="modal-content">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h2 class="text-2xl font-semibold text-gray-800">Introduce a New Friend</h2>
+                        <button id="closeAddPetModalButton" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button>
+                    </div>
+                    <form id="addPetForm" class="space-y-6">
+                        <div><label for="petName" class="block text-sm font-medium text-gray-600">Pet's Name</label><input type="text" id="petName" name="petName" required class="input-field"></div>
+                        <div><label for="petBreed" class="block text-sm font-medium text-gray-600">Breed / Species</label><input type="text" id="petBreed" name="petBreed" required class="input-field"></div>
+                        <div><label for="petAge" class="block text-sm font-medium text-gray-600">Age</label><input type="text" id="petAge" name="petAge" class="input-field"></div>
+                        <div><label for="petPhoto" class="block text-sm font-medium text-gray-600">Photo URL</label><input type="url" id="petPhoto" name="petPhoto" placeholder="https://example.com/your-pet.jpg" class="input-field"></div>
+                        <div class="flex justify-end space-x-3 pt-4"><button type="button" id="cancelAddPetButton" class="btn btn-secondary">Cancel</button><button type="submit" class="btn btn-primary"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Add This Pet</button></div>
+                    </form>
+                </div>
+            </div>
+
+            <section id="petDetailsSection" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center p-4 z-50 modal backdrop-blur-sm">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto card non-interactive-card">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200"><h2 id="detailsPetName" class="text-3xl font-bold text-blue-600"></h2><button onclick="pawtektadoApp.closePetDetails()" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="md:col-span-1"><img id="detailsPetPhoto" src="https://placehold.co/400x400/e2e8f0/94a3b8?text=Pet+Photo" alt="Pet Photo" class="rounded-lg object-cover w-full h-auto aspect-square mb-3 shadow-md"><p class="text-gray-600"><strong class="text-gray-700">Breed:</strong> <span id="detailsPetBreed"></span></p><p class="text-gray-600"><strong class="text-gray-700">Age:</strong> <span id="detailsPetAge"></span></p></div>
+                        <div class="md:col-span-2 space-y-4">
+                            <div><h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center"><svg class="icon-md text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>Needs & Reminders</h3><div id="needsList" class="space-y-3 max-h-64 overflow-y-auto pr-2 bg-gray-50 p-3 rounded-lg border border-gray-200"></div><p id="noNeedsMessage" class="text-gray-500 text-sm hidden p-4 text-center">No needs recorded yet. Add one below!</p></div>
+                            <form id="addNeedForm" class="space-y-4 border-t border-gray-200 pt-4"><input type="hidden" id="currentPetId"><h4 class="text-lg font-semibold text-gray-700">Add New Need/Reminder</h4><div><label for="needDescription" class="block text-sm font-medium text-gray-600">Description</label><input type="text" id="needDescription" required class="input-field"></div><div><label for="needDate" class="block text-sm font-medium text-gray-600">Date & Time</label><input type="datetime-local" id="needDate" required class="input-field"></div><div><label for="needProvider" class="block text-sm font-medium text-gray-600">Service Provider</label><select id="needProvider" class="input-field"><option value="">None (General Reminder)</option></select></div><button type="submit" class="btn btn-success w-full"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>Add Need</button></form>
+                        </div>
+                    </div>
+                     <button onclick="pawtektadoApp.handleDeletePet()" id="deletePetButton" class="btn btn-danger w-full mt-4"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>Delete This Pet</button>
+                </div>
+            </section>
+
+            <section id="missingPetsSection" class="hidden space-y-6"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-semibold text-gray-800">Missing Pets</h2><button class="btn btn-primary" onclick="pawtektadoApp.showMessageModal('Report Missing Pet form would appear here.', 'info')"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>Report Missing Pet</button></div><div id="missingPetsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div><div id="noMissingPetsMessage" class="text-center py-10 card hidden"><svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><p class="text-gray-500 text-lg">No missing pets reported currently.</p></div></section>
+            <section id="petEventsSection" class="hidden space-y-6"><h2 class="text-3xl font-semibold text-gray-800 mb-6">Upcoming Pet Events</h2><div id="petEventsListContainer" class="space-y-4"></div><div id="noPetEventsMessage" class="text-center py-10 card hidden"><svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><p class="text-gray-500 text-lg">No upcoming pet events listed.</p></div></section>
+            <section id="discountsPromosSection" class="hidden space-y-6"><h2 class="text-3xl font-semibold text-gray-800 mb-6">Pet Store Discounts & Promos</h2><div id="discountsPromosListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div><div id="noDiscountsPromosMessage" class="text-center py-10 card hidden"><svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg><p class="text-gray-500 text-lg">No discounts or promos available.</p></div></section>
+            <section id="adoptionSection" class="hidden space-y-6"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-semibold text-gray-800">Adopt a Friend</h2><button class="btn btn-success" onclick="pawtektadoApp.showMessageModal('Feature to list a pet for adoption would be here.', 'info')"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>List for Adoption</button></div><div id="adoptionListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div><div id="noAdoptionMessage" class="text-center py-10 card hidden"><svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg><p class="text-gray-500 text-lg">No pets listed for adoption.</p></div></section>
+            <section id="bookingsSection" class="hidden space-y-6"><h2 class="text-3xl font-semibold text-gray-800 mb-6">Upcoming Bookings</h2><div id="bookingsListContainer" class="space-y-4"></div><div id="noBookingsMessage" class="text-center py-10 card hidden"><svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><p class="text-gray-500 text-lg">No current bookings found.</p></div></section>
+            <section id="petHistorySection" class="hidden space-y-6"><h2 class="text-3xl font-semibold text-gray-800 mb-6">Pet Care History</h2><div id="petHistoryListContainer" class="space-y-4"></div><div id="noHistoryMessage" class="text-center py-10 card hidden"><svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><p class="text-gray-500 text-lg">No pet history found yet.</p></div></section>
+            <section id="providersSection" class="hidden space-y-6"><h2 class="text-3xl font-semibold text-gray-800 mb-6">Find Service Providers</h2><p class="text-sm text-gray-500 mb-6 -mt-4">Connect with local vets and pet service providers. (Sample Data)</p><div id="providersListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div></section>
+
+            <div id="messageModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm"><div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card non-interactive-card"><div id="messageModalIconContainer" class="mx-auto mb-4"></div><p id="modalMessageText" class="text-lg text-gray-700 mb-6"></p><button onclick="pawtektadoApp.closeMessageModal()" class="btn btn-primary w-1/2">OK</button></div></div>
+            <div id="confirmationModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm"><div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card non-interactive-card"><svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><p id="confirmationMessageText" class="text-lg text-gray-700 mb-6"></p><div class="flex justify-center space-x-4"><button id="confirmActionButton" class="btn btn-danger flex-1">Confirm</button><button id="cancelActionButton" class="btn btn-secondary flex-1">Cancel</button></div></div></div>
+            <footer class="text-center py-10 mt-16 border-t border-gray-200 bg-white"><p class="text-gray-500 text-sm">&copy; <span id="pawtektadoCurrentYear"></span> Pawtektado. Happy Pets, Happy Life!</p><p class="text-xs text-gray-400 mt-1">Crafted with ❤️ for our furry friends.</p></footer>
+        </div>
+    </div>
+
+    <div id="dashZingAppContainer" class="hidden">
+        <div class="container mx-auto p-4 md:p-6 lg:p-8 max-w-5xl">
+            <header class="text-center mb-10">
+                 <div class="inline-flex items-center justify-center bg-emerald-500 p-3 rounded-full mb-4 shadow-lg">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-theme-600">DashZing</h1>
+                <p class="text-gray-500 mt-3 text-lg">Ensure your store runs smoothly, every day. Consistency made simple.</p>
+            </header>
+
+            <nav class="mb-10 bg-white p-1 md:p-2 rounded-lg shadow-md">
+                <div class="flex border-b border-gray-200 flex-wrap justify-center">
+                    <button id="dzTabDashboard" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-theme-600 focus:outline-none active inline-flex items-center justify-center" onclick="dashZingApp.showSection('dzDashboardSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        Dashboard
+                    </button>
+                    <button id="dzTabStaffChecklists" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-theme-600 focus:outline-none inline-flex items-center justify-center" onclick="dashZingApp.showSection('dzStaffChecklistsSection')">
+                        <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 6a2 2 0 00-2 2v4a2 2 0 002 2h12a2 2 0 002-2v-4a2 2 0 00-2-2H4z" clip-rule="evenodd"></path></svg>
+                        My Tasks
+                    </button>
+                    <button id="dzTabManageChecklists" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-theme-600 focus:outline-none inline-flex items-center justify-center" onclick="dashZingApp.showSection('dzManageChecklistsSection')">
+                         <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                        Manage Checklists
+                    </button>
+                </div>
+            </nav>
+
+            <section id="dzDashboardSection" class="space-y-6">
+                <h2 class="text-3xl font-semibold text-gray-800 mb-6">Store Operations Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-6 text-center">
+                        <h3 class="text-lg font-semibold text-theme-700">Today's Completion</h3>
+                        <p class="text-5xl font-bold text-theme-600 mt-2"><span id="dzDashboardCompletionRate">85</span>%</p>
+                        <p class="text-sm text-gray-500">Across all checklists</p>
+                    </div>
+                    <div class="card p-6 text-center">
+                        <h3 class="text-lg font-semibold text-theme-700">Pending Tasks</h3>
+                        <p class="text-5xl font-bold text-yellow-500 mt-2"><span id="dzDashboardPendingTasks">5</span></p>
+                        <p class="text-sm text-gray-500">Across all staff</p>
+                    </div>
+                    <div class="card p-6 text-center">
+                        <h3 class="text-lg font-semibold text-theme-700">Reported Issues</h3>
+                        <p class="text-5xl font-bold text-red-500 mt-2"><span id="dzDashboardReportedIssues">2</span></p>
+                        <p class="text-sm text-gray-500">Requiring attention</p>
+                    </div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity / Missed Items</h3>
+                    <ul id="dzDashboardRecentActivity" class="space-y-2 text-sm">
+                        <li class="p-2 bg-red-50 border border-red-200 rounded-md">Closing: "Lock back door" missed by Staff A - 10:05 PM</li>
+                        <li class="p-2 bg-yellow-50 border border-yellow-200 rounded-md">Cleaning: "Wipe tables" - NOTE: Ran out of cleaning spray. - Staff B</li>
+                        <li class="p-2 bg-green-50 border border-green-200 rounded-md">Opening: "Turn on lights" completed by Staff C - 8:02 AM</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="dzStaffChecklistsSection" class="hidden space-y-6">
+                 <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-semibold text-gray-800">My Daily Tasks</h2>
+                    <div>
+                        <label for="dzStaffSelect" class="text-sm font-medium text-gray-600 mr-2">Select Staff:</label>
+                        <select id="dzStaffSelect" class="input-field inline-block w-auto py-2">
+                            </select>
+                    </div>
+                </div>
+                <div id="dzChecklistsForStaffContainer" class="space-y-6">
+                    </div>
+                <p id="dzNoChecklistsForStaff" class="text-center py-10 card hidden">Select a staff member to view their checklists.</p>
+            </section>
+
+            <section id="dzManageChecklistsSection" class="hidden space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-semibold text-gray-800">Manage Checklists</h2>
+                    <button id="dzOpenCreateChecklistModalBtn" class="btn btn-primary">
+                        <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Create New Checklist
+                    </button>
+                </div>
+                <div id="dzChecklistManagementContainer" class="space-y-4">
+                    </div>
+                 <p id="dzNoChecklistsToManage" class="text-center py-10 card hidden">No checklists created yet. Start by creating one!</p>
+            </section>
+            
+            <div id="dzCreateChecklistModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
+                <div class="modal-content max-w-lg">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h2 class="text-2xl font-semibold text-gray-800">Create New Checklist</h2>
+                        <button id="dzCloseCreateChecklistModalBtn" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button>
+                    </div>
+                    <form id="dzCreateChecklistForm" class="space-y-4">
+                        <div>
+                            <label for="dzChecklistName" class="block text-sm font-medium text-gray-600">Checklist Name (e.g., Opening Tasks)</label>
+                            <input type="text" id="dzChecklistName" required class="input-field">
+                        </div>
+                        <div>
+                            <label for="dzChecklistType" class="block text-sm font-medium text-gray-600">Type (Daily, Weekly, Shift-based)</label>
+                            <select id="dzChecklistType" class="input-field">
+                                <option value="Daily">Daily</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Shift-based">Shift-based</option>
+                            </select>
+                        </div>
+                        <div id="dzTasksContainer" class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-600">Tasks</label>
+                            </div>
+                        <button type="button" id="dzAddTaskBtn" class="btn btn-secondary text-sm py-1.5 px-3">Add Task</button>
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button type="button" id="dzCancelCreateChecklistBtn" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Checklist</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+             <div id="dzTaskNoteModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
+                <div class="modal-content max-w-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Add Note for Task</h2>
+                        <button id="dzCloseTaskNoteModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                    </div>
+                    <p id="dzTaskNoteModalTaskName" class="text-sm text-gray-600 mb-2"></p>
+                    <textarea id="dzTaskNoteTextarea" rows="3" class="input-field w-full" placeholder="Enter note here (e.g., 'Stockroom light out')"></textarea>
+                    <div class="mt-4 flex justify-end">
+                        <button id="dzSaveTaskNoteBtn" class="btn btn-primary">Save Note</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <footer class="text-center py-10 mt-16 border-t border-gray-200 bg-white"><p class="text-gray-500 text-sm">&copy; <span id="dashZingCurrentYear"></span> DashZing. Consistency Made Simple.</p></footer>
+        </div>
+    </div>
 
     <script>
-        // --- DOM Elements ---
-        const sections = {
-            myPets: document.getElementById('myPetsSection'),
-            // addPet: document.getElementById('addPetSection'), // Now a modal
-            petDetails: document.getElementById('petDetailsSection'),
-            providers: document.getElementById('providersSection'),
-            bookings: document.getElementById('bookingsSection'), 
-            petHistory: document.getElementById('petHistorySection'),
-            missingPets: document.getElementById('missingPetsSection'), // New
-            petEvents: document.getElementById('petEventsSection'), // New
-            discountsPromos: document.getElementById('discountsPromosSection'), // New
-            adoption: document.getElementById('adoptionSection') // New
-        };
-        const tabs = {
-            myPets: document.getElementById('tabMyPets'),
-            // addPet: document.getElementById('tabAddPet'), // Removed
-            providers: document.getElementById('tabProviders'),
-            bookings: document.getElementById('tabBookings'), 
-            petHistory: document.getElementById('tabPetHistory'),
-            missingPets: document.getElementById('tabMissingPets'), // New
-            petEvents: document.getElementById('tabPetEvents'), // New
-            discountsPromos: document.getElementById('tabDiscountsPromos'), // New
-            adoption: document.getElementById('tabAdoption') // New
-        };
+        // --- App Switcher Logic ---
+        const pawtektadoAppContainer = document.getElementById('pawtektadoAppContainer');
+        const dashZingAppContainer = document.getElementById('dashZingAppContainer');
+        const switchToPawtektadoBtn = document.getElementById('switchToPawtektadoBtn');
+        const switchToDashZingBtn = document.getElementById('switchToDashZingBtn');
 
-        const addPetModal = document.getElementById('addPetModal');
-        const openAddPetModalButton = document.getElementById('openAddPetModalButton');
-        const closeAddPetModalButton = document.getElementById('closeAddPetModalButton');
-        const cancelAddPetButton = document.getElementById('cancelAddPetButton');
-        const addPetForm = document.getElementById('addPetForm');
-        const petsListContainer = document.getElementById('petsListContainer');
-        const noPetsMessage = document.getElementById('noPetsMessage');
-        
-        const detailsPetName = document.getElementById('detailsPetName');
-        const detailsPetPhoto = document.getElementById('detailsPetPhoto');
-        const detailsPetBreed = document.getElementById('detailsPetBreed');
-        const detailsPetAge = document.getElementById('detailsPetAge');
-        const needsList = document.getElementById('needsList');
-        const noNeedsMessage = document.getElementById('noNeedsMessage');
-        const addNeedForm = document.getElementById('addNeedForm');
-        const currentPetIdInput = document.getElementById('currentPetId');
-        const needProviderSelect = document.getElementById('needProvider');
-
-        const providersListContainer = document.getElementById('providersListContainer');
-        const bookingsListContainer = document.getElementById('bookingsListContainer');
-        const noBookingsMessage = document.getElementById('noBookingsMessage');
-        const petHistoryListContainer = document.getElementById('petHistoryListContainer');
-        const noHistoryMessage = document.getElementById('noHistoryMessage');
-        
-        // New section containers
-        const missingPetsListContainer = document.getElementById('missingPetsListContainer');
-        const noMissingPetsMessage = document.getElementById('noMissingPetsMessage');
-        const petEventsListContainer = document.getElementById('petEventsListContainer');
-        const noPetEventsMessage = document.getElementById('noPetEventsMessage');
-        const discountsPromosListContainer = document.getElementById('discountsPromosListContainer');
-        const noDiscountsPromosMessage = document.getElementById('noDiscountsPromosMessage');
-        const adoptionListContainer = document.getElementById('adoptionListContainer');
-        const noAdoptionMessage = document.getElementById('noAdoptionMessage');
-
-        const messageModal = document.getElementById('messageModal');
-        const modalMessageText = document.getElementById('modalMessageText');
-        const messageModalIconContainer = document.getElementById('messageModalIconContainer');
-
-        const confirmationModal = document.getElementById('confirmationModal');
-        const confirmationMessageText = document.getElementById('confirmationMessageText');
-        const confirmActionButton = document.getElementById('confirmActionButton');
-        const cancelActionButton = document.getElementById('cancelActionButton');
-        let currentConfirmAction = null;
-
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        let pets = []; 
-        let currentEditingPetId = null;
-
-        const serviceProviders = [
-            { 
-                id: 'vet1', name: 'Happy Paws Veterinary Clinic', type: 'Veterinarian', phone: '555-0101', email: 'contact@happypawsvet.example.com', address: '123 Vet Street, Anytown, Metro Manila', services: ['Checkups', 'Vaccinations', 'Surgery', 'Dental Care'],
-                icon: '<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>'
-            },
-            { 
-                id: 'groomer1', name: 'Pristine Pups Grooming', type: 'Groomer', phone: '555-0202', email: 'info@pristinepups.example.com', address: '456 Groomer Ave, Quezon City', services: ['Bathing', 'Haircuts', 'Nail Trimming', 'De-shedding'],
-                icon: '<svg class="w-8 h-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16v4m-2-2h4m2 13.5V21M16 19h4m0-13.5V5M16 7h4m-9 7a3 3 0 01-6 0 3 3 0 016 0zm12 0a3 3 0 01-6 0 3 3 0 016 0z"></path></svg>'
-            },
-            { 
-                id: 'vet2', name: 'Healthy Tails Animal Hospital', type: 'Veterinarian', phone: '555-0105', email: 'reception@healthytails.example.com', address: '321 Health Blvd, Makati City', services: ['Emergency Care', 'Diagnostics', 'Wellness Exams', 'Nutrition Counseling'],
-                icon: '<svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>'
-            },
-            { 
-                id: 'store1', name: 'Pet Express SM Megamall', type: 'Pet Store', phone: '555-0404', email: 'customercare@petexpress.com.ph', address: 'SM Megamall, Mandaluyong City', services: ['Pet Food', 'Accessories', 'Toys', 'Grooming Products'],
-                icon: '<svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
+        function switchToApp(appName) {
+            if (appName === 'pawtektado') {
+                pawtektadoAppContainer.classList.remove('hidden');
+                dashZingAppContainer.classList.add('hidden');
+                switchToPawtektadoBtn.classList.add('active-app');
+                switchToDashZingBtn.classList.remove('active-app');
+            } else if (appName === 'dashzing') {
+                pawtektadoAppContainer.classList.add('hidden');
+                dashZingAppContainer.classList.remove('hidden');
+                switchToPawtektadoBtn.classList.remove('active-app');
+                switchToDashZingBtn.classList.add('active-app');
             }
-        ];
-        
-        const samplePets = [
-            {
-                id: 'pet_sample1_bantay', name: 'Bantay', breed: 'Aspin (Philippine Native Dog)', age: '3 years', photo: 'https://placedog.net/400/400?id=55',
-                needs: [
-                    { id: 'need_sample1_1', description: 'Annual Checkup', date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet1', status: 'Confirmed' },
-                    { id: 'need_sample1_3', description: 'Rabies Vaccination', date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet1', status: 'Completed' }
+        }
+        switchToPawtektadoBtn.addEventListener('click', () => switchToApp('pawtektado'));
+        switchToDashZingBtn.addEventListener('click', () => switchToApp('dashzing'));
+
+        // --- Pawtektado App Logic (self-contained object) ---
+        const pawtektadoApp = {
+            elements: { /* All Pawtektado DOM elements */
+                sections: {
+                    myPets: document.getElementById('myPetsSection'),
+                    petDetails: document.getElementById('petDetailsSection'),
+                    providers: document.getElementById('providersSection'),
+                    bookings: document.getElementById('bookingsSection'), 
+                    petHistory: document.getElementById('petHistorySection'),
+                    missingPets: document.getElementById('missingPetsSection'), 
+                    petEvents: document.getElementById('petEventsSection'), 
+                    discountsPromos: document.getElementById('discountsPromosSection'), 
+                    adoption: document.getElementById('adoptionSection') 
+                },
+                tabs: {
+                    myPets: document.getElementById('tabMyPets'),
+                    providers: document.getElementById('tabProviders'),
+                    bookings: document.getElementById('tabBookings'), 
+                    petHistory: document.getElementById('tabPetHistory'),
+                    missingPets: document.getElementById('tabMissingPets'), 
+                    petEvents: document.getElementById('tabPetEvents'), 
+                    discountsPromos: document.getElementById('tabDiscountsPromos'), 
+                    adoption: document.getElementById('tabAdoption') 
+                },
+                addPetModal: document.getElementById('addPetModal'),
+                openAddPetModalButton: document.getElementById('openAddPetModalButton'),
+                closeAddPetModalButton: document.getElementById('closeAddPetModalButton'),
+                cancelAddPetButton: document.getElementById('cancelAddPetButton'),
+                addPetForm: document.getElementById('addPetForm'),
+                petsListContainer: document.getElementById('petsListContainer'),
+                noPetsMessage: document.getElementById('noPetsMessage'),
+                detailsPetName: document.getElementById('detailsPetName'),
+                detailsPetPhoto: document.getElementById('detailsPetPhoto'),
+                detailsPetBreed: document.getElementById('detailsPetBreed'),
+                detailsPetAge: document.getElementById('detailsPetAge'),
+                needsList: document.getElementById('needsList'),
+                noNeedsMessage: document.getElementById('noNeedsMessage'),
+                addNeedForm: document.getElementById('addNeedForm'),
+                currentPetIdInput: document.getElementById('currentPetId'),
+                needProviderSelect: document.getElementById('needProvider'),
+                providersListContainer: document.getElementById('providersListContainer'),
+                bookingsListContainer: document.getElementById('bookingsListContainer'),
+                noBookingsMessage: document.getElementById('noBookingsMessage'),
+                petHistoryListContainer: document.getElementById('petHistoryListContainer'),
+                noHistoryMessage: document.getElementById('noHistoryMessage'),
+                missingPetsListContainer: document.getElementById('missingPetsListContainer'),
+                noMissingPetsMessage: document.getElementById('noMissingPetsMessage'),
+                petEventsListContainer: document.getElementById('petEventsListContainer'),
+                noPetEventsMessage: document.getElementById('noPetEventsMessage'),
+                discountsPromosListContainer: document.getElementById('discountsPromosListContainer'),
+                noDiscountsPromosMessage: document.getElementById('noDiscountsPromosMessage'),
+                adoptionListContainer: document.getElementById('adoptionListContainer'),
+                noAdoptionMessage: document.getElementById('noAdoptionMessage'),
+                messageModal: document.getElementById('messageModal'),
+                modalMessageText: document.getElementById('modalMessageText'),
+                messageModalIconContainer: document.getElementById('messageModalIconContainer'),
+                confirmationModal: document.getElementById('confirmationModal'),
+                confirmationMessageText: document.getElementById('confirmationMessageText'),
+                confirmActionButton: document.getElementById('confirmActionButton'),
+                cancelActionButton: document.getElementById('cancelActionButton'),
+                currentYearSpan: document.getElementById('pawtektadoCurrentYear')
+            },
+            data: {
+                pets: [],
+                currentEditingPetId: null,
+                currentConfirmAction: null,
+                serviceProviders: [ /* same as before */
+                    { id: 'vet1', name: 'Happy Paws Veterinary Clinic', type: 'Veterinarian', phone: '555-0101', email: 'contact@happypawsvet.example.com', address: '123 Vet Street, Anytown, Metro Manila', services: ['Checkups', 'Vaccinations', 'Surgery', 'Dental Care'], icon: '<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>'},
+                    { id: 'groomer1', name: 'Pristine Pups Grooming', type: 'Groomer', phone: '555-0202', email: 'info@pristinepups.example.com', address: '456 Groomer Ave, Quezon City', services: ['Bathing', 'Haircuts', 'Nail Trimming', 'De-shedding'], icon: '<svg class="w-8 h-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16v4m-2-2h4m2 13.5V21M16 19h4m0-13.5V5M16 7h4m-9 7a3 3 0 01-6 0 3 3 0 016 0zm12 0a3 3 0 01-6 0 3 3 0 016 0z"></path></svg>'},
+                    { id: 'vet2', name: 'Healthy Tails Animal Hospital', type: 'Veterinarian', phone: '555-0105', email: 'reception@healthytails.example.com', address: '321 Health Blvd, Makati City', services: ['Emergency Care', 'Diagnostics', 'Wellness Exams', 'Nutrition Counseling'], icon: '<svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>'},
+                    { id: 'store1', name: 'Pet Express SM Megamall', type: 'Pet Store', phone: '555-0404', email: 'customercare@petexpress.com.ph', address: 'SM Megamall, Mandaluyong City', services: ['Pet Food', 'Accessories', 'Toys', 'Grooming Products'], icon: '<svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'}
+                ],
+                samplePets: [ /* same as before */
+                    { id: 'pet_sample1_bantay', name: 'Bantay', breed: 'Aspin (Philippine Native Dog)', age: '3 years', photo: 'https://placedog.net/400/400?id=55', needs: [ { id: 'need_sample1_1', description: 'Annual Checkup', date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet1', status: 'Confirmed' }, { id: 'need_sample1_3', description: 'Rabies Vaccination', date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet1', status: 'Completed' } ] },
+                    { id: 'pet_sample2_muning', name: 'Muning', breed: 'Puspin (Philippine Shorthair Cat)', age: '1 year 6 months', photo: 'https://placekitten.com/400/400?image=12', needs: [ { id: 'need_sample2_1', description: 'Vaccination Booster', date: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet2', status: 'Confirmed' }, ] }
+                ],
+                missingPetsData: [ /* same as before */
+                    { id: 'mp1', name: 'Kuting', breed: 'Siamese Mix', lastSeen: 'Barangay Olympia, Makati', dateMissing: '2025-05-20', photo: 'https://placekitten.com/300/200?image=3', contact: '0917-XXX-XXXX', notes: 'Very friendly, wearing a red collar.' },
+                    { id: 'mp2', name: 'Max', breed: 'Labrador Retriever', lastSeen: 'Bonifacio High Street, BGC', dateMissing: '2025-05-22', photo: 'https://placedog.net/300/200?id=23', contact: '0920-XXX-XXXX', notes: 'Answers to his name, a bit shy with strangers.' }
+                ],
+                petEventsData: [ /* same as before */
+                    { id: 'ev1', name: 'PAWS Family Day & Pet Blessing', date: '2025-06-15T10:00', location: 'PAWS Animal Shelter, QC', description: 'Join us for a fun-filled day with games, food, and pet blessings by a guest priest.', organizer: 'PAWS Philippines', image: 'https://placedog.net/600/400?id=40' },
+                    { id: 'ev2', name: 'Pet Express Dog Town Summer Fair', date: '2025-07-05T14:00', location: 'SM Mall of Asia Grounds', description: 'Dog shows, agility courses, pet product booths, and free vet consultations.', organizer: 'Pet Express', image: 'https://placedog.net/600/400?id=50' }
+                ],
+                storePromosData: [ /* same as before */
+                    { id: 'sp1', storeName: 'Pet Express', promo: '20% OFF on all Acana Dog Food (11kg bags)', validity: 'Until June 30, 2025', image: 'https://placedog.net/100/100?id=1' },
+                    { id: 'sp2', storeName: 'Bow & Wow', promo: 'Buy 1 Take 1 on selected organic cat treats', validity: 'Whole month of June 2025', image: 'https://placekitten.com/100/100?image=2' },
+                    { id: 'sp3', storeName: 'Pawsitive Vibes Grooming', promo: 'PHP 100 OFF Full Grooming Service for new clients', validity: 'Until July 15, 2025', image: 'https://placedog.net/100/100?id=3' }
+                ],
+                adoptionPetsData: [ /* same as before */
+                    { id: 'ad1', name: 'Brownie', age: '2 years', breed: 'Aspin', gender: 'Male', shelter: 'CARA Welfare Philippines', photo: 'https://placedog.net/300/300?id=101', bio: 'Brownie is a sweet and playful aspin looking for a loving family. He loves walks and cuddles!' },
+                    { id: 'ad2', name: 'Oreo', age: '6 months', breed: 'Puspin', gender: 'Female', shelter: 'PAWS Animal Shelter', photo: 'https://placekitten.com/300/300?image=15', bio: 'Oreo is a curious and affectionate kitten. She enjoys playing with toys and napping in sunny spots.' },
+                    { id: 'ad3', name: 'Spot', age: '5 months', breed: 'Beagle Mix', gender: 'Male', shelter: 'MBY Pet Rescue and Sanctuary', photo: 'https://placedog.net/300/300?id=102', bio: 'Spot is an energetic puppy, full of life and love. He is looking for an active family.'}
                 ]
             },
-            {
-                id: 'pet_sample2_muning', name: 'Muning', breed: 'Puspin (Philippine Shorthair Cat)', age: '1 year 6 months', photo: 'https://placekitten.com/400/400?image=12',
-                needs: [
-                    { id: 'need_sample2_1', description: 'Vaccination Booster', date: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet2', status: 'Confirmed' },
-                ]
-            }
-        ];
+            init: function() { /* All Pawtektado event listeners and initial render calls */
+                const E = this.elements; // Shorthand
+                const D = this.data; // Shorthand
 
-        // --- Sample Data for New Sections ---
-        const missingPetsData = [
-            { id: 'mp1', name: 'Kuting', breed: 'Siamese Mix', lastSeen: 'Barangay Olympia, Makati', dateMissing: '2025-05-20', photo: 'https://placekitten.com/300/200?image=3', contact: '0917-XXX-XXXX', notes: 'Very friendly, wearing a red collar.' },
-            { id: 'mp2', name: 'Max', breed: 'Labrador Retriever', lastSeen: 'Bonifacio High Street, BGC', dateMissing: '2025-05-22', photo: 'https://placedog.net/300/200?id=23', contact: '0920-XXX-XXXX', notes: 'Answers to his name, a bit shy with strangers.' }
-        ];
-
-        const petEventsData = [
-            { id: 'ev1', name: 'PAWS Family Day & Pet Blessing', date: '2025-06-15T10:00', location: 'PAWS Animal Shelter, QC', description: 'Join us for a fun-filled day with games, food, and pet blessings by a guest priest.', organizer: 'PAWS Philippines', image: 'https://placedog.net/600/400?id=40' },
-            { id: 'ev2', name: 'Pet Express Dog Town Summer Fair', date: '2025-07-05T14:00', location: 'SM Mall of Asia Grounds', description: 'Dog shows, agility courses, pet product booths, and free vet consultations.', organizer: 'Pet Express', image: 'https://placedog.net/600/400?id=50' }
-        ];
-
-        const storePromosData = [
-            { id: 'sp1', storeName: 'Pet Express', promo: '20% OFF on all Acana Dog Food (11kg bags)', validity: 'Until June 30, 2025', image: 'https://placedog.net/100/100?id=1' },
-            { id: 'sp2', storeName: 'Bow & Wow', promo: 'Buy 1 Take 1 on selected organic cat treats', validity: 'Whole month of June 2025', image: 'https://placekitten.com/100/100?image=2' },
-            { id: 'sp3', storeName: 'Pawsitive Vibes Grooming', promo: 'PHP 100 OFF Full Grooming Service for new clients', validity: 'Until July 15, 2025', image: 'https://placedog.net/100/100?id=3' }
-        ];
-
-        const adoptionPetsData = [
-            { id: 'ad1', name: 'Brownie', age: '2 years', breed: 'Aspin', gender: 'Male', shelter: 'CARA Welfare Philippines', photo: 'https://placedog.net/300/300?id=101', bio: 'Brownie is a sweet and playful aspin looking for a loving family. He loves walks and cuddles!' },
-            { id: 'ad2', name: 'Oreo', age: '6 months', breed: 'Puspin', gender: 'Female', shelter: 'PAWS Animal Shelter', photo: 'https://placekitten.com/300/300?image=15', bio: 'Oreo is a curious and affectionate kitten. She enjoys playing with toys and napping in sunny spots.' },
-            { id: 'ad3', name: 'Spot', age: '5 months', breed: 'Beagle Mix', gender: 'Male', shelter: 'MBY Pet Rescue and Sanctuary', photo: 'https://placedog.net/300/300?id=102', bio: 'Spot is an energetic puppy, full of life and love. He is looking for an active family.'}
-        ];
-
-
-        // --- Functions ---
-        // (showSection, showMessageModal, closeMessageModal, showConfirmationModal, closeConfirmationModal, savePets, renderPetsList as before)
-        // Updated showSection, message modals, confirmation modals
-        function showSection(sectionId) {
-            Object.values(sections).forEach(section => section.classList.add('hidden'));
-            Object.values(tabs).forEach(tab => tab.classList.remove('active'));
-            
-            const targetSection = sections[sectionId] || document.getElementById(sectionId); // Fallback for modals
-            const targetTab = tabs[sectionId];
-
-            if (targetSection) {
-                targetSection.classList.remove('hidden');
-                if (targetSection.classList.contains('modal')) { // Modals like petDetails
-                    targetSection.classList.add('show');
+                let storedPets = localStorage.getItem('pawtektado_pets');
+                if (!storedPets || JSON.parse(storedPets).length === 0) {
+                    D.pets = JSON.parse(JSON.stringify(D.samplePets)); 
+                    this.savePets(); 
+                } else {
+                    D.pets = JSON.parse(storedPets);
                 }
-            }
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            
-            // Ensure other modals are hidden if not the target
-            ['petDetailsSection', 'addPetModal', 'messageModal', 'confirmationModal'].forEach(modalId => {
-                if (modalId !== sectionId && document.getElementById(modalId).classList.contains('show')) {
-                    document.getElementById(modalId).classList.remove('show');
-                }
-            });
-        }
-        
-        function showMessageModal(message, type = 'info') { 
-            modalMessageText.textContent = message;
-            messageModalIconContainer.innerHTML = ''; 
-            let iconSvg = '';
-            if (type === 'success') iconSvg = '<svg class="w-16 h-16 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-            else if (type === 'error') iconSvg = '<svg class="w-16 h-16 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-            else iconSvg = '<svg class="w-16 h-16 text-blue-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-            messageModalIconContainer.innerHTML = iconSvg;
-            messageModal.classList.add('show');
-        }
-        function closeMessageModal() { messageModal.classList.remove('show'); }
-        function showConfirmationModal(message, onConfirmCallback) {
-            confirmationMessageText.textContent = message;
-            currentConfirmAction = onConfirmCallback;
-            confirmationModal.classList.add('show');
-        }
-        function closeConfirmationModal() {
-            confirmationModal.classList.remove('show');
-            currentConfirmAction = null;
-        }
-        confirmActionButton.addEventListener('click', () => {
-            if (typeof currentConfirmAction === 'function') currentConfirmAction();
-            closeConfirmationModal();
-        });
-        cancelActionButton.addEventListener('click', () => { closeConfirmationModal(); });
+                
+                this.showSection('myPetsSection'); 
+                this.renderPetsList();
+                this.renderProviders();
+                this.renderBookingsList(); 
+                this.renderPetHistoryList(); 
+                this.renderMissingPets();
+                this.renderPetEvents();
+                this.renderDiscountsPromos();
+                this.renderAdoptionPets();
 
-        function savePets() {
-            localStorage.setItem('pets', JSON.stringify(pets));
-            renderBookingsList();
-            renderPetHistoryList();
-        }
+                E.openAddPetModalButton.addEventListener('click', () => {
+                    E.addPetForm.reset(); 
+                    E.addPetModal.classList.add('show');
+                });
+                E.closeAddPetModalButton.addEventListener('click', () => E.addPetModal.classList.remove('show'));
+                E.cancelAddPetButton.addEventListener('click', () => E.addPetModal.classList.remove('show'));
+                E.addPetForm.addEventListener('submit', (e) => this.handleAddPetFormSubmit(e));
+                E.addNeedForm.addEventListener('submit', (e) => this.handleAddNeedFormSubmit(e));
+                E.confirmActionButton.addEventListener('click', () => {
+                    if (typeof D.currentConfirmAction === 'function') D.currentConfirmAction();
+                    this.closeConfirmationModal();
+                });
+                E.cancelActionButton.addEventListener('click', () => this.closeConfirmationModal());
+                E.currentYearSpan.textContent = new Date().getFullYear();
+            },
+            showSection: function(sectionId) { /* Pawtektado specific showSection */
+                Object.values(this.elements.sections).forEach(section => section.classList.add('hidden'));
+                Object.values(this.elements.tabs).forEach(tab => tab.classList.remove('active'));
+                
+                const targetSection = this.elements.sections[sectionId] || document.getElementById(sectionId);
+                const targetTab = this.elements.tabs[sectionId];
 
-        function renderPetsList() {
-            petsListContainer.innerHTML = ''; 
-            if (pets.length === 0) {
-                noPetsMessage.classList.remove('hidden');
-                return;
-            }
-            noPetsMessage.classList.add('hidden');
-            pets.forEach(pet => {
-                const petCard = document.createElement('div');
-                petCard.className = 'card p-5 flex flex-col items-center text-center cursor-pointer group';
-                petCard.onclick = () => viewPetDetails(pet.id);
-                const petPhotoUrl = pet.photo || `https://placehold.co/150x150/e0e7ff/4f46e5?text=${pet.name.substring(0,1)}`;
-                petCard.innerHTML = `
-                    <img src="${petPhotoUrl}" alt="${pet.name}" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-400 transition-all duration-300 mb-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/150x150/e2e8f0/94a3b8?text=Pet';">
-                    <h3 class="text-xl font-semibold text-blue-600 group-hover:text-blue-700">${pet.name}</h3>
-                    <p class="text-sm text-gray-500">${pet.breed}</p>
-                    ${pet.age ? `<p class="text-xs text-gray-400 mt-1">Age: ${pet.age}</p>` : ''}
-                `;
-                petsListContainer.appendChild(petCard);
-            });
-        }
-
-        // Add Pet Modal Logic
-        openAddPetModalButton.addEventListener('click', () => {
-            addPetForm.reset(); // Clear form
-            addPetModal.classList.add('show');
-        });
-        closeAddPetModalButton.addEventListener('click', () => addPetModal.classList.remove('show'));
-        cancelAddPetButton.addEventListener('click', () => addPetModal.classList.remove('show'));
-
-        addPetForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newPet = {
-                id: 'pet_' + Date.now(), name: addPetForm.petName.value, breed: addPetForm.petBreed.value,
-                age: addPetForm.petAge.value, photo: addPetForm.petPhoto.value, needs: [] 
-            };
-            pets.push(newPet);
-            savePets();
-            renderPetsList();
-            addPetForm.reset();
-            addPetModal.classList.remove('show');
-            showMessageModal(`${newPet.name} has been added successfully!`, 'success');
-            showSection('myPets'); 
-        });
-        
-        function populateProviderDropdown() {
-            needProviderSelect.innerHTML = '<option value="">None (General Reminder)</option>';
-            serviceProviders.forEach(provider => {
-                const option = document.createElement('option');
-                option.value = provider.id; option.textContent = provider.name;
-                needProviderSelect.appendChild(option);
-            });
-        }
-
-        function viewPetDetails(petId) { /* Same as before, but check for pet */ 
-            const pet = pets.find(p => p.id === petId);
-            if (!pet) { showMessageModal('Error: Pet not found.', 'error'); return; }
-            currentEditingPetId = pet.id; currentPetIdInput.value = pet.id; 
-            detailsPetName.textContent = pet.name;
-            detailsPetPhoto.src = pet.photo || `https://placehold.co/400x400/e0e7ff/4f46e5?text=${pet.name}`;
-            detailsPetPhoto.onerror = function() { this.src = 'https://placehold.co/400x400/e2e8f0/94a3b8?text=Pet+Photo'; };
-            detailsPetBreed.textContent = pet.breed; detailsPetAge.textContent = pet.age || 'N/A';
-            populateProviderDropdown(); renderPetNeeds(pet.id);
-            sections.petDetails.classList.add('show'); // Directly show, not via showSection for modals
-        }
-        
-        function closePetDetails() { 
-            sections.petDetails.classList.remove('show'); 
-            currentEditingPetId = null;
-        }
-
-        function handleDeletePet() { /* Uses showConfirmationModal */ 
-            if (!currentEditingPetId) return;
-            const pet = pets.find(p => p.id === currentEditingPetId);
-            if (!pet) return;
-            showConfirmationModal(`Are you sure you want to delete ${pet.name}? This action cannot be undone.`, () => {
-                actuallyDeletePet();
-            });
-        }
-
-        function actuallyDeletePet() { /* Same as before */ 
-            if (!currentEditingPetId) return;
-            pets = pets.filter(pet => pet.id !== currentEditingPetId);
-            savePets(); renderPetsList(); closePetDetails();
-            showMessageModal('Pet deleted successfully.', 'success');
-            showSection('myPets'); // Ensure correct section is shown after modal closure
-        }
-
-        function renderPetNeeds(petId) { /* Same logic, improved styling slightly in HTML template if needed */ 
-            const pet = pets.find(p => p.id === petId);
-            needsList.innerHTML = ''; 
-            if (!pet || !pet.needs || pet.needs.length === 0) {
-                noNeedsMessage.classList.remove('hidden'); return;
-            }
-            noNeedsMessage.classList.add('hidden');
-            const sortedNeeds = [...pet.needs].sort((a, b) => new Date(b.date) - new Date(a.date));
-            sortedNeeds.forEach(need => {
-                const needElement = document.createElement('div');
-                needElement.className = 'p-3 bg-white rounded-md border border-gray-200 shadow-sm flex justify-between items-center';
-                const needDate = new Date(need.date);
-                const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                let providerName = ''; let providerIcon = '';
-                if (need.providerId) {
-                    const provider = serviceProviders.find(p => p.id === need.providerId);
-                    if (provider) {
-                        providerName = ` <span class="text-xs text-gray-500">(@ ${provider.name})</span>`;
-                        if (provider.icon) providerIcon = `<span class="mr-2">${provider.icon.replace('w-8 h-8', 'w-5 h-5')}</span>`;
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                    if (targetSection.classList.contains('modal') && sectionId !== 'addPetModal') { // addPetModal is handled by its own buttons
+                        targetSection.classList.add('show');
                     }
                 }
-                const isPast = needDate < new Date();
-                needElement.innerHTML = `
-                    <div class="flex-grow">
-                        <p class="font-medium text-indigo-700 flex items-center ${isPast ? 'line-through text-gray-400' : ''}">
-                            ${providerIcon || '<svg class="icon-sm text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16v4m-2-2h4m2 13.5V21M16 19h4m0-13.5V5M16 7h4m-9 7a3 3 0 01-6 0 3 3 0 016 0zm12 0a3 3 0 01-6 0 3 3 0 016 0z"></path></svg>'}
-                            ${need.description}${providerName}
-                        </p>
-                        <p class="text-xs text-gray-500 ml-7 ${isPast ? 'line-through' : ''}">${formattedDate} - ${need.status || (isPast ? 'Completed' : 'Pending')}</p>
-                    </div>
-                    <button onclick="deleteNeed('${pet.id}', '${need.id}')" class="btn btn-danger btn-sm p-1.5 ml-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                `;
-                needsList.appendChild(needElement);
-            });
-        }
-
-        addNeedForm.addEventListener('submit', (e) => { /* Same as before */ 
-            e.preventDefault();
-            const petId = currentPetIdInput.value; 
-            if (!petId) { showMessageModal('Error: Could not find pet to add need to.', 'error'); return; }
-            const pet = pets.find(p => p.id === petId);
-            if (!pet) { showMessageModal('Error: Pet not found.', 'error'); return; }
-            const newNeed = {
-                id: 'need_' + Date.now(), description: addNeedForm.needDescription.value, date: addNeedForm.needDate.value,
-                providerId: addNeedForm.needProvider.value || null, status: addNeedForm.needProvider.value ? 'Pending' : 'Scheduled'
-            };
-            if (!pet.needs) pet.needs = []; 
-            pet.needs.push(newNeed); savePets(); renderPetNeeds(pet.id); addNeedForm.reset();
-            showMessageModal('Need added successfully!', 'success');
-        });
-
-        function deleteNeed(petId, needId) { /* Same as before */ 
-            const pet = pets.find(p => p.id === petId);
-            if (!pet || !pet.needs) return;
-            pet.needs = pet.needs.filter(need => need.id !== needId);
-            savePets(); renderPetNeeds(petId); 
-            showMessageModal('Need removed.', 'info');
-        }
-
-        function renderProviders() { /* Same as before */ 
-             providersListContainer.innerHTML = ''; 
-            serviceProviders.forEach(provider => {
-                const providerCard = document.createElement('div');
-                providerCard.className = 'card p-6 space-y-3 flex flex-col items-center text-center';
-                let servicesHTML = provider.services.map(service => `<span class="inline-block bg-gray-100 text-gray-600 text-xs font-medium mr-2 mb-2 px-2.5 py-1 rounded-full">${service}</span>`).join('');
-                let providerIconHTML = provider.icon ? provider.icon : '<svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>';
-                providerCard.innerHTML = `
-                    <div class="mb-3 text-gray-400">${providerIconHTML}</div>
-                    <h3 class="text-xl font-semibold text-green-600">${provider.name}</h3>
-                    <p class="text-sm font-medium text-gray-500">${provider.type}</p>
-                    <p class="text-sm text-gray-600"><span class="font-medium">Address:</span> ${provider.address || 'N/A'}</p>
-                    <div class="mt-2 w-full">
-                        <h4 class="text-xs font-semibold text-gray-500 uppercase mb-2 text-left">Services:</h4>
-                        <div class="text-left">${servicesHTML || '<p class="text-xs text-gray-500">N/A</p>'}</div>
-                    </div>
-                    <div class="mt-auto pt-4 space-x-2 border-t border-gray-200 w-full">
-                        ${provider.phone ? `<a href="tel:${provider.phone}" class="btn btn-primary text-sm py-1.5 px-3">Call</a>` : ''}
-                        ${provider.email ? `<a href="mailto:${provider.email}" class="btn btn-secondary text-sm py-1.5 px-3">Email</a>` : ''}
-                    </div>
-                `;
-                providersListContainer.appendChild(providerCard);
-            });
-        }
-        function renderBookingsList() { /* Same as before */ 
-            bookingsListContainer.innerHTML = ''; let hasBookings = false; const now = new Date(); let upcomingBookings = [];
-            pets.forEach(pet => {
-                if (pet.needs && pet.needs.length > 0) {
-                    pet.needs.forEach(need => {
-                        const needDate = new Date(need.date);
-                        if (need.providerId && needDate > now) upcomingBookings.push({ ...need, petName: pet.name, petId: pet.id });
-                    });
-                }
-            });
-            upcomingBookings.sort((a,b) => new Date(a.date) - new Date(b.date));
-            if (upcomingBookings.length > 0) hasBookings = true;
-            upcomingBookings.forEach(need => {
-                const provider = serviceProviders.find(p => p.id === need.providerId);
-                const bookingItem = document.createElement('div');
-                bookingItem.className = 'list-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2';
-                const needDate = new Date(need.date);
-                const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                const providerIconHTML = provider && provider.icon ? provider.icon.replace('w-8 h-8', 'w-6 h-6 text-blue-500') : '<svg class="icon-sm text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>';
-                bookingItem.innerHTML = `
-                    <div class="flex items-center"> ${providerIconHTML}
-                        <div>
-                            <p class="font-semibold text-blue-700">${need.description} <span class="text-sm text-gray-600 font-normal">for ${need.petName}</span></p>
-                            <p class="text-xs text-gray-500">With: ${provider ? provider.name : 'Unknown Provider'}</p>
-                            <p class="text-xs text-gray-500">On: ${formattedDate} <span class="font-semibold ${need.status === 'Confirmed' ? 'text-green-600' : 'text-yellow-600'}">(${need.status || 'Pending'})</span></p>
-                        </div>
-                    </div>
-                    <button onclick="viewPetDetails('${need.petId}')" class="btn btn-secondary text-xs py-1 px-3 mt-2 sm:mt-0">View Pet</button>
-                `;
-                bookingsListContainer.appendChild(bookingItem);
-            });
-            noBookingsMessage.classList.toggle('hidden', hasBookings);
-        }
-        function renderPetHistoryList() { /* Same as before */ 
-            petHistoryListContainer.innerHTML = ''; let hasHistory = false; const now = new Date(); let allPastNeeds = [];
-            pets.forEach(pet => {
-                if (pet.needs && pet.needs.length > 0) {
-                    pet.needs.forEach(need => {
-                        const needDate = new Date(need.date);
-                        if (needDate <= now) allPastNeeds.push({ ...need, petName: pet.name, petId: pet.id });
-                    });
-                }
-            });
-            allPastNeeds.sort((a, b) => new Date(b.date) - new Date(a.date));
-            if (allPastNeeds.length > 0) hasHistory = true;
-            allPastNeeds.forEach(need => {
-                const provider = serviceProviders.find(p => p.id === need.providerId);
-                const historyItem = document.createElement('div');
-                historyItem.className = 'list-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 opacity-80 hover:opacity-100';
-                const needDate = new Date(need.date);
-                const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                const itemIcon = '<svg class="icon-sm text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>';
-                historyItem.innerHTML = `
-                     <div class="flex items-center"> ${itemIcon}
-                        <div>
-                            <p class="font-semibold text-gray-700">${need.description} <span class="text-sm text-gray-500 font-normal">for ${need.petName}</span></p>
-                            ${provider ? `<p class="text-xs text-gray-500">With: ${provider.name}</p>` : ''}
-                            <p class="text-xs text-gray-500">On: ${formattedDate} <span class="font-semibold text-green-700">(${need.status || 'Completed'})</span></p>
-                        </div>
-                    </div>
-                     <button onclick="viewPetDetails('${need.petId}')" class="btn btn-secondary text-xs py-1 px-3 mt-2 sm:mt-0">View Pet</button>
-                `;
-                petHistoryListContainer.appendChild(historyItem);
-            });
-            noHistoryMessage.classList.toggle('hidden', hasHistory);
-        }
+                if (targetTab) targetTab.classList.add('active');
+                
+                // Ensure other modals are hidden if not the target
+                [this.elements.sections.petDetails, this.elements.addPetModal, this.elements.messageModal, this.elements.confirmationModal].forEach(modal => {
+                    if(modal !== targetSection && modal.classList.contains('show')) modal.classList.remove('show');
+                });
+            },
+            showMessageModal: function(message, type = 'info') { /* Pawtektado specific */
+                this.elements.modalMessageText.textContent = message;
+                this.elements.messageModalIconContainer.innerHTML = ''; 
+                let iconSvg = '';
+                if (type === 'success') iconSvg = '<svg class="w-16 h-16 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+                else if (type === 'error') iconSvg = '<svg class="w-16 h-16 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+                else iconSvg = '<svg class="w-16 h-16 text-blue-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+                this.elements.messageModalIconContainer.innerHTML = iconSvg;
+                this.elements.messageModal.classList.add('show');
+            },
+            closeMessageModal: function() { this.elements.messageModal.classList.remove('show'); },
+            showConfirmationModal: function(message, onConfirmCallback) {
+                this.elements.confirmationMessageText.textContent = message;
+                this.data.currentConfirmAction = onConfirmCallback;
+                this.elements.confirmationModal.classList.add('show');
+            },
+            closeConfirmationModal: function() {
+                this.elements.confirmationModal.classList.remove('show');
+                this.data.currentConfirmAction = null;
+            },
+            savePets: function() {
+                localStorage.setItem('pawtektado_pets', JSON.stringify(this.data.pets));
+                this.renderBookingsList();
+                this.renderPetHistoryList();
+            },
+            renderPetsList: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data;
+                E.petsListContainer.innerHTML = ''; 
+                if (D.pets.length === 0) { E.noPetsMessage.classList.remove('hidden'); return; }
+                E.noPetsMessage.classList.add('hidden');
+                D.pets.forEach(pet => {
+                    const petCard = document.createElement('div');
+                    petCard.className = 'card p-5 flex flex-col items-center text-center cursor-pointer group';
+                    petCard.onclick = () => this.viewPetDetails(pet.id);
+                    const petPhotoUrl = pet.photo || `https://placehold.co/150x150/e0e7ff/4f46e5?text=${pet.name.substring(0,1)}`;
+                    petCard.innerHTML = `<img src="${petPhotoUrl}" alt="${pet.name}" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-400 transition-all duration-300 mb-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/150x150/e2e8f0/94a3b8?text=Pet';"><h3 class="text-xl font-semibold text-blue-600 group-hover:text-blue-700">${pet.name}</h3><p class="text-sm text-gray-500">${pet.breed}</p>${pet.age ? `<p class="text-xs text-gray-400 mt-1">Age: ${pet.age}</p>` : ''}`;
+                    E.petsListContainer.appendChild(petCard);
+                });
+            },
+            handleAddPetFormSubmit: function(e) {
+                e.preventDefault();
+                const D = this.data; const E = this.elements;
+                const newPet = { id: 'pet_' + Date.now(), name: E.addPetForm.petName.value, breed: E.addPetForm.petBreed.value, age: E.addPetForm.petAge.value, photo: E.addPetForm.petPhoto.value, needs: [] };
+                D.pets.push(newPet); this.savePets(); this.renderPetsList(); E.addPetForm.reset();
+                E.addPetModal.classList.remove('show');
+                this.showMessageModal(`${newPet.name} has been added successfully!`, 'success');
+                this.showSection('myPetsSection'); 
+            },
+            populateProviderDropdown: function() { /* Pawtektado specific */
+                this.elements.needProviderSelect.innerHTML = '<option value="">None (General Reminder)</option>';
+                this.data.serviceProviders.forEach(provider => {
+                    const option = document.createElement('option'); option.value = provider.id; option.textContent = provider.name;
+                    this.elements.needProviderSelect.appendChild(option);
+                });
+            },
+            viewPetDetails: function(petId) { 
+                const D = this.data; const E = this.elements;
+                const pet = D.pets.find(p => p.id === petId);
+                if (!pet) { this.showMessageModal('Error: Pet not found.', 'error'); return; }
+                D.currentEditingPetId = pet.id; E.currentPetIdInput.value = pet.id; 
+                E.detailsPetName.textContent = pet.name;
+                E.detailsPetPhoto.src = pet.photo || `https://placehold.co/400x400/e0e7ff/4f46e5?text=${pet.name}`;
+                E.detailsPetPhoto.onerror = function() { this.src = 'https://placehold.co/400x400/e2e8f0/94a3b8?text=Pet+Photo'; };
+                E.detailsPetBreed.textContent = pet.breed; E.detailsPetAge.textContent = pet.age || 'N/A';
+                this.populateProviderDropdown(); this.renderPetNeeds(pet.id);
+                E.sections.petDetails.classList.add('show');
+            },
+            closePetDetails: function() { 
+                this.elements.sections.petDetails.classList.remove('show'); 
+                this.data.currentEditingPetId = null;
+            },
+            handleDeletePet: function() { 
+                const D = this.data;
+                if (!D.currentEditingPetId) return;
+                const pet = D.pets.find(p => p.id === D.currentEditingPetId);
+                if (!pet) return;
+                this.showConfirmationModal(`Are you sure you want to delete ${pet.name}? This action cannot be undone.`, () => {
+                    this.actuallyDeletePet();
+                });
+            },
+            actuallyDeletePet: function() { 
+                const D = this.data;
+                if (!D.currentEditingPetId) return;
+                D.pets = D.pets.filter(pet => pet.id !== D.currentEditingPetId);
+                this.savePets(); this.renderPetsList(); this.closePetDetails();
+                this.showMessageModal('Pet deleted successfully.', 'success');
+                this.showSection('myPetsSection');
+            },
+            renderPetNeeds: function(petId) { /* Pawtektado specific */
+                const D = this.data; const E = this.elements;
+                const pet = D.pets.find(p => p.id === petId);
+                E.needsList.innerHTML = ''; 
+                if (!pet || !pet.needs || pet.needs.length === 0) { E.noNeedsMessage.classList.remove('hidden'); return; }
+                E.noNeedsMessage.classList.add('hidden');
+                const sortedNeeds = [...pet.needs].sort((a, b) => new Date(b.date) - new Date(a.date));
+                sortedNeeds.forEach(need => {
+                    const needElement = document.createElement('div');
+                    needElement.className = 'p-3 bg-white rounded-md border border-gray-200 shadow-sm flex justify-between items-center';
+                    const needDate = new Date(need.date);
+                    const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                    let providerName = ''; let providerIcon = '';
+                    if (need.providerId) {
+                        const provider = D.serviceProviders.find(p => p.id === need.providerId);
+                        if (provider) { providerName = ` <span class="text-xs text-gray-500">(@ ${provider.name})</span>`; if (provider.icon) providerIcon = `<span class="mr-2">${provider.icon.replace('w-8 h-8', 'w-5 h-5')}</span>`;}
+                    }
+                    const isPast = needDate < new Date();
+                    needElement.innerHTML = `<div class="flex-grow"><p class="font-medium text-indigo-700 flex items-center ${isPast ? 'line-through text-gray-400' : ''}">${providerIcon || '<svg class="icon-sm text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16v4m-2-2h4m2 13.5V21M16 19h4m0-13.5V5M16 7h4m-9 7a3 3 0 01-6 0 3 3 0 016 0zm12 0a3 3 0 01-6 0 3 3 0 016 0z"></path></svg>'} ${need.description}${providerName}</p><p class="text-xs text-gray-500 ml-7 ${isPast ? 'line-through' : ''}">${formattedDate} - ${need.status || (isPast ? 'Completed' : 'Pending')}</p></div><button onclick="pawtektadoApp.deleteNeed('${pet.id}', '${need.id}')" class="btn btn-danger btn-sm p-1.5 ml-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>`;
+                    E.needsList.appendChild(needElement);
+                });
+            },
+            handleAddNeedFormSubmit: function(e) { 
+                e.preventDefault();
+                const D = this.data; const E = this.elements;
+                const petId = E.currentPetIdInput.value; 
+                if (!petId) { this.showMessageModal('Error: Could not find pet to add need to.', 'error'); return; }
+                const pet = D.pets.find(p => p.id === petId);
+                if (!pet) { this.showMessageModal('Error: Pet not found.', 'error'); return; }
+                const newNeed = { id: 'need_' + Date.now(), description: E.addNeedForm.needDescription.value, date: E.addNeedForm.needDate.value, providerId: E.addNeedForm.needProvider.value || null, status: E.addNeedForm.needProvider.value ? 'Pending' : 'Scheduled' };
+                if (!pet.needs) pet.needs = []; 
+                pet.needs.push(newNeed); this.savePets(); this.renderPetNeeds(pet.id); E.addNeedForm.reset();
+                this.showMessageModal('Need added successfully!', 'success');
+            },
+            deleteNeed: function(petId, needId) { 
+                const D = this.data;
+                const pet = D.pets.find(p => p.id === petId);
+                if (!pet || !pet.needs) return;
+                pet.needs = pet.needs.filter(need => need.id !== needId);
+                this.savePets(); this.renderPetNeeds(petId); 
+                this.showMessageModal('Need removed.', 'info');
+            },
+            renderProviders: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.providersListContainer.innerHTML = ''; 
+                D.serviceProviders.forEach(provider => {
+                    const providerCard = document.createElement('div');
+                    providerCard.className = 'card p-6 space-y-3 flex flex-col items-center text-center';
+                    let servicesHTML = provider.services.map(service => `<span class="inline-block bg-gray-100 text-gray-600 text-xs font-medium mr-2 mb-2 px-2.5 py-1 rounded-full">${service}</span>`).join('');
+                    let providerIconHTML = provider.icon ? provider.icon : '<svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>';
+                    providerCard.innerHTML = `<div class="mb-3 text-gray-400">${providerIconHTML}</div><h3 class="text-xl font-semibold text-green-600">${provider.name}</h3><p class="text-sm font-medium text-gray-500">${provider.type}</p><p class="text-sm text-gray-600"><span class="font-medium">Address:</span> ${provider.address || 'N/A'}</p><div class="mt-2 w-full"><h4 class="text-xs font-semibold text-gray-500 uppercase mb-2 text-left">Services:</h4><div class="text-left">${servicesHTML || '<p class="text-xs text-gray-500">N/A</p>'}</div></div><div class="mt-auto pt-4 space-x-2 border-t border-gray-200 w-full">${provider.phone ? `<a href="tel:${provider.phone}" class="btn btn-primary text-sm py-1.5 px-3">Call</a>` : ''}${provider.email ? `<a href="mailto:${provider.email}" class="btn btn-secondary text-sm py-1.5 px-3">Email</a>` : ''}</div>`;
+                    E.providersListContainer.appendChild(providerCard);
+                });
+            },
+            renderBookingsList: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.bookingsListContainer.innerHTML = ''; let hasBookings = false; const now = new Date(); let upcomingBookings = [];
+                D.pets.forEach(pet => { if (pet.needs && pet.needs.length > 0) { pet.needs.forEach(need => { const needDate = new Date(need.date); if (need.providerId && needDate > now) upcomingBookings.push({ ...need, petName: pet.name, petId: pet.id }); }); } });
+                upcomingBookings.sort((a,b) => new Date(a.date) - new Date(b.date));
+                if (upcomingBookings.length > 0) hasBookings = true;
+                upcomingBookings.forEach(need => {
+                    const provider = D.serviceProviders.find(p => p.id === need.providerId);
+                    const bookingItem = document.createElement('div'); bookingItem.className = 'list-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2';
+                    const needDate = new Date(need.date); const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                    const providerIconHTML = provider && provider.icon ? provider.icon.replace('w-8 h-8', 'w-6 h-6 text-blue-500') : '<svg class="icon-sm text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>';
+                    bookingItem.innerHTML = `<div class="flex items-center"> ${providerIconHTML}<div><p class="font-semibold text-blue-700">${need.description} <span class="text-sm text-gray-600 font-normal">for ${need.petName}</span></p><p class="text-xs text-gray-500">With: ${provider ? provider.name : 'Unknown Provider'}</p><p class="text-xs text-gray-500">On: ${formattedDate} <span class="font-semibold ${need.status === 'Confirmed' ? 'text-green-600' : 'text-yellow-600'}">(${need.status || 'Pending'})</span></p></div></div><button onclick="pawtektadoApp.viewPetDetails('${need.petId}')" class="btn btn-secondary text-xs py-1 px-3 mt-2 sm:mt-0">View Pet</button>`;
+                    E.bookingsListContainer.appendChild(bookingItem);
+                });
+                E.noBookingsMessage.classList.toggle('hidden', !hasBookings);
+            },
+            renderPetHistoryList: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.petHistoryListContainer.innerHTML = ''; let hasHistory = false; const now = new Date(); let allPastNeeds = [];
+                D.pets.forEach(pet => { if (pet.needs && pet.needs.length > 0) { pet.needs.forEach(need => { const needDate = new Date(need.date); if (needDate <= now) allPastNeeds.push({ ...need, petName: pet.name, petId: pet.id }); }); } });
+                allPastNeeds.sort((a, b) => new Date(b.date) - new Date(a.date));
+                if (allPastNeeds.length > 0) hasHistory = true;
+                allPastNeeds.forEach(need => {
+                    const provider = D.serviceProviders.find(p => p.id === need.providerId);
+                    const historyItem = document.createElement('div'); historyItem.className = 'list-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 opacity-80 hover:opacity-100';
+                    const needDate = new Date(need.date); const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                    const itemIcon = '<svg class="icon-sm text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>';
+                    historyItem.innerHTML = `<div class="flex items-center"> ${itemIcon}<div><p class="font-semibold text-gray-700">${need.description} <span class="text-sm text-gray-500 font-normal">for ${need.petName}</span></p>${provider ? `<p class="text-xs text-gray-500">With: ${provider.name}</p>` : ''}<p class="text-xs text-gray-500">On: ${formattedDate} <span class="font-semibold text-green-700">(${need.status || 'Completed'})</span></p></div></div><button onclick="pawtektadoApp.viewPetDetails('${need.petId}')" class="btn btn-secondary text-xs py-1 px-3 mt-2 sm:mt-0">View Pet</button>`;
+                    E.petHistoryListContainer.appendChild(historyItem);
+                });
+                E.noHistoryMessage.classList.toggle('hidden', !hasHistory);
+            },
+            renderMissingPets: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.missingPetsListContainer.innerHTML = '';
+                if (D.missingPetsData.length === 0) { E.noMissingPetsMessage.classList.remove('hidden'); return; }
+                E.noMissingPetsMessage.classList.add('hidden');
+                D.missingPetsData.forEach(pet => {
+                    const card = document.createElement('div'); card.className = 'card p-5 flex flex-col md:flex-row gap-4 items-start';
+                    card.innerHTML = `<img src="${pet.photo}" alt="${pet.name}" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/300x200/e2e8f0/94a3b8?text=Missing';"><div class="flex-1"><h3 class="text-xl font-semibold text-red-600">${pet.name} - MISSING</h3><p class="text-sm text-gray-600"><strong>Breed:</strong> ${pet.breed}</p><p class="text-sm text-gray-600"><strong>Last Seen:</strong> ${pet.lastSeen}</p><p class="text-sm text-gray-600"><strong>Date Missing:</strong> ${new Date(pet.dateMissing).toLocaleDateString()}</p><p class="text-sm text-gray-600 mt-1"><strong>Notes:</strong> ${pet.notes}</p><p class="text-sm text-blue-600 font-semibold mt-2"><strong>Contact:</strong> ${pet.contact}</p></div>`;
+                    E.missingPetsListContainer.appendChild(card);
+                });
+            },
+            renderPetEvents: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.petEventsListContainer.innerHTML = '';
+                if (D.petEventsData.length === 0) { E.noPetEventsMessage.classList.remove('hidden'); return; }
+                E.noPetEventsMessage.classList.add('hidden');
+                D.petEventsData.forEach(event => {
+                    const item = document.createElement('div'); item.className = 'list-item flex flex-col md:flex-row gap-4 items-start';
+                    const eventDate = new Date(event.date); const formattedDate = `${eventDate.toLocaleDateString()} ${eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                    item.innerHTML = `<img src="${event.image || 'https://placehold.co/150x100/d1fae5/059669?text=Event'}" alt="${event.name}" class="w-full md:w-40 h-32 md:h-auto object-cover rounded-md shadow" onerror="this.onerror=null;this.src='https://placehold.co/150x100/d1fae5/059669?text=Event';"><div class="flex-1"><h3 class="text-lg font-semibold text-green-700">${event.name}</h3><p class="text-xs text-gray-500 mb-1"><span class="font-medium">${formattedDate}</span> @ ${event.location}</p><p class="text-sm text-gray-600">${event.description}</p><p class="text-xs text-gray-500 mt-1">Organized by: ${event.organizer}</p></div>`;
+                    E.petEventsListContainer.appendChild(item);
+                });
+            },
+            renderDiscountsPromos: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.discountsPromosListContainer.innerHTML = '';
+                if (D.storePromosData.length === 0) { E.noDiscountsPromosMessage.classList.remove('hidden'); return; }
+                E.noDiscountsPromosMessage.classList.add('hidden');
+                D.storePromosData.forEach(promo => {
+                    const card = document.createElement('div'); card.className = 'card p-5 flex items-start gap-4';
+                    card.innerHTML = `<img src="${promo.image || 'https://placehold.co/80x80/fef3c7/f59e0b?text=Promo'}" alt="${promo.storeName}" class="w-20 h-20 object-contain rounded-md bg-gray-100 p-1" onerror="this.onerror=null;this.src='https://placehold.co/80x80/fef3c7/f59e0b?text=Promo';"><div class="flex-1"><h3 class="text-md font-semibold text-yellow-700">${promo.storeName}</h3><p class="text-lg font-bold text-orange-600">${promo.promo}</p><p class="text-xs text-gray-500 mt-1">Valid: ${promo.validity}</p></div>`;
+                    E.discountsPromosListContainer.appendChild(card);
+                });
+            },
+            renderAdoptionPets: function() { /* Pawtektado specific */
+                const E = this.elements; const D = this.data; E.adoptionListContainer.innerHTML = '';
+                if (D.adoptionPetsData.length === 0) { E.noAdoptionMessage.classList.remove('hidden'); return; }
+                E.noAdoptionMessage.classList.add('hidden');
+                D.adoptionPetsData.forEach(pet => {
+                    const card = document.createElement('div'); card.className = 'card p-5 flex flex-col items-center text-center group';
+                    card.innerHTML = `<img src="${pet.photo}" alt="${pet.name}" class="w-full h-48 object-cover rounded-lg mb-3 shadow-md group-hover:shadow-lg transition-shadow" onerror="this.onerror=null;this.src='https://placehold.co/300x300/fce7f3/ec4899?text=AdoptMe';"><h3 class="text-xl font-semibold text-pink-600">${pet.name}</h3><p class="text-sm text-gray-500">${pet.age} old, ${pet.gender} ${pet.breed}</p><p class="text-xs text-gray-400 mt-1">From: ${pet.shelter}</p><p class="text-sm text-gray-600 mt-2 px-2 h-16 overflow-hidden text-ellipsis">${pet.bio}</p><button class="btn btn-primary btn-sm mt-3 py-1.5 px-4 text-xs" onclick="pawtektadoApp.showMessageModal('Contact ${pet.shelter} to learn more about ${pet.name}.', 'info')">Learn More</button>`;
+                    E.adoptionListContainer.appendChild(card);
+                });
+            }
+        };
         
-        // --- Render Functions for New Sections ---
-        function renderMissingPets() {
-            missingPetsListContainer.innerHTML = '';
-            if (missingPetsData.length === 0) {
-                noMissingPetsMessage.classList.remove('hidden'); return;
-            }
-            noMissingPetsMessage.classList.add('hidden');
-            missingPetsData.forEach(pet => {
-                const card = document.createElement('div');
-                card.className = 'card p-5 flex flex-col md:flex-row gap-4 items-start';
-                card.innerHTML = `
-                    <img src="${pet.photo}" alt="${pet.name}" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/300x200/e2e8f0/94a3b8?text=Missing';">
-                    <div class="flex-1">
-                        <h3 class="text-xl font-semibold text-red-600">${pet.name} - MISSING</h3>
-                        <p class="text-sm text-gray-600"><strong>Breed:</strong> ${pet.breed}</p>
-                        <p class="text-sm text-gray-600"><strong>Last Seen:</strong> ${pet.lastSeen}</p>
-                        <p class="text-sm text-gray-600"><strong>Date Missing:</strong> ${new Date(pet.dateMissing).toLocaleDateString()}</p>
-                        <p class="text-sm text-gray-600 mt-1"><strong>Notes:</strong> ${pet.notes}</p>
-                        <p class="text-sm text-blue-600 font-semibold mt-2"><strong>Contact:</strong> ${pet.contact}</p>
-                    </div>
-                `;
-                missingPetsListContainer.appendChild(card);
-            });
-        }
+        // --- DashZing App Logic (self-contained object) ---
+        const dashZingApp = {
+            elements: {
+                sections: {
+                    dzDashboardSection: document.getElementById('dzDashboardSection'),
+                    dzStaffChecklistsSection: document.getElementById('dzStaffChecklistsSection'),
+                    dzManageChecklistsSection: document.getElementById('dzManageChecklistsSection')
+                },
+                tabs: {
+                    dzDashboardSection: document.getElementById('dzTabDashboard'),
+                    dzStaffChecklistsSection: document.getElementById('dzTabStaffChecklists'),
+                    dzManageChecklistsSection: document.getElementById('dzTabManageChecklists')
+                },
+                // Dashboard elements
+                dzDashboardCompletionRate: document.getElementById('dzDashboardCompletionRate'),
+                dzDashboardPendingTasks: document.getElementById('dzDashboardPendingTasks'),
+                dzDashboardReportedIssues: document.getElementById('dzDashboardReportedIssues'),
+                dzDashboardRecentActivity: document.getElementById('dzDashboardRecentActivity'),
+                // Staff Checklist elements
+                dzStaffSelect: document.getElementById('dzStaffSelect'),
+                dzChecklistsForStaffContainer: document.getElementById('dzChecklistsForStaffContainer'),
+                dzNoChecklistsForStaff: document.getElementById('dzNoChecklistsForStaff'),
+                // Manage Checklist elements
+                dzChecklistManagementContainer: document.getElementById('dzChecklistManagementContainer'),
+                dzNoChecklistsToManage: document.getElementById('dzNoChecklistsToManage'),
+                dzOpenCreateChecklistModalBtn: document.getElementById('dzOpenCreateChecklistModalBtn'),
+                // Create Checklist Modal elements
+                dzCreateChecklistModal: document.getElementById('dzCreateChecklistModal'),
+                dzCloseCreateChecklistModalBtn: document.getElementById('dzCloseCreateChecklistModalBtn'),
+                dzCreateChecklistForm: document.getElementById('dzCreateChecklistForm'),
+                dzChecklistName: document.getElementById('dzChecklistName'),
+                dzChecklistType: document.getElementById('dzChecklistType'),
+                dzTasksContainer: document.getElementById('dzTasksContainer'),
+                dzAddTaskBtn: document.getElementById('dzAddTaskBtn'),
+                dzCancelCreateChecklistBtn: document.getElementById('dzCancelCreateChecklistBtn'),
+                // Task Note Modal elements
+                dzTaskNoteModal: document.getElementById('dzTaskNoteModal'),
+                dzCloseTaskNoteModalBtn: document.getElementById('dzCloseTaskNoteModalBtn'),
+                dzTaskNoteModalTaskName: document.getElementById('dzTaskNoteModalTaskName'),
+                dzTaskNoteTextarea: document.getElementById('dzTaskNoteTextarea'),
+                dzSaveTaskNoteBtn: document.getElementById('dzSaveTaskNoteBtn'),
+                currentYearSpan: document.getElementById('dashZingCurrentYear')
+            },
+            data: {
+                checklists: [],
+                staff: [
+                    { id: 'staff1', name: 'Maria Dela Cruz' },
+                    { id: 'staff2', name: 'Juan Santos' },
+                    { id: 'staff3', name: 'Ana Reyes' }
+                ],
+                taskStatuses: {}, // { 'checklistId_taskId_staffId_date': { completed: true/false, timestamp: '', note: '' } }
+                currentChecklistEditId: null,
+                currentTaskForNote: null, // { checklistId, taskId, staffId, dateString }
+            },
+            init: function() {
+                const E = this.elements;
+                const D = this.data;
 
-        function renderPetEvents() {
-            petEventsListContainer.innerHTML = '';
-            if (petEventsData.length === 0) {
-                noPetEventsMessage.classList.remove('hidden'); return;
-            }
-            noPetEventsMessage.classList.add('hidden');
-            petEventsData.forEach(event => {
-                const item = document.createElement('div');
-                item.className = 'list-item flex flex-col md:flex-row gap-4 items-start';
-                const eventDate = new Date(event.date);
-                const formattedDate = `${eventDate.toLocaleDateString()} ${eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                item.innerHTML = `
-                    <img src="${event.image || 'https://placehold.co/150x100/d1fae5/059669?text=Event'}" alt="${event.name}" class="w-full md:w-40 h-32 md:h-auto object-cover rounded-md shadow" onerror="this.onerror=null;this.src='https://placehold.co/150x100/d1fae5/059669?text=Event';">
-                    <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-green-700">${event.name}</h3>
-                        <p class="text-xs text-gray-500 mb-1">
-                            <span class="font-medium">${formattedDate}</span> @ ${event.location}
-                        </p>
-                        <p class="text-sm text-gray-600">${event.description}</p>
-                        <p class="text-xs text-gray-500 mt-1">Organized by: ${event.organizer}</p>
-                    </div>
-                `;
-                petEventsListContainer.appendChild(item);
-            });
-        }
+                let storedChecklists = localStorage.getItem('dashZing_checklists');
+                D.checklists = storedChecklists ? JSON.parse(storedChecklists) : this.getSampleChecklists();
+                
+                let storedTaskStatuses = localStorage.getItem('dashZing_taskStatuses');
+                D.taskStatuses = storedTaskStatuses ? JSON.parse(storedTaskStatuses) : {};
 
-        function renderDiscountsPromos() {
-            discountsPromosListContainer.innerHTML = '';
-            if (storePromosData.length === 0) {
-                noDiscountsPromosMessage.classList.remove('hidden'); return;
-            }
-            noDiscountsPromosMessage.classList.add('hidden');
-            storePromosData.forEach(promo => {
-                const card = document.createElement('div');
-                card.className = 'card p-5 flex items-start gap-4';
-                card.innerHTML = `
-                    <img src="${promo.image || 'https://placehold.co/80x80/fef3c7/f59e0b?text=Promo'}" alt="${promo.storeName}" class="w-20 h-20 object-contain rounded-md bg-gray-100 p-1" onerror="this.onerror=null;this.src='https://placehold.co/80x80/fef3c7/f59e0b?text=Promo';">
-                    <div class="flex-1">
-                        <h3 class="text-md font-semibold text-yellow-700">${promo.storeName}</h3>
-                        <p class="text-lg font-bold text-orange-600">${promo.promo}</p>
-                        <p class="text-xs text-gray-500 mt-1">Valid: ${promo.validity}</p>
-                    </div>
-                `;
-                discountsPromosListContainer.appendChild(card);
-            });
-        }
+                this.saveChecklists(); // Save sample if it's first time
+                this.saveTaskStatuses();
 
-        function renderAdoptionPets() {
-            adoptionListContainer.innerHTML = '';
-            if (adoptionPetsData.length === 0) {
-                noAdoptionMessage.classList.remove('hidden'); return;
-            }
-            noAdoptionMessage.classList.add('hidden');
-            adoptionPetsData.forEach(pet => {
-                const card = document.createElement('div');
-                card.className = 'card p-5 flex flex-col items-center text-center group';
-                card.innerHTML = `
-                    <img src="${pet.photo}" alt="${pet.name}" class="w-full h-48 object-cover rounded-lg mb-3 shadow-md group-hover:shadow-lg transition-shadow" onerror="this.onerror=null;this.src='https://placehold.co/300x300/fce7f3/ec4899?text=AdoptMe';">
-                    <h3 class="text-xl font-semibold text-pink-600">${pet.name}</h3>
-                    <p class="text-sm text-gray-500">${pet.age} old, ${pet.gender} ${pet.breed}</p>
-                    <p class="text-xs text-gray-400 mt-1">From: ${pet.shelter}</p>
-                    <p class="text-sm text-gray-600 mt-2 px-2 h-16 overflow-hidden text-ellipsis">${pet.bio}</p>
-                    <button class="btn btn-primary btn-sm mt-3 py-1.5 px-4 text-xs" onclick="showMessageModal('Contact ${pet.shelter} to learn more about ${pet.name}.', 'info')">Learn More</button>
-                `;
-                adoptionListContainer.appendChild(card);
-            });
-        }
+                this.populateStaffSelect();
+                this.renderDashboard();
+                this.renderManageChecklists();
+                // Initial render for staff view will be triggered by staff selection
 
-        // --- Initial Setup ---
+                E.dzOpenCreateChecklistModalBtn.addEventListener('click', () => this.openCreateChecklistModal());
+                E.dzCloseCreateChecklistModalBtn.addEventListener('click', () => this.closeCreateChecklistModal());
+                E.dzCancelCreateChecklistBtn.addEventListener('click', () => this.closeCreateChecklistModal());
+                E.dzCreateChecklistForm.addEventListener('submit', (e) => this.handleSaveChecklist(e));
+                E.dzAddTaskBtn.addEventListener('click', () => this.addTaskToModalForm());
+                E.dzStaffSelect.addEventListener('change', (e) => this.renderChecklistsForStaff(e.target.value));
+
+                E.dzCloseTaskNoteModalBtn.addEventListener('click', () => this.closeTaskNoteModal());
+                E.dzSaveTaskNoteBtn.addEventListener('click', () => this.saveTaskNote());
+                
+                if(E.currentYearSpan) E.currentYearSpan.textContent = new Date().getFullYear();
+            },
+            getSampleChecklists: function() {
+                return [
+                    { id: 'cl1', name: 'Store Opening Tasks', type: 'Daily', tasks: [ {id: 't1_1', text: 'Turn on all lights'}, {id: 't1_2', text: 'Check POS system'}, {id: 't1_3', text: 'Unlock main entrance'}, {id: 't1_4', text: 'Display "Open" sign'} ] },
+                    { id: 'cl2', name: 'Mid-Shift Restroom Check', type: 'Shift-based', tasks: [ {id: 't2_1', text: 'Check toilet paper stock'}, {id: 't2_2', text: 'Ensure floor is dry'}, {id: 't2_3', text: 'Empty trash bin if full'} ] },
+                    { id: 'cl3', name: 'Store Closing Procedures', type: 'Daily', tasks: [ {id: 't3_1', text: 'Count cash register'}, {id: 't3_2', text: 'Lock all doors and windows'}, {id: 't3_3', text: 'Turn off lights (except security)'}, {id: 't3_4', text: 'Set alarm system'} ] },
+                    { id: 'cl4', name: 'Weekly Merchandising Check', type: 'Weekly', tasks: [ {id: 't4_1', text: 'Dust all shelves'}, {id: 't4_2', text: 'Check product expiration dates'}, {id: 't4_3', text: 'Restock low items on display'} ] }
+                ];
+            },
+            saveChecklists: function() { localStorage.setItem('dashZing_checklists', JSON.stringify(this.data.checklists)); },
+            saveTaskStatuses: function() { localStorage.setItem('dashZing_taskStatuses', JSON.stringify(this.data.taskStatuses)); },
+            showSection: function(sectionId) {
+                Object.values(this.elements.sections).forEach(section => section.classList.add('hidden'));
+                Object.values(this.elements.tabs).forEach(tab => tab.classList.remove('active'));
+                if (this.elements.sections[sectionId]) this.elements.sections[sectionId].classList.remove('hidden');
+                if (this.elements.tabs[sectionId]) this.elements.tabs[sectionId].classList.add('active');
+            },
+            renderDashboard: function() {
+                const D = this.data; const E = this.elements;
+                let totalTasks = 0; let completedTasks = 0; let pendingTasks = 0; let issues = 0;
+                const todayStr = new Date().toISOString().slice(0,10);
+                
+                D.checklists.forEach(cl => {
+                    cl.tasks.forEach(task => {
+                        totalTasks++; // Assuming each task is daily for simplicity in this dashboard view
+                        D.staff.forEach(st => {
+                            const statusKey = `${cl.id}_${task.id}_${st.id}_${todayStr}`;
+                            const status = D.taskStatuses[statusKey];
+                            if (status && status.completed) completedTasks++;
+                            else pendingTasks++; // Simplified: if not completed today, it's pending
+                            if (status && status.note) issues++;
+                        });
+                    });
+                });
+                
+                E.dzDashboardCompletionRate.textContent = totalTasks > 0 ? Math.round((completedTasks / (totalTasks * D.staff.length)) * 100) : 0; // Approximation
+                E.dzDashboardPendingTasks.textContent = pendingTasks;
+                E.dzDashboardReportedIssues.textContent = issues;
+
+                // Sample Recent Activity (can be expanded)
+                E.dzDashboardRecentActivity.innerHTML = `
+                    <li class="p-2 bg-red-50 border border-red-200 rounded-md text-xs">Closing: "Lock back door" missed by Maria - ${new Date(Date.now() - 2 * 60 * 60 * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</li>
+                    <li class="p-2 bg-yellow-50 border border-yellow-200 rounded-md text-xs">Cleaning: "Wipe tables" - NOTE: Ran out of spray. - Juan - ${new Date(Date.now() - 4 * 60 * 60 * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</li>
+                    <li class="p-2 bg-green-50 border border-green-200 rounded-md text-xs">Opening: "Turn on lights" completed by Ana - ${new Date(Date.now() - 10 * 60 * 60 * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</li>
+                `;
+            },
+            populateStaffSelect: function() {
+                const E = this.elements; const D = this.data;
+                E.dzStaffSelect.innerHTML = '<option value="">-- Select Staff --</option>';
+                D.staff.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s.id; option.textContent = s.name;
+                    E.dzStaffSelect.appendChild(option);
+                });
+            },
+            renderChecklistsForStaff: function(staffId) {
+                const E = this.elements; const D = this.data;
+                E.dzChecklistsForStaffContainer.innerHTML = '';
+                if (!staffId) { E.dzNoChecklistsForStaff.classList.remove('hidden'); return; }
+                E.dzNoChecklistsForStaff.classList.add('hidden');
+
+                const todayStr = new Date().toISOString().slice(0,10);
+
+                D.checklists.forEach(cl => {
+                    // For prototype, assume all checklists are relevant daily. 
+                    // Real app would filter by type (Daily, Weekly on right day, Shift-based)
+                    const checklistCard = document.createElement('div');
+                    checklistCard.className = 'card p-6';
+                    let tasksHTML = `<h3 class="text-xl font-semibold text-theme-700 mb-3">${cl.name} <span class="text-xs font-normal text-gray-500">(${cl.type})</span></h3><ul class="space-y-3">`;
+                    
+                    cl.tasks.forEach(task => {
+                        const statusKey = `${cl.id}_${task.id}_${staffId}_${todayStr}`;
+                        const status = D.taskStatuses[statusKey] || { completed: false, note: '' };
+                        tasksHTML += `
+                            <li class="flex items-center justify-between p-3 rounded-md ${status.completed ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'} border">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="${statusKey}" data-cl-id="${cl.id}" data-task-id="${task.id}" data-staff-id="${staffId}" 
+                                           class="h-5 w-5 text-theme-600 border-gray-300 rounded focus:ring-theme-500 mr-3" ${status.completed ? 'checked' : ''}>
+                                    <label for="${statusKey}" class="text-sm ${status.completed ? 'line-through text-gray-500' : 'text-gray-700'}">${task.text}</label>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    ${status.note ? `<span class="text-xs text-yellow-600 bg-yellow-100 px-2 py-0.5 rounded-full" title="${status.note}">Note</span>` : ''}
+                                    <button class="text-xs text-blue-500 hover:text-blue-700" data-cl-id="${cl.id}" data-task-id="${task.id}" data-staff-id="${staffId}" data-task-name="${task.text}">
+                                        ${status.note ? 'Edit Note' : 'Add Note'}
+                                    </button>
+                                </div>
+                            </li>
+                        `;
+                    });
+                    tasksHTML += `</ul>`;
+                    checklistCard.innerHTML = tasksHTML;
+                    E.dzChecklistsForStaffContainer.appendChild(checklistCard);
+                });
+                // Add event listeners for checkboxes and note buttons
+                E.dzChecklistsForStaffContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    cb.addEventListener('change', (e) => this.handleTaskCompletion(e));
+                });
+                E.dzChecklistsForStaffContainer.querySelectorAll('button[data-task-name]').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.openTaskNoteModal(e.currentTarget.dataset));
+                });
+            },
+            handleTaskCompletion: function(event) {
+                const checkbox = event.target;
+                const { clId, taskId, staffId } = checkbox.dataset;
+                const todayStr = new Date().toISOString().slice(0,10);
+                const statusKey = `${clId}_${taskId}_${staffId}_${todayStr}`;
+                
+                if (!this.data.taskStatuses[statusKey]) this.data.taskStatuses[statusKey] = { note: '' };
+                this.data.taskStatuses[statusKey].completed = checkbox.checked;
+                this.data.taskStatuses[statusKey].timestamp = new Date().toISOString();
+                this.saveTaskStatuses();
+                this.renderChecklistsForStaff(staffId); // Re-render to update styles
+                this.renderDashboard(); // Update dashboard stats
+            },
+            openTaskNoteModal: function(dataset) {
+                const { clId, taskId, staffId, taskName } = dataset;
+                const todayStr = new Date().toISOString().slice(0,10);
+                this.data.currentTaskForNote = { clId, taskId, staffId, dateString: todayStr };
+                
+                const E = this.elements;
+                E.dzTaskNoteModalTaskName.textContent = `Task: ${taskName}`;
+                const statusKey = `${clId}_${taskId}_${staffId}_${todayStr}`;
+                E.dzTaskNoteTextarea.value = this.data.taskStatuses[statusKey]?.note || '';
+                E.dzTaskNoteModal.classList.add('show');
+            },
+            closeTaskNoteModal: function() {
+                this.elements.dzTaskNoteModal.classList.remove('show');
+                this.data.currentTaskForNote = null;
+            },
+            saveTaskNote: function() {
+                const { clId, taskId, staffId, dateString } = this.data.currentTaskForNote;
+                const statusKey = `${clId}_${taskId}_${staffId}_${dateString}`;
+                const noteText = this.elements.dzTaskNoteTextarea.value.trim();
+
+                if (!this.data.taskStatuses[statusKey]) this.data.taskStatuses[statusKey] = { completed: false };
+                this.data.taskStatuses[statusKey].note = noteText;
+                this.saveTaskStatuses();
+                this.renderChecklistsForStaff(staffId); // Re-render staff checklists
+                this.renderDashboard(); // Update dashboard for issues
+                this.closeTaskNoteModal();
+            },
+
+            renderManageChecklists: function() {
+                const E = this.elements; const D = this.data;
+                E.dzChecklistManagementContainer.innerHTML = '';
+                if (D.checklists.length === 0) { E.dzNoChecklistsToManage.classList.remove('hidden'); return; }
+                E.dzNoChecklistsToManage.classList.add('hidden');
+
+                D.checklists.forEach(cl => {
+                    const card = document.createElement('div');
+                    card.className = 'card p-4';
+                    let tasksPreview = cl.tasks.slice(0, 3).map(t => `<li class="text-xs text-gray-500">- ${t.text}</li>`).join('');
+                    if (cl.tasks.length > 3) tasksPreview += '<li class="text-xs text-gray-500">...and more</li>';
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-lg font-semibold text-theme-700">${cl.name} <span class="text-xs font-normal text-gray-400">(${cl.type})</span></h4>
+                                <ul class="mt-1">${tasksPreview}</ul>
+                            </div>
+                            <div class="space-x-2">
+                                <button class="btn btn-secondary btn-sm py-1 px-2 text-xs" onclick="dashZingApp.openCreateChecklistModal('${cl.id}')">Edit</button>
+                                <button class="btn btn-danger btn-sm py-1 px-2 text-xs" onclick="dashZingApp.deleteChecklist('${cl.id}')">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    E.dzChecklistManagementContainer.appendChild(card);
+                });
+            },
+            openCreateChecklistModal: function(checklistId = null) {
+                const E = this.elements; const D = this.data;
+                E.dzCreateChecklistForm.reset();
+                E.dzTasksContainer.innerHTML = '<label class="block text-sm font-medium text-gray-600">Tasks</label>'; // Reset tasks area
+                D.currentChecklistEditId = checklistId;
+
+                if (checklistId) {
+                    const checklist = D.checklists.find(cl => cl.id === checklistId);
+                    if (checklist) {
+                        E.dzChecklistName.value = checklist.name;
+                        E.dzChecklistType.value = checklist.type;
+                        checklist.tasks.forEach(task => this.addTaskToModalForm(task.text, task.id));
+                    }
+                } else {
+                    this.addTaskToModalForm(); // Add one empty task field by default
+                }
+                E.dzCreateChecklistModal.classList.add('show');
+            },
+            closeCreateChecklistModal: function() {
+                this.elements.dzCreateChecklistModal.classList.remove('show');
+                this.data.currentChecklistEditId = null;
+            },
+            addTaskToModalForm: function(taskText = '', taskId = null) {
+                const E = this.elements;
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'flex items-center space-x-2 mb-2';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'input-field flex-grow dz-task-input';
+                input.placeholder = 'Task description';
+                input.value = taskText;
+                if(taskId) input.dataset.taskId = taskId; // Store original ID if editing
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-danger btn-sm p-1.5 text-xs';
+                removeBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                removeBtn.onclick = () => taskDiv.remove();
+                
+                taskDiv.appendChild(input);
+                taskDiv.appendChild(removeBtn);
+                E.dzTasksContainer.appendChild(taskDiv);
+            },
+            handleSaveChecklist: function(event) {
+                event.preventDefault();
+                const E = this.elements; const D = this.data;
+                const name = E.dzChecklistName.value.trim();
+                const type = E.dzChecklistType.value;
+                const taskInputs = E.dzTasksContainer.querySelectorAll('.dz-task-input');
+                const tasks = [];
+                taskInputs.forEach(input => {
+                    const text = input.value.trim();
+                    if (text) {
+                        tasks.push({ id: input.dataset.taskId || 'task_' + Date.now() + Math.random().toString(16).slice(2), text: text });
+                    }
+                });
+
+                if (!name || tasks.length === 0) {
+                    pawtektadoApp.showMessageModal('Checklist name and at least one task are required.', 'error'); // Use Pawtektado's modal for now
+                    return;
+                }
+
+                if (D.currentChecklistEditId) { // Editing existing
+                    const index = D.checklists.findIndex(cl => cl.id === D.currentChecklistEditId);
+                    if (index > -1) {
+                        D.checklists[index] = { ...D.checklists[index], name, type, tasks };
+                    }
+                } else { // Creating new
+                    D.checklists.push({ id: 'cl_' + Date.now(), name, type, tasks });
+                }
+                this.saveChecklists();
+                this.renderManageChecklists();
+                this.closeCreateChecklistModal();
+                pawtektadoApp.showMessageModal('Checklist saved successfully!', 'success');
+            },
+            deleteChecklist: function(checklistId) {
+                 pawtektadoApp.showConfirmationModal('Are you sure you want to delete this checklist? This will also remove related task statuses.', () => {
+                    this.data.checklists = this.data.checklists.filter(cl => cl.id !== checklistId);
+                    // Also clean up task statuses related to this checklist (more complex, simplified for proto)
+                    Object.keys(this.data.taskStatuses).forEach(key => {
+                        if (key.startsWith(checklistId + '_')) delete this.data.taskStatuses[key];
+                    });
+                    this.saveChecklists();
+                    this.saveTaskStatuses();
+                    this.renderManageChecklists();
+                    this.renderDashboard(); // Task statuses might change
+                    pawtektadoApp.showMessageModal('Checklist deleted.', 'info');
+                });
+            }
+        };
+
+        // --- Global Event Listeners & Initializations ---
         document.addEventListener('DOMContentLoaded', () => {
-            let storedPets = localStorage.getItem('pets');
-            if (!storedPets || JSON.parse(storedPets).length === 0) {
-                pets = JSON.parse(JSON.stringify(samplePets)); 
-                savePets(); 
-            } else {
-                pets = JSON.parse(storedPets);
-            }
+            pawtektadoApp.init();
+            dashZingApp.init();
             
-            showSection('myPets'); 
-            renderPetsList();
-            renderProviders();
-            renderBookingsList(); 
-            renderPetHistoryList(); 
-            // Render new sections
-            renderMissingPets();
-            renderPetEvents();
-            renderDiscountsPromos();
-            renderAdoptionPets();
+            // Default to Pawtektado
+            switchToApp('pawtektado');
 
+            // Global Escape key listener for any open modal
             document.addEventListener('keydown', function (event) {
                 if (event.key === "Escape") {
-                    // Close any open modal
-                    [addPetModal, sections.petDetails, messageModal, confirmationModal].forEach(modal => {
+                    // Pawtektado Modals
+                    [pawtektadoApp.elements.addPetModal, pawtektadoApp.elements.sections.petDetails, pawtektadoApp.elements.messageModal, pawtektadoApp.elements.confirmationModal].forEach(modal => {
                         if(modal.classList.contains('show')) modal.classList.remove('show');
                     });
-                    // If pet details was closed, ensure currentEditingPetId is reset
-                    if(!sections.petDetails.classList.contains('show')) currentEditingPetId = null;
+                    if(!pawtektadoApp.elements.sections.petDetails.classList.contains('show')) pawtektadoApp.data.currentEditingPetId = null;
+
+                    // DashZing Modals
+                    [dashZingApp.elements.dzCreateChecklistModal, dashZingApp.elements.dzTaskNoteModal].forEach(modal => {
+                         if(modal.classList.contains('show')) modal.classList.remove('show');
+                    });
+                    if(!dashZingApp.elements.dzTaskNoteModal.classList.contains('show')) dashZingApp.data.currentTaskForNote = null;
+                    if(!dashZingApp.elements.dzCreateChecklistModal.classList.contains('show')) dashZingApp.data.currentChecklistEditId = null;
+
                 }
             });
         });
