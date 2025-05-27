@@ -112,16 +112,45 @@
             width: 100%; max-width: 500px; 
             max-height: 90vh; overflow-y: auto;
         }
-        /* Progress bar for DashZing dashboard */
-        .progress-bar-bg { background-color: #e5e7eb; border-radius: 0.25rem; overflow: hidden; height: 1rem; }
-        .progress-bar-fill { background-color: #10b981; height: 100%; transition: width 0.5s ease-in-out; border-radius: 0.25rem; }
+        
+        /* DashZing Dashboard Staff Overview Task Lane */
+        .staff-task-lane {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 0.75rem; /* For scrollbar visibility */
+            gap: 0.5rem; /* Spacing between task cards */
+        }
+        .staff-task-card {
+            flex: 0 0 auto; /* Prevent shrinking/growing, allow natural width */
+            min-width: 120px; /* Minimum width for readability */
+            max-width: 200px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem; /* 6px */
+            border: 1px solid;
+            font-size: 0.75rem; /* text-xs */
+            line-height: 1rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .staff-task-card .task-text {
+            font-weight: 500;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 0.125rem;
+        }
+        .staff-task-card .checklist-name {
+            font-size: 0.65rem; /* Smaller than text-xs */
+            color: #6b7280; /* gray-500 */
+        }
+        .task-completed { background-color: #d1fae5; border-color: #6ee7b7; color: #065f46; } /* green-100 border-green-300 text-green-800 */
+        .task-pending-note { background-color: #fef3c7; border-color: #fcd34d; color: #92400e; } /* yellow-100 border-yellow-400 text-yellow-800 */
+        .task-pending { background-color: #fee2e2; border-color: #fca5a5; color: #991b1b; } /* red-100 border-red-300 text-red-800 */
+
 
         /* Schedule Grid for DashZing */
-        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; } /* Increased minmax */
         .schedule-day-card { border: 1px solid #d1d5db; border-radius: 0.5rem; padding: 1rem; background-color: #f9fafb; }
-        .schedule-day-card h4 { font-weight: 600; margin-bottom: 0.5rem; color: #047857; }
+        .schedule-day-card h4 { font-weight: 600; margin-bottom: 0.75rem; color: #047857; border-bottom: 1px solid #d1d5db; padding-bottom: 0.5rem;}
         .schedule-day-card ul li { font-size: 0.875rem; margin-bottom: 0.25rem; }
-        .schedule-day-card .shift-assignment input { font-size: 0.875rem; padding: 0.25rem 0.5rem; }
+        .schedule-day-card .shift-assignment input { font-size: 0.875rem; padding: 0.375rem 0.5rem; }
     </style>
 </head>
 <body>
@@ -376,20 +405,20 @@
             init: function() { /* DashZing init */
                 const E = this.elements; const D = this.data;
                 D.checklists = JSON.parse(localStorage.getItem('dashZing_checklists')) || this.getSampleChecklists();
-                D.taskStatuses = JSON.parse(localStorage.getItem('dashZing_taskStatuses')) || {};
-                D.schedules = JSON.parse(localStorage.getItem('dashZing_schedules')) || {};
+                D.taskStatuses = JSON.parse(localStorage.getItem('dashZing_taskStatuses')) || this.getSampleTaskStatuses(); // Load or get sample task statuses
+                D.schedules = JSON.parse(localStorage.getItem('dashZing_schedules')) || this.getSampleSchedules(); // Load or get sample schedules
+                
                 this.saveChecklists(); this.saveTaskStatuses(); this.saveSchedules();
 
                 this.populateStaffSelect(E.dzStaffSelectForTasks);
                 this.populateStaffSelect(E.dzScheduleStaffSelect);
                 this.populateStaffSelectForAssignment(E.dzChecklistAssignedTo);
                 
-                this.setCurrentScheduleWeek(new Date()); // Set to current week
+                this.setCurrentScheduleWeek(new Date()); 
                 E.dzScheduleWeekSelect.addEventListener('change', (e) => this.handleWeekChange(new Date(e.target.value)));
                 E.dzCopyLastWeekScheduleBtn.addEventListener('click', () => this.copyLastWeekSchedule());
                 E.dzPublishScheduleBtn.addEventListener('click', () => this.publishSchedule());
                 E.dzScheduleStaffSelect.addEventListener('change', (e) => this.renderStaffSpecificSchedule(e.target.value));
-
 
                 this.renderDashboard(); this.renderManageChecklists();
                 E.dzOpenCreateChecklistModalBtn.addEventListener('click', () => this.openCreateChecklistModal());
@@ -401,125 +430,157 @@
                 E.dzCloseTaskNoteModalBtn.addEventListener('click', () => this.closeTaskNoteModal());
                 E.dzSaveTaskNoteBtn.addEventListener('click', () => this.saveTaskNote());
                 if(E.currentYearSpan) E.currentYearSpan.textContent = new Date().getFullYear();
-                this.showSection('dzDashboardSection'); // Default to dashboard
+                // this.showSection('dzDashboardSection'); // Default to dashboard - handled by global switcher
+            },
+            getSampleSchedules: function() {
+                const today = new Date();
+                const todayStr = today.toISOString().slice(0,10);
+                const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+                const tomorrowStr = tomorrow.toISOString().slice(0,10);
+                
+                let schedules = {};
+                schedules[todayStr] = {
+                    'staff1': '9:00 AM - 5:00 PM',
+                    'staff2': '1:00 PM - 9:00 PM',
+                    'staff3': 'OFF'
+                };
+                schedules[tomorrowStr] = {
+                    'staff1': 'OFF',
+                    'staff2': '9:00 AM - 5:00 PM',
+                    'staff3': '1:00 PM - 9:00 PM',
+                    'staff4': '10:00 AM - 2:00 PM'
+                };
+                return schedules;
+            },
+            getSampleTaskStatuses: function() {
+                // Add more varied sample statuses for today to better demo the dashboard
+                const todayStr = new Date().toISOString().slice(0,10);
+                return {
+                    // Maria (staff1) - Opening Tasks (cl1)
+                    [`cl1_t1_1_staff1_${todayStr}`]: { completed: true, timestamp: new Date().toISOString(), note: '' }, // Turn on lights
+                    [`cl1_t1_2_staff1_${todayStr}`]: { completed: true, timestamp: new Date().toISOString(), note: '' }, // Check POS
+                    [`cl1_t1_3_staff1_${todayStr}`]: { completed: false, note: 'Key stuck for a bit.' }, // Unlock main - pending with note
+                    // Juan (staff2) - Closing Procedures (cl3)
+                    [`cl3_t3_1_staff2_${todayStr}`]: { completed: false, note: '' }, // Count cash - pending
+                    // Ana (staff3) - Opening Tasks (cl1)
+                    [`cl1_t1_4_staff3_${todayStr}`]: { completed: true, timestamp: new Date().toISOString(), note: '' }, // Display "Open" sign
+                    // General Restroom Check (cl2) - could be done by anyone on shift
+                    [`cl2_t2_1_staff1_${todayStr}`]: { completed: false, note: 'Low on stock.' }, // Check toilet paper (Maria)
+                };
             },
             setCurrentScheduleWeek: function(date) {
                 const day = date.getDay();
-                const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-                this.data.currentScheduleWeekStart = new Date(date.setDate(diff));
+                const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
+                this.data.currentScheduleWeekStart = new Date(date.getFullYear(), date.getMonth(), diff);
                 this.elements.dzScheduleWeekSelect.value = this.data.currentScheduleWeekStart.toISOString().slice(0,10);
                 this.renderScheduleBuilder();
                 this.renderStaffSpecificSchedule(this.elements.dzScheduleStaffSelect.value);
             },
-            handleWeekChange: function(selectedDate) {
-                // Ensure selectedDate is not in the past for scheduling, or adjust as needed
-                // For simplicity, we'll allow any date selection for now.
-                this.setCurrentScheduleWeek(selectedDate);
-            },
-            getWeekDays: function(startDate) {
-                const days = [];
-                for (let i = 0; i < 7; i++) {
-                    const day = new Date(startDate);
-                    day.setDate(startDate.getDate() + i);
-                    days.push(day);
-                }
-                return days;
-            },
+            handleWeekChange: function(selectedDate) { this.setCurrentScheduleWeek(selectedDate); },
+            getWeekDays: function(startDate) { const days = []; for (let i = 0; i < 7; i++) { const day = new Date(startDate); day.setDate(startDate.getDate() + i); days.push(day); } return days; },
             saveChecklists: function() { localStorage.setItem('dashZing_checklists', JSON.stringify(this.data.checklists)); },
             saveTaskStatuses: function() { localStorage.setItem('dashZing_taskStatuses', JSON.stringify(this.data.taskStatuses)); },
             saveSchedules: function() { localStorage.setItem('dashZing_schedules', JSON.stringify(this.data.schedules)); },
             showSection: function(sectionId) { Object.values(this.elements.sections).forEach(section => section.classList.add('hidden')); Object.values(this.elements.tabs).forEach(tab => tab.classList.remove('active')); if (this.elements.sections[sectionId]) this.elements.sections[sectionId].classList.remove('hidden'); if (this.elements.tabs[sectionId]) this.elements.tabs[sectionId].classList.add('active'); },
-            getSampleChecklists: function() { return [ { id: 'cl1', name: 'Store Opening Tasks', type: 'Daily', tasks: [ {id: 't1_1', text: 'Turn on all lights'}, {id: 't1_2', text: 'Check POS system'}, {id: 't1_3', text: 'Unlock main entrance'}, {id: 't1_4', text: 'Display "Open" sign'} ], assignedTo: ['staff1', 'staff3'] }, { id: 'cl2', name: 'Mid-Shift Restroom Check', type: 'Shift-based', tasks: [ {id: 't2_1', text: 'Check toilet paper stock'}, {id: 't2_2', text: 'Ensure floor is dry'}, {id: 't2_3', text: 'Empty trash bin if full'} ], assignedTo: [] }, { id: 'cl3', name: 'Store Closing Procedures', type: 'Daily', tasks: [ {id: 't3_1', text: 'Count cash register'}, {id: 't3_2', text: 'Lock all doors and windows'}, {id: 't3_3', text: 'Turn off lights (except security)'}, {id: 't3_4', text: 'Set alarm system'} ], assignedTo: ['staff2'] }, { id: 'cl4', name: 'Weekly Merchandising Check', type: 'Weekly', tasks: [ {id: 't4_1', text: 'Dust all shelves'}, {id: 't4_2', text: 'Check product expiration dates'}, {id: 't4_3', text: 'Restock low items on display'} ], assignedTo: [] } ]; },
+            getSampleChecklists: function() { return [ { id: 'cl1', name: 'Store Opening Tasks', type: 'Daily', tasks: [ {id: 't1_1', text: 'Turn on all lights'}, {id: 't1_2', text: 'Check POS system'}, {id: 't1_3', text: 'Unlock main entrance'}, {id: 't1_4', text: 'Display "Open" sign'} ], assignedTo: ['staff1', 'staff3'] }, { id: 'cl2', name: 'Mid-Shift Restroom Check', type: 'Daily', tasks: [ {id: 't2_1', text: 'Check toilet paper stock'}, {id: 't2_2', text: 'Ensure floor is dry'}, {id: 't2_3', text: 'Empty trash bin if full'} ], assignedTo: [] }, { id: 'cl3', name: 'Store Closing Procedures', type: 'Daily', tasks: [ {id: 't3_1', text: 'Count cash register'}, {id: 't3_2', text: 'Lock all doors and windows'}, {id: 't3_3', text: 'Turn off lights (except security)'}, {id: 't3_4', text: 'Set alarm system'} ], assignedTo: ['staff2'] }, { id: 'cl4', name: 'Weekly Merchandising Check', type: 'Weekly', tasks: [ {id: 't4_1', text: 'Dust all shelves'}, {id: 't4_2', text: 'Check product expiration dates'}, {id: 't4_3', text: 'Restock low items on display'} ], assignedTo: [] } ]; },
             renderDashboard: function() {
                 const D = this.data; const E = this.elements;
                 const today = new Date();
                 const todayStr = today.toISOString().slice(0,10);
                 E.dzDashboardTodayDate.textContent = today.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-                let overallTotalTasks = 0; let overallCompletedTasks = 0; let overallIssues = 0;
+                let overallTotalAssignedTasks = 0; let overallCompletedAssignedTasks = 0; let overallIssues = 0;
                 let recentActivitiesHTML = '';
                 let staffOverviewHTML = '';
 
-                if (D.staff.length === 0) { E.dzNoStaffForDashboard.classList.remove('hidden'); } 
-                else { E.dzNoStaffForDashboard.classList.add('hidden'); }
+                E.dzNoStaffForDashboard.classList.toggle('hidden', D.staff.length > 0);
 
                 D.staff.forEach(staffMember => {
-                    let staffTotalTasksToday = 0; let staffCompletedTasksToday = 0;
-                    let staffPendingTasksList = '';
-                    
-                    // Get staff schedule for today
+                    let staffTasksHTML = '';
+                    let staffTotalTasksForDay = 0;
+                    let staffCompletedTasksForDay = 0;
                     const staffShiftToday = D.schedules[todayStr]?.[staffMember.id] || "Not Scheduled";
 
                     D.checklists.forEach(cl => {
-                        // Show task if checklist is daily, or weekly on the correct day, or shift-based (simplified for now)
-                        // AND if checklist is assigned to this staff member OR has no specific assignment (general)
                         const isAssignedToStaff = cl.assignedTo && cl.assignedTo.includes(staffMember.id);
                         const isGeneralChecklist = !cl.assignedTo || cl.assignedTo.length === 0;
-                        // Basic logic: if daily and (assigned or general), include. More complex for weekly/monthly.
-                        if (cl.type === 'Daily' && (isAssignedToStaff || isGeneralChecklist)) {
+                        
+                        // Determine if checklist is relevant for today
+                        let isRelevantToday = false;
+                        if (cl.type === 'Daily') isRelevantToday = true;
+                        else if (cl.type === 'Weekly' && today.getDay() === 1) isRelevantToday = true; // Monday for weekly, simplified
+                        else if (cl.type === 'Monthly' && today.getDate() === 1) isRelevantToday = true; // 1st of month for monthly
+                        else if (cl.type === 'Shift-based' && staffShiftToday !== "Not Scheduled") isRelevantToday = true;
+
+
+                        if (isRelevantToday && (isAssignedToStaff || (isGeneralChecklist && staffShiftToday !== "Not Scheduled") )) { // General tasks only for scheduled staff
                             cl.tasks.forEach(task => {
-                                staffTotalTasksToday++;
-                                overallTotalTasks++;
+                                staffTotalTasksForDay++;
+                                overallTotalAssignedTasks++;
                                 const statusKey = `${cl.id}_${task.id}_${staffMember.id}_${todayStr}`;
-                                const status = D.taskStatuses[statusKey];
-                                if (status && status.completed) {
-                                    staffCompletedTasksToday++;
-                                    overallCompletedTasks++;
-                                } else {
-                                    staffPendingTasksList += `<li class="text-xs text-gray-600">- ${task.text} (${cl.name})</li>`;
-                                }
-                                if (status && status.note) {
+                                const status = D.taskStatuses[statusKey] || { completed: false, note: '' };
+                                let taskCardClass = 'task-pending';
+                                if (status.completed) {
+                                    taskCardClass = 'task-completed';
+                                    staffCompletedTasksForDay++;
+                                    overallCompletedAssignedTasks++;
+                                } else if (status.note) {
+                                    taskCardClass = 'task-pending-note';
                                     overallIssues++;
-                                    recentActivitiesHTML += `<li class="p-2 bg-yellow-50 border border-yellow-200 rounded-md text-xs">${cl.name}: "${task.text}" - NOTE by ${staffMember.name}: ${status.note}</li>`;
                                 }
-                                if (status && !status.completed && status.timestamp) { // Example of missed item
-                                     recentActivitiesHTML += `<li class="p-2 bg-red-50 border border-red-200 rounded-md text-xs">${cl.name}: "${task.text}" was due, not marked by ${staffMember.name}.</li>`;
+                                
+                                staffTasksHTML += `
+                                    <div class="staff-task-card ${taskCardClass}" title="${task.text} - ${cl.name}${status.note ? ` (Note: ${status.note})` : ''}">
+                                        <div class="task-text">${task.text}</div>
+                                        <div class="checklist-name">${cl.name}</div>
+                                    </div>
+                                `;
+                                // For recent activity log
+                                if (status.note && !status.completed) {
+                                     recentActivitiesHTML += `<li class="p-2 bg-yellow-50 border border-yellow-200 rounded-md text-xs">${cl.name}: "${task.text}" - NOTE by ${staffMember.name}: ${status.note}</li>`;
+                                } else if (!status.completed && staffShiftToday !== "Not Scheduled") { // Consider as missed if not completed and staff is/was scheduled
+                                    // This logic for "missed" is simple, real app might need due times.
+                                    // For prototype, any non-complete task for a scheduled staff is potentially "pending/missed"
                                 }
                             });
                         }
                     });
-                    const completionPercentage = staffTotalTasksToday > 0 ? Math.round((staffCompletedTasksToday / staffTotalTasksToday) * 100) : 0;
+
                     staffOverviewHTML += `
-                        <div class="card p-4 non-interactive-card">
+                        <div class="card p-4 non-interactive-card mb-4">
                             <h4 class="font-semibold text-theme-700">${staffMember.name} <span class="text-xs font-normal text-gray-500">(${staffShiftToday})</span></h4>
-                            <div class="mt-2 mb-1 text-xs text-gray-500">Completion: ${completionPercentage}%</div>
-                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${completionPercentage}%;"></div></div>
-                            ${staffPendingTasksList ? `<h5 class="text-xs font-medium text-yellow-600 mt-3 mb-1">Pending:</h5><ul class="space-y-0.5 max-h-20 overflow-y-auto">${staffPendingTasksList}</ul>` : '<p class="text-xs text-green-600 mt-3">All tasks completed!</p>'}
+                            ${staffTotalTasksForDay > 0 ? `
+                                <div class="mt-2 text-xs text-gray-500">${staffCompletedTasksForDay} of ${staffTotalTasksForDay} tasks completed.</div>
+                                <div class="staff-task-lane mt-2">
+                                    ${staffTasksHTML || '<p class="text-xs text-gray-400">No tasks assigned for today.</p>'}
+                                </div>
+                            ` : '<p class="text-xs text-gray-400 mt-2">No tasks assigned for today or not scheduled.</p>'}
                         </div>
                     `;
                 });
                 E.dzDashboardStaffOverviewContainer.innerHTML = staffOverviewHTML || '<p class="text-gray-500">No staff data to display.</p>';
                 
-                const overallCompletionRate = overallTotalTasks > 0 ? Math.round((overallCompletedTasks / overallTotalTasks) * 100) : 0;
+                const overallCompletionRate = overallTotalAssignedTasks > 0 ? Math.round((overallCompletedAssignedTasks / overallTotalAssignedTasks) * 100) : 0;
                 E.dzDashboardCompletionRate.textContent = overallCompletionRate;
-                E.dzDashboardPendingTasks.textContent = overallTotalTasks - overallCompletedTasks;
-                E.dzDashboardReportedIssues.textContent = overallIssues;
+                E.dzDashboardPendingTasks.textContent = overallTotalAssignedTasks - overallCompletedAssignedTasks;
+                E.dzDashboardReportedIssues.textContent = overallIssues; // This counts notes on pending tasks
                 E.dzDashboardRecentActivity.innerHTML = recentActivitiesHTML || '<p class="text-gray-500 text-sm">No notable recent activity.</p>';
                 E.dzNoRecentActivity.classList.toggle('hidden', !!recentActivitiesHTML);
             },
-            populateStaffSelect: function(selectElement) {
-                const D = this.data;
-                selectElement.innerHTML = '<option value="">-- Select Staff --</option>';
-                D.staff.forEach(s => { const option = document.createElement('option'); option.value = s.id; option.textContent = s.name; selectElement.appendChild(option); });
-            },
-            populateStaffSelectForAssignment: function(selectElement) {
-                const D = this.data; selectElement.innerHTML = ''; // No default for multi-select
-                D.staff.forEach(s => { const option = document.createElement('option'); option.value = s.id; option.textContent = s.name; selectElement.appendChild(option); });
-            },
-            renderChecklistsForStaff: function(staffId) {
+            populateStaffSelect: function(selectElement) { const D = this.data; selectElement.innerHTML = '<option value="">-- Select Staff --</option>'; D.staff.forEach(s => { const option = document.createElement('option'); option.value = s.id; option.textContent = s.name; selectElement.appendChild(option); }); },
+            populateStaffSelectForAssignment: function(selectElement) { const D = this.data; selectElement.innerHTML = ''; D.staff.forEach(s => { const option = document.createElement('option'); option.value = s.id; option.textContent = s.name; selectElement.appendChild(option); }); },
+            renderChecklistsForStaff: function(staffId) { /* Logic remains similar, but dashboard is now primary overview */
                 const E = this.elements; const D = this.data;
                 E.dzChecklistsForStaffContainer.innerHTML = '';
                 if (!staffId) { E.dzNoChecklistsForStaff.classList.remove('hidden'); E.dzNoChecklistsForStaff.textContent = "Select a staff member to view their tasks."; return; }
                 E.dzNoChecklistsForStaff.classList.add('hidden');
-
-                const todayStr = new Date().toISOString().slice(0,10);
-                let tasksFound = false;
-
+                const todayStr = new Date().toISOString().slice(0,10); let tasksFound = false;
                 D.checklists.forEach(cl => {
                     const isAssignedToStaff = cl.assignedTo && cl.assignedTo.includes(staffId);
                     const isGeneralChecklist = !cl.assignedTo || cl.assignedTo.length === 0;
-                    // For prototype: show if Daily AND (assigned OR general). Weekly/Monthly logic would be more complex.
-                    if (cl.type === 'Daily' && (isAssignedToStaff || isGeneralChecklist)) {
+                    let isRelevantToday = cl.type === 'Daily' || (cl.type === 'Weekly' && new Date().getDay() === 1) || (cl.type === 'Monthly' && new Date().getDate() === 1) || cl.type === 'Shift-based';
+
+                    if (isRelevantToday && (isAssignedToStaff || isGeneralChecklist)) {
                         tasksFound = true;
                         const checklistCard = document.createElement('div'); checklistCard.className = 'card p-6';
                         let tasksHTML = `<h3 class="text-xl font-semibold text-theme-700 mb-3">${cl.name} <span class="text-xs font-normal text-gray-500">(${cl.type})</span></h3><ul class="space-y-3">`;
@@ -536,184 +597,21 @@
                 E.dzChecklistsForStaffContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener('change', (e) => this.handleTaskCompletion(e)));
                 E.dzChecklistsForStaffContainer.querySelectorAll('button[data-task-name]').forEach(btn => btn.addEventListener('click', (e) => this.openTaskNoteModal(e.currentTarget.dataset)));
             },
-            handleTaskCompletion: function(event) { /* Same as before, re-renders staff checklists and dashboard */
-                const checkbox = event.target; const { clId, taskId, staffId } = checkbox.dataset;
-                const todayStr = new Date().toISOString().slice(0,10); const statusKey = `${clId}_${taskId}_${staffId}_${todayStr}`;
-                if (!this.data.taskStatuses[statusKey]) this.data.taskStatuses[statusKey] = { note: '' };
-                this.data.taskStatuses[statusKey].completed = checkbox.checked; this.data.taskStatuses[statusKey].timestamp = new Date().toISOString();
-                this.saveTaskStatuses(); this.renderChecklistsForStaff(staffId); this.renderDashboard();
-            },
-            openTaskNoteModal: function(dataset) { /* Same as before */
-                const { clId, taskId, staffId, taskName } = dataset; const todayStr = new Date().toISOString().slice(0,10);
-                this.data.currentTaskForNote = { clId, taskId, staffId, dateString: todayStr };
-                const E = this.elements; E.dzTaskNoteModalTaskName.textContent = `Task: ${taskName}`;
-                const statusKey = `${clId}_${taskId}_${staffId}_${todayStr}`;
-                E.dzTaskNoteTextarea.value = this.data.taskStatuses[statusKey]?.note || '';
-                E.dzTaskNoteModal.classList.add('show');
-            },
+            handleTaskCompletion: function(event) { const checkbox = event.target; const { clId, taskId, staffId } = checkbox.dataset; const todayStr = new Date().toISOString().slice(0,10); const statusKey = `${clId}_${taskId}_${staffId}_${todayStr}`; if (!this.data.taskStatuses[statusKey]) this.data.taskStatuses[statusKey] = { note: '' }; this.data.taskStatuses[statusKey].completed = checkbox.checked; this.data.taskStatuses[statusKey].timestamp = new Date().toISOString(); this.saveTaskStatuses(); this.renderChecklistsForStaff(staffId); this.renderDashboard(); },
+            openTaskNoteModal: function(dataset) { const { clId, taskId, staffId, taskName } = dataset; const todayStr = new Date().toISOString().slice(0,10); this.data.currentTaskForNote = { clId, taskId, staffId, dateString: todayStr }; const E = this.elements; E.dzTaskNoteModalTaskName.textContent = `Task: ${taskName}`; const statusKey = `${clId}_${taskId}_${staffId}_${todayStr}`; E.dzTaskNoteTextarea.value = this.data.taskStatuses[statusKey]?.note || ''; E.dzTaskNoteModal.classList.add('show'); },
             closeTaskNoteModal: function() { this.elements.dzTaskNoteModal.classList.remove('show'); this.data.currentTaskForNote = null; },
-            saveTaskNote: function() { /* Same as before, re-renders staff checklists and dashboard */
-                const { clId, taskId, staffId, dateString } = this.data.currentTaskForNote;
-                const statusKey = `${clId}_${taskId}_${staffId}_${dateString}`;
-                const noteText = this.elements.dzTaskNoteTextarea.value.trim();
-                if (!this.data.taskStatuses[statusKey]) this.data.taskStatuses[statusKey] = { completed: false };
-                this.data.taskStatuses[statusKey].note = noteText; this.saveTaskStatuses();
-                this.renderChecklistsForStaff(staffId); this.renderDashboard(); this.closeTaskNoteModal();
-            },
-            renderManageChecklists: function() { /* Updated to show assigned staff */
-                const E = this.elements; const D = this.data; E.dzChecklistManagementContainer.innerHTML = '';
-                if (D.checklists.length === 0) { E.dzNoChecklistsToManage.classList.remove('hidden'); return; }
-                E.dzNoChecklistsToManage.classList.add('hidden');
-                D.checklists.forEach(cl => {
-                    const card = document.createElement('div'); card.className = 'card p-4';
-                    let tasksPreview = cl.tasks.slice(0, 2).map(t => `<li class="text-xs text-gray-500">- ${t.text}</li>`).join('');
-                    if (cl.tasks.length > 2) tasksPreview += '<li class="text-xs text-gray-500">...and more</li>';
-                    let assignedStaffNames = 'General';
-                    if (cl.assignedTo && cl.assignedTo.length > 0) {
-                        assignedStaffNames = cl.assignedTo.map(staffId => D.staff.find(s => s.id === staffId)?.name || 'Unknown').join(', ');
-                    }
-                    card.innerHTML = `<div class="flex justify-between items-start"><div class="flex-1"><h4 class="text-lg font-semibold text-theme-700">${cl.name} <span class="text-xs font-normal text-gray-400">(${cl.type})</span></h4><p class="text-xs text-blue-500 mt-1">Assigned to: ${assignedStaffNames}</p><ul class="mt-1">${tasksPreview}</ul></div><div class="space-x-2 flex-shrink-0"><button class="btn btn-secondary btn-sm py-1 px-2 text-xs" onclick="dashZingApp.openCreateChecklistModal('${cl.id}')">Edit</button><button class="btn btn-danger btn-sm py-1 px-2 text-xs" onclick="dashZingApp.deleteChecklist('${cl.id}')">Delete</button></div></div>`;
-                    E.dzChecklistManagementContainer.appendChild(card);
-                });
-            },
-            openCreateChecklistModal: function(checklistId = null) { /* Updated for assignment */
-                const E = this.elements; const D = this.data; E.dzCreateChecklistForm.reset();
-                E.dzTasksContainer.innerHTML = '<label class="block text-sm font-medium text-gray-600 mb-1">Tasks</label>';
-                D.currentChecklistEditId = checklistId;
-                this.populateStaffSelectForAssignment(E.dzChecklistAssignedTo); // Populate staff for assignment
-
-                if (checklistId) {
-                    const checklist = D.checklists.find(cl => cl.id === checklistId);
-                    if (checklist) {
-                        E.dzChecklistName.value = checklist.name; E.dzChecklistType.value = checklist.type;
-                        checklist.tasks.forEach(task => this.addTaskToModalForm(task.text, task.id));
-                        // Select assigned staff in multi-select
-                        if (checklist.assignedTo) {
-                            Array.from(E.dzChecklistAssignedTo.options).forEach(option => {
-                                if (checklist.assignedTo.includes(option.value)) option.selected = true;
-                                else option.selected = false;
-                            });
-                        }
-                    }
-                } else { this.addTaskToModalForm(); Array.from(E.dzChecklistAssignedTo.options).forEach(opt => opt.selected = false); }
-                E.dzCreateChecklistModal.classList.add('show');
-            },
+            saveTaskNote: function() { const { clId, taskId, staffId, dateString } = this.data.currentTaskForNote; const statusKey = `${clId}_${taskId}_${staffId}_${dateString}`; const noteText = this.elements.dzTaskNoteTextarea.value.trim(); if (!this.data.taskStatuses[statusKey]) this.data.taskStatuses[statusKey] = { completed: false }; this.data.taskStatuses[statusKey].note = noteText; this.saveTaskStatuses(); this.renderChecklistsForStaff(staffId); this.renderDashboard(); this.closeTaskNoteModal(); },
+            renderManageChecklists: function() { const E = this.elements; const D = this.data; E.dzChecklistManagementContainer.innerHTML = ''; if (D.checklists.length === 0) { E.dzNoChecklistsToManage.classList.remove('hidden'); return; } E.dzNoChecklistsToManage.classList.add('hidden'); D.checklists.forEach(cl => { const card = document.createElement('div'); card.className = 'card p-4'; let tasksPreview = cl.tasks.slice(0, 2).map(t => `<li class="text-xs text-gray-500">- ${t.text}</li>`).join(''); if (cl.tasks.length > 2) tasksPreview += '<li class="text-xs text-gray-500">...and more</li>'; let assignedStaffNames = 'General'; if (cl.assignedTo && cl.assignedTo.length > 0) { assignedStaffNames = cl.assignedTo.map(staffId => D.staff.find(s => s.id === staffId)?.name || 'Unknown').join(', '); } card.innerHTML = `<div class="flex justify-between items-start"><div class="flex-1"><h4 class="text-lg font-semibold text-theme-700">${cl.name} <span class="text-xs font-normal text-gray-400">(${cl.type})</span></h4><p class="text-xs text-blue-500 mt-1">Assigned to: ${assignedStaffNames}</p><ul class="mt-1">${tasksPreview}</ul></div><div class="space-x-2 flex-shrink-0"><button class="btn btn-secondary btn-sm py-1 px-2 text-xs" onclick="dashZingApp.openCreateChecklistModal('${cl.id}')">Edit</button><button class="btn btn-danger btn-sm py-1 px-2 text-xs" onclick="dashZingApp.deleteChecklist('${cl.id}')">Delete</button></div></div>`; E.dzChecklistManagementContainer.appendChild(card); }); },
+            openCreateChecklistModal: function(checklistId = null) { const E = this.elements; const D = this.data; E.dzCreateChecklistForm.reset(); E.dzTasksContainer.innerHTML = '<label class="block text-sm font-medium text-gray-600 mb-1">Tasks</label>'; D.currentChecklistEditId = checklistId; this.populateStaffSelectForAssignment(E.dzChecklistAssignedTo); if (checklistId) { const checklist = D.checklists.find(cl => cl.id === checklistId); if (checklist) { E.dzChecklistName.value = checklist.name; E.dzChecklistType.value = checklist.type; checklist.tasks.forEach(task => this.addTaskToModalForm(task.text, task.id)); if (checklist.assignedTo) { Array.from(E.dzChecklistAssignedTo.options).forEach(option => { option.selected = checklist.assignedTo.includes(option.value); }); } } } else { this.addTaskToModalForm(); Array.from(E.dzChecklistAssignedTo.options).forEach(opt => opt.selected = false); } E.dzCreateChecklistModal.classList.add('show'); },
             closeCreateChecklistModal: function() { this.elements.dzCreateChecklistModal.classList.remove('show'); this.data.currentChecklistEditId = null; },
-            addTaskToModalForm: function(taskText = '', taskId = null) { /* Same as before */
-                const E = this.elements; const taskDiv = document.createElement('div'); taskDiv.className = 'flex items-center space-x-2 mb-2';
-                const input = document.createElement('input'); input.type = 'text'; input.className = 'input-field flex-grow dz-task-input'; input.placeholder = 'Task description'; input.value = taskText;
-                if(taskId) input.dataset.taskId = taskId;
-                const removeBtn = document.createElement('button'); removeBtn.type = 'button'; removeBtn.className = 'btn btn-danger btn-sm p-1.5 text-xs'; removeBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'; removeBtn.onclick = () => taskDiv.remove();
-                taskDiv.appendChild(input); taskDiv.appendChild(removeBtn); E.dzTasksContainer.appendChild(taskDiv);
-            },
-            handleSaveChecklist: function(event) { /* Updated for assignment */
-                event.preventDefault(); const E = this.elements; const D = this.data;
-                const name = E.dzChecklistName.value.trim(); const type = E.dzChecklistType.value;
-                const taskInputs = E.dzTasksContainer.querySelectorAll('.dz-task-input'); const tasks = [];
-                taskInputs.forEach(input => { const text = input.value.trim(); if (text) { tasks.push({ id: input.dataset.taskId || 'task_' + Date.now() + Math.random().toString(16).slice(2), text: text }); } });
-                
-                const assignedTo = Array.from(E.dzChecklistAssignedTo.selectedOptions).map(option => option.value);
-
-                if (!name || tasks.length === 0) { pawtektadoApp.showMessageModal('Checklist name and at least one task are required.', 'error'); return; }
-                if (D.currentChecklistEditId) { const index = D.checklists.findIndex(cl => cl.id === D.currentChecklistEditId); if (index > -1) { D.checklists[index] = { ...D.checklists[index], name, type, tasks, assignedTo }; } }
-                else { D.checklists.push({ id: 'cl_' + Date.now(), name, type, tasks, assignedTo }); }
-                this.saveChecklists(); this.renderManageChecklists(); this.closeCreateChecklistModal();
-                pawtektadoApp.showMessageModal('Checklist saved successfully!', 'success');
-            },
-            deleteChecklist: function(checklistId) { /* Same as before */
-                 pawtektadoApp.showConfirmationModal('Are you sure you want to delete this checklist?', () => {
-                    this.data.checklists = this.data.checklists.filter(cl => cl.id !== checklistId);
-                    Object.keys(this.data.taskStatuses).forEach(key => { if (key.startsWith(checklistId + '_')) delete this.data.taskStatuses[key]; });
-                    this.saveChecklists(); this.saveTaskStatuses(); this.renderManageChecklists(); this.renderDashboard();
-                    pawtektadoApp.showMessageModal('Checklist deleted.', 'info');
-                });
-            },
-            // --- Schedule Module Functions ---
-            renderScheduleBuilder: function() {
-                const E = this.elements; const D = this.data;
-                E.dzScheduleBuilderContainer.innerHTML = '';
-                const weekDays = this.getWeekDays(D.currentScheduleWeekStart);
-
-                weekDays.forEach(day => {
-                    const dayStr = day.toISOString().slice(0,10);
-                    const dayCard = document.createElement('div');
-                    dayCard.className = 'schedule-day-card';
-                    let assignmentsHTML = '';
-                    D.staff.forEach(staff => {
-                        const shift = D.schedules[dayStr]?.[staff.id] || '';
-                        assignmentsHTML += `
-                            <div class="shift-assignment mb-2">
-                                <label class="text-xs text-gray-600 block">${staff.name}:</label>
-                                <input type="text" value="${shift}" data-day="${dayStr}" data-staff-id="${staff.id}" 
-                                       class="input-field text-xs p-1 w-full dz-shift-input" placeholder="e.g., 9AM-5PM">
-                            </div>
-                        `;
-                    });
-                    dayCard.innerHTML = `<h4>${day.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}</h4><ul>${assignmentsHTML}</ul>`;
-                    E.dzScheduleBuilderContainer.appendChild(dayCard);
-                });
-                // Add event listeners for shift inputs after rendering
-                E.dzScheduleBuilderContainer.querySelectorAll('.dz-shift-input').forEach(input => {
-                    input.addEventListener('change', (e) => this.updateShift(e.target.dataset.day, e.target.dataset.staffId, e.target.value));
-                });
-            },
-            updateShift: function(dayStr, staffId, shiftValue) {
-                const D = this.data;
-                if (!D.schedules[dayStr]) D.schedules[dayStr] = {};
-                if (shiftValue.trim() === '') delete D.schedules[dayStr][staffId];
-                else D.schedules[dayStr][staffId] = shiftValue.trim();
-                // No immediate save, saved on "Publish"
-            },
-            copyLastWeekSchedule: function() {
-                const D = this.data;
-                const currentWeekStartStr = D.currentScheduleWeekStart.toISOString().slice(0,10);
-                const lastWeekStartDate = new Date(D.currentScheduleWeekStart);
-                lastWeekStartDate.setDate(D.currentScheduleWeekStart.getDate() - 7);
-                
-                const weekDaysCurrent = this.getWeekDays(D.currentScheduleWeekStart);
-                const weekDaysLast = this.getWeekDays(lastWeekStartDate);
-
-                for(let i=0; i<7; i++) {
-                    const currentDayStr = weekDaysCurrent[i].toISOString().slice(0,10);
-                    const lastWeekDayStr = weekDaysLast[i].toISOString().slice(0,10);
-                    if (D.schedules[lastWeekDayStr]) {
-                        D.schedules[currentDayStr] = JSON.parse(JSON.stringify(D.schedules[lastWeekDayStr]));
-                    } else {
-                        delete D.schedules[currentDayStr]; // Clear if no data from last week
-                    }
-                }
-                this.renderScheduleBuilder(); // Re-render with copied data
-                pawtektadoApp.showMessageModal('Last week\'s schedule copied. Review and publish.', 'info');
-            },
-            publishSchedule: function() {
-                this.saveSchedules(); // Save current state of D.schedules
-                this.renderStaffSpecificSchedule(this.elements.dzScheduleStaffSelect.value); // Update staff view
-                this.renderDashboard(); // Update dashboard with potentially new shifts
-                pawtektadoApp.showMessageModal('Schedule published successfully!', 'success');
-            },
-            renderStaffSpecificSchedule: function(staffId) {
-                const E = this.elements; const D = this.data;
-                E.dzStaffScheduleList.innerHTML = '';
-                E.dzStaffScheduleWeekDisplay.textContent = D.currentScheduleWeekStart.toLocaleDateString([], { month: 'short', day: 'numeric' });
-
-                if (!staffId) { E.dzNoScheduleForStaff.classList.remove('hidden'); return; }
-                E.dzNoScheduleForStaff.classList.add('hidden');
-
-                const weekDays = this.getWeekDays(D.currentScheduleWeekStart);
-                let scheduledThisWeek = false;
-                weekDays.forEach(day => {
-                    const dayStr = day.toISOString().slice(0,10);
-                    const shift = D.schedules[dayStr]?.[staffId];
-                    if (shift) {
-                        scheduledThisWeek = true;
-                        const li = document.createElement('li');
-                        li.className = "text-sm p-2 border-b border-gray-200";
-                        li.innerHTML = `<span class="font-medium">${day.toLocaleDateString([], { weekday: 'long' })}:</span> ${shift}`;
-                        E.dzStaffScheduleList.appendChild(li);
-                    }
-                });
-                if (!scheduledThisWeek) E.dzNoScheduleForStaff.classList.remove('hidden');
-            }
+            addTaskToModalForm: function(taskText = '', taskId = null) { const E = this.elements; const taskDiv = document.createElement('div'); taskDiv.className = 'flex items-center space-x-2 mb-2'; const input = document.createElement('input'); input.type = 'text'; input.className = 'input-field flex-grow dz-task-input'; input.placeholder = 'Task description'; input.value = taskText; if(taskId) input.dataset.taskId = taskId; const removeBtn = document.createElement('button'); removeBtn.type = 'button'; removeBtn.className = 'btn btn-danger btn-sm p-1.5 text-xs'; removeBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'; removeBtn.onclick = () => taskDiv.remove(); taskDiv.appendChild(input); taskDiv.appendChild(removeBtn); E.dzTasksContainer.appendChild(taskDiv); },
+            handleSaveChecklist: function(event) { event.preventDefault(); const E = this.elements; const D = this.data; const name = E.dzChecklistName.value.trim(); const type = E.dzChecklistType.value; const taskInputs = E.dzTasksContainer.querySelectorAll('.dz-task-input'); const tasks = []; taskInputs.forEach(input => { const text = input.value.trim(); if (text) { tasks.push({ id: input.dataset.taskId || 'task_' + Date.now() + Math.random().toString(16).slice(2), text: text }); } }); const assignedTo = Array.from(E.dzChecklistAssignedTo.selectedOptions).map(option => option.value); if (!name || tasks.length === 0) { pawtektadoApp.showMessageModal('Checklist name and at least one task are required.', 'error'); return; } if (D.currentChecklistEditId) { const index = D.checklists.findIndex(cl => cl.id === D.currentChecklistEditId); if (index > -1) { D.checklists[index] = { ...D.checklists[index], name, type, tasks, assignedTo }; } } else { D.checklists.push({ id: 'cl_' + Date.now(), name, type, tasks, assignedTo }); } this.saveChecklists(); this.renderManageChecklists(); this.closeCreateChecklistModal(); pawtektadoApp.showMessageModal('Checklist saved successfully!', 'success'); this.renderDashboard(); /* Refresh dashboard after checklist change */ },
+            deleteChecklist: function(checklistId) { pawtektadoApp.showConfirmationModal('Are you sure you want to delete this checklist?', () => { this.data.checklists = this.data.checklists.filter(cl => cl.id !== checklistId); Object.keys(this.data.taskStatuses).forEach(key => { if (key.startsWith(checklistId + '_')) delete this.data.taskStatuses[key]; }); this.saveChecklists(); this.saveTaskStatuses(); this.renderManageChecklists(); this.renderDashboard(); pawtektadoApp.showMessageModal('Checklist deleted.', 'info'); }); },
+            renderScheduleBuilder: function() { const E = this.elements; const D = this.data; E.dzScheduleBuilderContainer.innerHTML = ''; const weekDays = this.getWeekDays(D.currentScheduleWeekStart); weekDays.forEach(day => { const dayStr = day.toISOString().slice(0,10); const dayCard = document.createElement('div'); dayCard.className = 'schedule-day-card'; let assignmentsHTML = ''; D.staff.forEach(staff => { const shift = D.schedules[dayStr]?.[staff.id] || ''; assignmentsHTML += `<div class="shift-assignment mb-2"><label class="text-xs text-gray-600 block">${staff.name}:</label><input type="text" value="${shift}" data-day="${dayStr}" data-staff-id="${staff.id}" class="input-field text-xs p-1 w-full dz-shift-input" placeholder="e.g., 9AM-5PM"></div>`; }); dayCard.innerHTML = `<h4>${day.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}</h4><ul>${assignmentsHTML}</ul>`; E.dzScheduleBuilderContainer.appendChild(dayCard); }); E.dzScheduleBuilderContainer.querySelectorAll('.dz-shift-input').forEach(input => { input.addEventListener('change', (e) => this.updateShift(e.target.dataset.day, e.target.dataset.staffId, e.target.value)); }); },
+            updateShift: function(dayStr, staffId, shiftValue) { const D = this.data; if (!D.schedules[dayStr]) D.schedules[dayStr] = {}; if (shiftValue.trim() === '') delete D.schedules[dayStr][staffId]; else D.schedules[dayStr][staffId] = shiftValue.trim(); /* No immediate save */ },
+            copyLastWeekSchedule: function() { const D = this.data; const lastWeekStartDate = new Date(D.currentScheduleWeekStart); lastWeekStartDate.setDate(D.currentScheduleWeekStart.getDate() - 7); const weekDaysCurrent = this.getWeekDays(D.currentScheduleWeekStart); const weekDaysLast = this.getWeekDays(lastWeekStartDate); for(let i=0; i<7; i++) { const currentDayStr = weekDaysCurrent[i].toISOString().slice(0,10); const lastWeekDayStr = weekDaysLast[i].toISOString().slice(0,10); if (D.schedules[lastWeekDayStr]) { D.schedules[currentDayStr] = JSON.parse(JSON.stringify(D.schedules[lastWeekDayStr])); } else { delete D.schedules[currentDayStr]; } } this.renderScheduleBuilder(); pawtektadoApp.showMessageModal('Last week\'s schedule copied. Review and publish.', 'info'); },
+            publishSchedule: function() { this.saveSchedules(); this.renderStaffSpecificSchedule(this.elements.dzScheduleStaffSelect.value); this.renderDashboard(); pawtektadoApp.showMessageModal('Schedule published successfully!', 'success'); },
+            renderStaffSpecificSchedule: function(staffId) { const E = this.elements; const D = this.data; E.dzStaffScheduleList.innerHTML = ''; E.dzStaffScheduleWeekDisplay.textContent = D.currentScheduleWeekStart.toLocaleDateString([], { month: 'short', day: 'numeric' }); if (!staffId) { E.dzNoScheduleForStaff.classList.remove('hidden'); return; } E.dzNoScheduleForStaff.classList.add('hidden'); const weekDays = this.getWeekDays(D.currentScheduleWeekStart); let scheduledThisWeek = false; weekDays.forEach(day => { const dayStr = day.toISOString().slice(0,10); const shift = D.schedules[dayStr]?.[staffId]; if (shift) { scheduledThisWeek = true; const li = document.createElement('li'); li.className = "text-sm p-2 border-b border-gray-200"; li.innerHTML = `<span class="font-medium">${day.toLocaleDateString([], { weekday: 'long' })}:</span> ${shift}`; E.dzStaffScheduleList.appendChild(li); } }); if (!scheduledThisWeek) E.dzNoScheduleForStaff.classList.remove('hidden'); }
         };
 
         // --- Global Event Listeners & Initializations ---
