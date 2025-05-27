@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawtektado - Pet Care Agent</title>
+    <title>Pawtektado - Pet Care Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -16,11 +16,18 @@
             transition: all 0.3s ease;
             border-bottom-width: 3px;
             border-color: transparent;
+            padding: 0.75rem 0.5rem; /* Adjusted padding for more tabs */
+            font-size: 0.8rem; /* Adjusted font size */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .tab-button {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem; /* sm */
+            }
         }
         .tab-button.active {
             border-color: #3b82f6; /* Blue-500 */
             color: #3b82f6;
-            /* background-color: #eff6ff; */ /* Removed background for a cleaner look */
         }
         .tab-button:hover {
             background-color: #e5e7eb; /* gray-200 */
@@ -32,109 +39,53 @@
             box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.07), 0 2px 8px -1px rgba(0, 0, 0, 0.04);
             transition: box-shadow 0.3s ease;
         }
-        .card:hover {
+        .card:hover:not(.non-interactive-card) { /* Add non-interactive-card class to cards that shouldn't have hover zoom */
             box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.07), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
         }
-        .modal {
-            display: none; /* Hidden by default */
-        }
-        .modal.show {
-            display: flex; /* Show when active */
-        }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e5e7eb; /* gray-200 */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #9ca3af; /* gray-400 */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280; /* gray-500 */
-        }
+        .modal { display: none; }
+        .modal.show { display: flex; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
         .list-item {
-            background-color: #f9fafb; /* gray-50 */
-            padding: 1rem 1.25rem; 
-            border-radius: 0.5rem; /* rounded-md */
-            border: 1px solid #e5e7eb; /* border-gray-200 */
+            background-color: #f9fafb; padding: 1rem 1.25rem; 
+            border-radius: 0.5rem; border: 1px solid #e5e7eb;
             transition: background-color 0.2s ease;
         }
-        .list-item:hover {
-            background-color: #f3f4f6; /* gray-100 */
-        }
-        .icon-sm {
-            width: 1.25rem; /* 20px */
-            height: 1.25rem; /* 20px */
-            margin-right: 0.5rem; /* 8px */
-        }
-        .icon-md {
-            width: 1.5rem; /* 24px */
-            height: 1.5rem; /* 24px */
-            margin-right: 0.5rem; /* 8px */
-        }
+        .list-item:hover { background-color: #f3f4f6; }
+        .icon-sm { width: 1.1rem; height: 1.1rem; margin-right: 0.35rem; }
+         @media (min-width: 768px) { .icon-sm { width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;} }
+        .icon-md { width: 1.5rem; height: 1.5rem; margin-right: 0.5rem; }
         .btn {
-            padding: 0.625rem 1.25rem; /* 10px 20px */
-            border-radius: 0.5rem; /* 8px */
-            font-weight: 600;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            padding: 0.625rem 1.25rem; border-radius: 0.5rem; font-weight: 600;
+            transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center;
             box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
         }
-        .btn-primary {
-            background-color: #3b82f6; /* blue-500 */
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #2563eb; /* blue-600 */
-        }
-        .btn-secondary {
-            background-color: #e5e7eb; /* gray-200 */
-            color: #374151; /* gray-700 */
-        }
-        .btn-secondary:hover {
-            background-color: #d1d5db; /* gray-300 */
-        }
-        .btn-danger {
-            background-color: #ef4444; /* red-500 */
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: #dc2626; /* red-600 */
-        }
-        .btn-success {
-            background-color: #22c55e; /* green-500 */
-            color: white;
-        }
-        .btn-success:hover {
-            background-color: #16a34a; /* green-600 */
-        }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #e5e7eb; color: #374151; }
+        .btn-secondary:hover { background-color: #d1d5db; }
+        .btn-danger { background-color: #ef4444; color: white; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-success { background-color: #22c55e; color: white; }
+        .btn-success:hover { background-color: #16a34a; }
         .input-field {
-            margin-top: 0.25rem;
-            display: block;
-            width: 100%;
-            padding: 0.625rem 0.75rem; /* 10px 12px */
-            border: 1px solid #d1d5db; /* gray-300 */
-            border-radius: 0.5rem; /* 8px */
+            margin-top: 0.25rem; display: block; width: 100%; padding: 0.625rem 0.75rem;
+            border: 1px solid #d1d5db; border-radius: 0.5rem; 
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .input-field:focus {
-            outline: none;
-            border-color: #3b82f6; /* blue-500 */
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* blue-500 with opacity */
+            outline: none; border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
-        .empty-state-icon {
-            width: 4rem; /* 64px */
-            height: 4rem; /* 64px */
-            color: #9ca3af; /* gray-400 */
-            margin-bottom: 1rem;
+        .empty-state-icon { width: 4rem; height: 4rem; color: #9ca3af; margin-bottom: 1rem; }
+        .modal-content {
+            background-color: white; padding: 1.5rem; border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            width: 100%; max-width: 500px; /* Default max-width for modals */
+            max-height: 90vh; overflow-y: auto;
         }
     </style>
 </head>
@@ -145,76 +96,103 @@
                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 14.5c0 .69.56 1.25 1.25 1.25h6.5c.69 0 1.25-.56 1.25-1.25S16.19 13.25 15.5 13.25h-6.5c-.69 0-1.25.56-1.25 1.25zM9 10.75s.5-1 1.5-1 1.5 1 1.5 1M13.5 10.75s.5-1 1.5-1 1.5 1 1.5 1"></path></svg>
             </div>
             <h1 class="text-4xl md:text-5xl font-bold text-blue-600">Pawtektado</h1>
-            <p class="text-gray-500 mt-3 text-lg">Your Pet Care Agent Manage needs, bookings, and history with ease.</p>
+            <p class="text-gray-500 mt-3 text-lg">Your Pet Care Companion. Manage needs, bookings, and history with ease.</p>
         </header>
 
-        <nav class="mb-10 bg-white p-2 rounded-lg shadow-md">
+        <nav class="mb-10 bg-white p-1 md:p-2 rounded-lg shadow-md">
             <div class="flex border-b border-gray-200 flex-wrap justify-center">
-                <button id="tabMyPets" class="tab-button flex-1 py-3 px-2 md:px-4 text-sm md:text-base text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none active inline-flex items-center justify-center" onclick="showSection('myPetsSection')">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <button id="tabMyPets" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none active inline-flex items-center justify-center" onclick="showSection('myPetsSection')">
+                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                     My Pets
                 </button>
-                <button id="tabAddPet" class="tab-button flex-1 py-3 px-2 md:px-4 text-sm md:text-base text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('addPetSection')">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Add Pet
+                <button id="tabMissingPets" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('missingPetsSection')">
+                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                    Missing
                 </button>
-                <button id="tabBookings" class="tab-button flex-1 py-3 px-2 md:px-4 text-sm md:text-base text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('bookingsSection')">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <button id="tabPetEvents" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('petEventsSection')">
+                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                    Events
+                </button>
+                 <button id="tabAdoption" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('adoptionSection')">
+                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path></svg>
+                    Adoption
+                </button>
+                <button id="tabBookings" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('bookingsSection')">
+                    <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
                     Bookings
                 </button>
-                <button id="tabPetHistory" class="tab-button flex-1 py-3 px-2 md:px-4 text-sm md:text-base text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('petHistorySection')">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Pet History
+                <button id="tabPetHistory" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('petHistorySection')">
+                     <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                    History
                 </button>
-                <button id="tabProviders" class="tab-button flex-1 py-3 px-2 md:px-4 text-sm md:text-base text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('providersSection')">
-                     <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                <button id="tabDiscountsPromos" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('discountsPromosSection')">
+                     <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                    Promos
+                </button>
+                <button id="tabProviders" class="tab-button flex-1 text-center font-semibold text-gray-500 hover:text-blue-500 focus:outline-none inline-flex items-center justify-center" onclick="showSection('providersSection')">
+                     <svg class="icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     Providers
                 </button>
             </div>
         </nav>
 
         <section id="myPetsSection" class="space-y-6">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">My Beloved Pets</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-semibold text-gray-800">My Beloved Pets</h2>
+                <button id="openAddPetModalButton" class="btn btn-primary">
+                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Add New Pet
+                </button>
+            </div>
             <div id="petsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 </div>
             <div id="noPetsMessage" class="text-center py-10 card hidden">
                 <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
                 <p class="text-gray-500 text-lg">You haven't added any pets yet.</p>
-                <button class="btn btn-primary mt-4" onclick="showSection('addPetSection')">
+                <button class="btn btn-primary mt-4" onclick="document.getElementById('openAddPetModalButton').click()">
                     <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     Add Your First Pet
                 </button>
             </div>
         </section>
+        
+        <div id="addPetModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="modal-content">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h2 class="text-2xl font-semibold text-gray-800">Introduce a New Friend</h2>
+                    <button id="closeAddPetModalButton" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button>
+                </div>
+                <form id="addPetForm" class="space-y-6">
+                    <div>
+                        <label for="petName" class="block text-sm font-medium text-gray-600">Pet's Name</label>
+                        <input type="text" id="petName" name="petName" required class="input-field">
+                    </div>
+                    <div>
+                        <label for="petBreed" class="block text-sm font-medium text-gray-600">Breed / Species</label>
+                        <input type="text" id="petBreed" name="petBreed" required class="input-field">
+                    </div>
+                    <div>
+                        <label for="petAge" class="block text-sm font-medium text-gray-600">Age (e.g., 2 years, 5 months)</label>
+                        <input type="text" id="petAge" name="petAge" class="input-field">
+                    </div>
+                    <div>
+                        <label for="petPhoto" class="block text-sm font-medium text-gray-600">Photo URL (Optional)</label>
+                        <input type="url" id="petPhoto" name="petPhoto" placeholder="https://example.com/your-pet.jpg" class="input-field">
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="cancelAddPetButton" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Add This Pet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        <section id="addPetSection" class="hidden space-y-6 card p-6 md:p-8">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Introduce a New Friend</h2>
-            <form id="addPetForm" class="space-y-6">
-                <div>
-                    <label for="petName" class="block text-sm font-medium text-gray-600">Pet's Name</label>
-                    <input type="text" id="petName" name="petName" required class="input-field">
-                </div>
-                <div>
-                    <label for="petBreed" class="block text-sm font-medium text-gray-600">Breed / Species</label>
-                    <input type="text" id="petBreed" name="petBreed" required class="input-field">
-                </div>
-                <div>
-                    <label for="petAge" class="block text-sm font-medium text-gray-600">Age (e.g., 2 years, 5 months)</label>
-                    <input type="text" id="petAge" name="petAge" class="input-field">
-                </div>
-                <div>
-                    <label for="petPhoto" class="block text-sm font-medium text-gray-600">Photo URL (Optional)</label>
-                    <input type="url" id="petPhoto" name="petPhoto" placeholder="https://example.com/your-pet.jpg" class="input-field">
-                </div>
-                <button type="submit" class="btn btn-primary w-full">
-                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Add This Pet
-                </button>
-            </form>
-        </section>
 
         <section id="petDetailsSection" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center p-4 z-50 modal backdrop-blur-sm">
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto card">
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto card non-interactive-card">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                     <h2 id="detailsPetName" class="text-3xl font-bold text-blue-600"></h2>
                     <button onclick="closePetDetails()" class="text-gray-400 hover:text-gray-600 text-3xl transition-colors">&times;</button>
@@ -231,15 +209,14 @@
                                 <svg class="icon-md text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
                                 Needs & Reminders
                             </h3>
-                            <div id="needsList" class="space-y-3 max-h-64 overflow-y-auto pr-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
-                                </div>
+                            <div id="needsList" class="space-y-3 max-h-64 overflow-y-auto pr-2 bg-gray-50 p-3 rounded-lg border border-gray-200"></div>
                             <p id="noNeedsMessage" class="text-gray-500 text-sm hidden p-4 text-center">No needs recorded yet. Add one below!</p>
                         </div>
                         <form id="addNeedForm" class="space-y-4 border-t border-gray-200 pt-4">
                             <input type="hidden" id="currentPetId">
                             <h4 class="text-lg font-semibold text-gray-700">Add New Need/Reminder</h4>
                             <div>
-                                <label for="needDescription" class="block text-sm font-medium text-gray-600">Description (e.g., Vet Appointment, Vaccination)</label>
+                                <label for="needDescription" class="block text-sm font-medium text-gray-600">Description</label>
                                 <input type="text" id="needDescription" required class="input-field">
                             </div>
                             <div>
@@ -249,7 +226,7 @@
                              <div>
                                 <label for="needProvider" class="block text-sm font-medium text-gray-600">Service Provider (Optional)</label>
                                 <select id="needProvider" class="input-field">
-                                    <option value="">None</option>
+                                    <option value="">None (General Reminder)</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-success w-full">
@@ -266,10 +243,56 @@
             </div>
         </section>
 
+        <section id="missingPetsSection" class="hidden space-y-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-semibold text-gray-800">Missing Pets</h2>
+                <button class="btn btn-primary" onclick="showMessageModal('Report Missing Pet form would appear here.', 'info')">
+                     <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Report Missing Pet
+                </button>
+            </div>
+            <div id="missingPetsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div id="noMissingPetsMessage" class="text-center py-10 card hidden">
+                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <p class="text-gray-500 text-lg">No missing pets reported currently. We hope it stays this way!</p>
+            </div>
+        </section>
+
+        <section id="petEventsSection" class="hidden space-y-6">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Upcoming Pet Events</h2>
+            <div id="petEventsListContainer" class="space-y-4"></div>
+            <div id="noPetEventsMessage" class="text-center py-10 card hidden">
+                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <p class="text-gray-500 text-lg">No upcoming pet events listed at the moment. Check back soon!</p>
+            </div>
+        </section>
+
+        <section id="discountsPromosSection" class="hidden space-y-6">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Pet Store Discounts & Promos</h2>
+            <div id="discountsPromosListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div id="noDiscountsPromosMessage" class="text-center py-10 card hidden">
+                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <p class="text-gray-500 text-lg">No discounts or promos available right now. Stay tuned!</p>
+            </div>
+        </section>
+
+        <section id="adoptionSection" class="hidden space-y-6">
+             <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-semibold text-gray-800">Adopt a Friend</h2>
+                <button class="btn btn-success" onclick="showMessageModal('Feature to list a pet for adoption would be here.', 'info')">
+                     <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    List for Adoption
+                </button>
+            </div>
+            <div id="adoptionListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="noAdoptionMessage" class="text-center py-10 card hidden">
+                <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <p class="text-gray-500 text-lg">No pets listed for adoption currently. Many furry friends are waiting in shelters!</p>
+            </div>
+        </section>
         <section id="bookingsSection" class="hidden space-y-6">
             <h2 class="text-3xl font-semibold text-gray-800 mb-6">Upcoming Bookings</h2>
-            <div id="bookingsListContainer" class="space-y-4">
-                </div>
+            <div id="bookingsListContainer" class="space-y-4"></div>
             <div id="noBookingsMessage" class="text-center py-10 card hidden">
                 <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 <p class="text-gray-500 text-lg">No current bookings found.</p>
@@ -278,8 +301,7 @@
 
         <section id="petHistorySection" class="hidden space-y-6">
             <h2 class="text-3xl font-semibold text-gray-800 mb-6">Pet Care History</h2>
-            <div id="petHistoryListContainer" class="space-y-4">
-                </div>
+            <div id="petHistoryListContainer" class="space-y-4"></div>
             <div id="noHistoryMessage" class="text-center py-10 card hidden">
                  <svg class="empty-state-icon mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <p class="text-gray-500 text-lg">No pet history found yet.</p>
@@ -289,20 +311,19 @@
         <section id="providersSection" class="hidden space-y-6">
             <h2 class="text-3xl font-semibold text-gray-800 mb-6">Find Service Providers</h2>
             <p class="text-sm text-gray-500 mb-6 -mt-4">Connect with local vets and pet service providers. (Sample Data)</p>
-            <div id="providersListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                </div>
+            <div id="providersListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
+
         <div id="messageModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card non-interactive-card">
                 <div id="messageModalIconContainer" class="mx-auto mb-4"></div>
                 <p id="modalMessageText" class="text-lg text-gray-700 mb-6"></p>
                 <button onclick="closeMessageModal()" class="btn btn-primary w-1/2">OK</button>
             </div>
         </div>
-        
         <div id="confirmationModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-60 items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center card non-interactive-card">
                 <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 <p id="confirmationMessageText" class="text-lg text-gray-700 mb-6"></p>
                 <div class="flex justify-center space-x-4">
@@ -316,27 +337,39 @@
 
     <footer class="text-center py-10 mt-16 border-t border-gray-200 bg-white">
         <p class="text-gray-500 text-sm">&copy; <span id="currentYear"></span> Pawtektado. Happy Pets, Happy Life!</p>
-        <p class="text-xs text-gray-400 mt-1">Crafted with ❤️ for our furry friends by Kevin Rhay Avendano</p>
+        <p class="text-xs text-gray-400 mt-1">Crafted with ❤️ for our furry friends.</p>
     </footer>
 
     <script>
         // --- DOM Elements ---
         const sections = {
             myPets: document.getElementById('myPetsSection'),
-            addPet: document.getElementById('addPetSection'),
+            // addPet: document.getElementById('addPetSection'), // Now a modal
             petDetails: document.getElementById('petDetailsSection'),
             providers: document.getElementById('providersSection'),
-            bookings: document.getElementById('bookingsSection'),
-            petHistory: document.getElementById('petHistorySection')
+            bookings: document.getElementById('bookingsSection'), 
+            petHistory: document.getElementById('petHistorySection'),
+            missingPets: document.getElementById('missingPetsSection'), // New
+            petEvents: document.getElementById('petEventsSection'), // New
+            discountsPromos: document.getElementById('discountsPromosSection'), // New
+            adoption: document.getElementById('adoptionSection') // New
         };
         const tabs = {
             myPets: document.getElementById('tabMyPets'),
-            addPet: document.getElementById('tabAddPet'),
+            // addPet: document.getElementById('tabAddPet'), // Removed
             providers: document.getElementById('tabProviders'),
-            bookings: document.getElementById('tabBookings'),
-            petHistory: document.getElementById('tabPetHistory')
+            bookings: document.getElementById('tabBookings'), 
+            petHistory: document.getElementById('tabPetHistory'),
+            missingPets: document.getElementById('tabMissingPets'), // New
+            petEvents: document.getElementById('tabPetEvents'), // New
+            discountsPromos: document.getElementById('tabDiscountsPromos'), // New
+            adoption: document.getElementById('tabAdoption') // New
         };
 
+        const addPetModal = document.getElementById('addPetModal');
+        const openAddPetModalButton = document.getElementById('openAddPetModalButton');
+        const closeAddPetModalButton = document.getElementById('closeAddPetModalButton');
+        const cancelAddPetButton = document.getElementById('cancelAddPetButton');
         const addPetForm = document.getElementById('addPetForm');
         const petsListContainer = document.getElementById('petsListContainer');
         const noPetsMessage = document.getElementById('noPetsMessage');
@@ -357,10 +390,19 @@
         const petHistoryListContainer = document.getElementById('petHistoryListContainer');
         const noHistoryMessage = document.getElementById('noHistoryMessage');
         
+        // New section containers
+        const missingPetsListContainer = document.getElementById('missingPetsListContainer');
+        const noMissingPetsMessage = document.getElementById('noMissingPetsMessage');
+        const petEventsListContainer = document.getElementById('petEventsListContainer');
+        const noPetEventsMessage = document.getElementById('noPetEventsMessage');
+        const discountsPromosListContainer = document.getElementById('discountsPromosListContainer');
+        const noDiscountsPromosMessage = document.getElementById('noDiscountsPromosMessage');
+        const adoptionListContainer = document.getElementById('adoptionListContainer');
+        const noAdoptionMessage = document.getElementById('noAdoptionMessage');
+
         const messageModal = document.getElementById('messageModal');
         const modalMessageText = document.getElementById('modalMessageText');
         const messageModalIconContainer = document.getElementById('messageModalIconContainer');
-
 
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmationMessageText = document.getElementById('confirmationMessageText');
@@ -370,94 +412,81 @@
 
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // --- Data Storage (localStorage) ---
-        let pets = [];
+        let pets = []; 
         let currentEditingPetId = null;
 
-        // --- Sample Provider Data ---
         const serviceProviders = [
             { 
-                id: 'vet1', 
-                name: 'Happy Paws Veterinary Clinic', 
-                type: 'Veterinarian', 
-                phone: '555-0101', 
-                email: 'contact@happypawsvet.example.com', 
-                address: '123 Vet Street, Anytown',
-                services: ['Checkups', 'Vaccinations', 'Surgery', 'Dental Care'],
-                icon: '<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>' // Simple representation
+                id: 'vet1', name: 'Happy Paws Veterinary Clinic', type: 'Veterinarian', phone: '555-0101', email: 'contact@happypawsvet.example.com', address: '123 Vet Street, Anytown, Metro Manila', services: ['Checkups', 'Vaccinations', 'Surgery', 'Dental Care'],
+                icon: '<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>'
             },
             { 
-                id: 'groomer1', 
-                name: 'Pristine Pups Grooming', 
-                type: 'Groomer', 
-                phone: '555-0202', 
-                email: 'info@pristinepups.example.com', 
-                address: '456 Groomer Ave, Anytown',
-                services: ['Bathing', 'Haircuts', 'Nail Trimming', 'De-shedding'],
+                id: 'groomer1', name: 'Pristine Pups Grooming', type: 'Groomer', phone: '555-0202', email: 'info@pristinepups.example.com', address: '456 Groomer Ave, Quezon City', services: ['Bathing', 'Haircuts', 'Nail Trimming', 'De-shedding'],
                 icon: '<svg class="w-8 h-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16v4m-2-2h4m2 13.5V21M16 19h4m0-13.5V5M16 7h4m-9 7a3 3 0 01-6 0 3 3 0 016 0zm12 0a3 3 0 01-6 0 3 3 0 016 0z"></path></svg>'
             },
             { 
-                id: 'walker1', 
-                name: 'Walky Paws Dog Walking', 
-                type: 'Dog Walker', 
-                phone: '555-0303', 
-                email: 'bookings@walkypaws.example.com', 
-                address: '789 Park Road, Anytown',
-                services: ['Group Walks', 'Solo Walks', 'Pet Sitting (short)'],
-                icon: '<svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.5 15a.5.5 0 01.5-.5h16a.5.5 0 010 1H4a.5.5 0 01-.5-.5zM17.5 10.5l-1.293 1.293a1 1 0 01-1.414 0L12 9.086l-2.793 2.707a1 1 0 01-1.414 0L6.5 10.5"></path></svg>'
-            },
-             { 
-                id: 'vet2', 
-                name: 'Healthy Tails Animal Hospital', 
-                type: 'Veterinarian', 
-                phone: '555-0105', 
-                email: 'reception@healthytails.example.com', 
-                address: '321 Health Blvd, Anytown',
-                services: ['Emergency Care', 'Diagnostics', 'Wellness Exams', 'Nutrition Counseling'],
+                id: 'vet2', name: 'Healthy Tails Animal Hospital', type: 'Veterinarian', phone: '555-0105', email: 'reception@healthytails.example.com', address: '321 Health Blvd, Makati City', services: ['Emergency Care', 'Diagnostics', 'Wellness Exams', 'Nutrition Counseling'],
                 icon: '<svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7.76 15.24A5.992 5.992 0 0112 14a5.992 5.992 0 014.24 1.24M12 3v2m0 14v2m-7.07-2.93l1.41-1.41M17.66 7.34l1.41-1.41M3 12h2m14 0h2M6.34 7.34l-1.41-1.41M19.07 16.66l-1.41-1.41"></path></svg>'
+            },
+            { 
+                id: 'store1', name: 'Pet Express SM Megamall', type: 'Pet Store', phone: '555-0404', email: 'customercare@petexpress.com.ph', address: 'SM Megamall, Mandaluyong City', services: ['Pet Food', 'Accessories', 'Toys', 'Grooming Products'],
+                icon: '<svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
             }
         ];
         
-        // --- Sample Pet Data (if localStorage is empty) ---
         const samplePets = [
             {
-                id: 'pet_sample1_bantay',
-                name: 'Bantay',
-                breed: 'Aspin (Philippine Native Dog)',
-                age: '3 years',
-                photo: 'https://placedog.net/400/400?id=55', // More specific dog placeholder
+                id: 'pet_sample1_bantay', name: 'Bantay', breed: 'Aspin (Philippine Native Dog)', age: '3 years', photo: 'https://placedog.net/400/400?id=55',
                 needs: [
                     { id: 'need_sample1_1', description: 'Annual Checkup', date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet1', status: 'Confirmed' },
-                    { id: 'need_sample1_2', description: 'Grooming Session', date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'groomer1', status: 'Pending' },
                     { id: 'need_sample1_3', description: 'Rabies Vaccination', date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet1', status: 'Completed' }
                 ]
             },
             {
-                id: 'pet_sample2_muning',
-                name: 'Muning',
-                breed: 'Puspin (Philippine Shorthair Cat)',
-                age: '1 year 6 months',
-                photo: 'https://placekitten.com/400/400?image=12', // More specific cat placeholder
+                id: 'pet_sample2_muning', name: 'Muning', breed: 'Puspin (Philippine Shorthair Cat)', age: '1 year 6 months', photo: 'https://placekitten.com/400/400?image=12',
                 needs: [
                     { id: 'need_sample2_1', description: 'Vaccination Booster', date: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet2', status: 'Confirmed' },
-                    { id: 'need_sample2_2', description: 'Deworming', date: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0,16), providerId: 'vet2', status: 'Completed' }
                 ]
             }
         ];
 
+        // --- Sample Data for New Sections ---
+        const missingPetsData = [
+            { id: 'mp1', name: 'Kuting', breed: 'Siamese Mix', lastSeen: 'Barangay Olympia, Makati', dateMissing: '2025-05-20', photo: 'https://placekitten.com/300/200?image=3', contact: '0917-XXX-XXXX', notes: 'Very friendly, wearing a red collar.' },
+            { id: 'mp2', name: 'Max', breed: 'Labrador Retriever', lastSeen: 'Bonifacio High Street, BGC', dateMissing: '2025-05-22', photo: 'https://placedog.net/300/200?id=23', contact: '0920-XXX-XXXX', notes: 'Answers to his name, a bit shy with strangers.' }
+        ];
+
+        const petEventsData = [
+            { id: 'ev1', name: 'PAWS Family Day & Pet Blessing', date: '2025-06-15T10:00', location: 'PAWS Animal Shelter, QC', description: 'Join us for a fun-filled day with games, food, and pet blessings by a guest priest.', organizer: 'PAWS Philippines', image: 'https://placedog.net/600/400?id=40' },
+            { id: 'ev2', name: 'Pet Express Dog Town Summer Fair', date: '2025-07-05T14:00', location: 'SM Mall of Asia Grounds', description: 'Dog shows, agility courses, pet product booths, and free vet consultations.', organizer: 'Pet Express', image: 'https://placedog.net/600/400?id=50' }
+        ];
+
+        const storePromosData = [
+            { id: 'sp1', storeName: 'Pet Express', promo: '20% OFF on all Acana Dog Food (11kg bags)', validity: 'Until June 30, 2025', image: 'https://placedog.net/100/100?id=1' },
+            { id: 'sp2', storeName: 'Bow & Wow', promo: 'Buy 1 Take 1 on selected organic cat treats', validity: 'Whole month of June 2025', image: 'https://placekitten.com/100/100?image=2' },
+            { id: 'sp3', storeName: 'Pawsitive Vibes Grooming', promo: 'PHP 100 OFF Full Grooming Service for new clients', validity: 'Until July 15, 2025', image: 'https://placedog.net/100/100?id=3' }
+        ];
+
+        const adoptionPetsData = [
+            { id: 'ad1', name: 'Brownie', age: '2 years', breed: 'Aspin', gender: 'Male', shelter: 'CARA Welfare Philippines', photo: 'https://placedog.net/300/300?id=101', bio: 'Brownie is a sweet and playful aspin looking for a loving family. He loves walks and cuddles!' },
+            { id: 'ad2', name: 'Oreo', age: '6 months', breed: 'Puspin', gender: 'Female', shelter: 'PAWS Animal Shelter', photo: 'https://placekitten.com/300/300?image=15', bio: 'Oreo is a curious and affectionate kitten. She enjoys playing with toys and napping in sunny spots.' },
+            { id: 'ad3', name: 'Spot', age: '5 months', breed: 'Beagle Mix', gender: 'Male', shelter: 'MBY Pet Rescue and Sanctuary', photo: 'https://placedog.net/300/300?id=102', bio: 'Spot is an energetic puppy, full of life and love. He is looking for an active family.'}
+        ];
+
 
         // --- Functions ---
-
+        // (showSection, showMessageModal, closeMessageModal, showConfirmationModal, closeConfirmationModal, savePets, renderPetsList as before)
+        // Updated showSection, message modals, confirmation modals
         function showSection(sectionId) {
             Object.values(sections).forEach(section => section.classList.add('hidden'));
             Object.values(tabs).forEach(tab => tab.classList.remove('active'));
             
-            const targetSection = sections[sectionId] || document.getElementById(sectionId);
+            const targetSection = sections[sectionId] || document.getElementById(sectionId); // Fallback for modals
             const targetTab = tabs[sectionId];
 
             if (targetSection) {
                 targetSection.classList.remove('hidden');
-                if (sectionId === 'petDetailsSection') {
+                if (targetSection.classList.contains('modal')) { // Modals like petDetails
                     targetSection.classList.add('show');
                 }
             }
@@ -465,53 +494,39 @@
                 targetTab.classList.add('active');
             }
             
-            if (sectionId !== 'petDetailsSection' && sections.petDetails.classList.contains('show')) {
-                sections.petDetails.classList.remove('show');
-                sections.petDetails.classList.add('hidden');
-            }
+            // Ensure other modals are hidden if not the target
+            ['petDetailsSection', 'addPetModal', 'messageModal', 'confirmationModal'].forEach(modalId => {
+                if (modalId !== sectionId && document.getElementById(modalId).classList.contains('show')) {
+                    document.getElementById(modalId).classList.remove('show');
+                }
+            });
         }
         
-        function showMessageModal(message, type = 'info') { // type can be 'info', 'success', 'error'
+        function showMessageModal(message, type = 'info') { 
             modalMessageText.textContent = message;
-            messageModalIconContainer.innerHTML = ''; // Clear previous icon
-
+            messageModalIconContainer.innerHTML = ''; 
             let iconSvg = '';
-            if (type === 'success') {
-                iconSvg = '<svg class="w-16 h-16 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-            } else if (type === 'error') {
-                iconSvg = '<svg class="w-16 h-16 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-            } else { // Default info icon
-                iconSvg = '<svg class="w-16 h-16 text-blue-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-            }
+            if (type === 'success') iconSvg = '<svg class="w-16 h-16 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            else if (type === 'error') iconSvg = '<svg class="w-16 h-16 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            else iconSvg = '<svg class="w-16 h-16 text-blue-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
             messageModalIconContainer.innerHTML = iconSvg;
             messageModal.classList.add('show');
         }
-
-        function closeMessageModal() {
-            messageModal.classList.remove('show');
-        }
-
+        function closeMessageModal() { messageModal.classList.remove('show'); }
         function showConfirmationModal(message, onConfirmCallback) {
             confirmationMessageText.textContent = message;
             currentConfirmAction = onConfirmCallback;
             confirmationModal.classList.add('show');
         }
-
         function closeConfirmationModal() {
             confirmationModal.classList.remove('show');
             currentConfirmAction = null;
         }
-
         confirmActionButton.addEventListener('click', () => {
-            if (typeof currentConfirmAction === 'function') {
-                currentConfirmAction();
-            }
+            if (typeof currentConfirmAction === 'function') currentConfirmAction();
             closeConfirmationModal();
         });
-
-        cancelActionButton.addEventListener('click', () => {
-            closeConfirmationModal();
-        });
+        cancelActionButton.addEventListener('click', () => { closeConfirmationModal(); });
 
         function savePets() {
             localStorage.setItem('pets', JSON.stringify(pets));
@@ -526,14 +541,11 @@
                 return;
             }
             noPetsMessage.classList.add('hidden');
-
             pets.forEach(pet => {
                 const petCard = document.createElement('div');
                 petCard.className = 'card p-5 flex flex-col items-center text-center cursor-pointer group';
                 petCard.onclick = () => viewPetDetails(pet.id);
-
                 const petPhotoUrl = pet.photo || `https://placehold.co/150x150/e0e7ff/4f46e5?text=${pet.name.substring(0,1)}`;
-                
                 petCard.innerHTML = `
                     <img src="${petPhotoUrl}" alt="${pet.name}" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-400 transition-all duration-300 mb-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/150x150/e2e8f0/94a3b8?text=Pet';">
                     <h3 class="text-xl font-semibold text-blue-600 group-hover:text-blue-700">${pet.name}</h3>
@@ -544,20 +556,25 @@
             });
         }
 
+        // Add Pet Modal Logic
+        openAddPetModalButton.addEventListener('click', () => {
+            addPetForm.reset(); // Clear form
+            addPetModal.classList.add('show');
+        });
+        closeAddPetModalButton.addEventListener('click', () => addPetModal.classList.remove('show'));
+        cancelAddPetButton.addEventListener('click', () => addPetModal.classList.remove('show'));
+
         addPetForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const newPet = {
-                id: 'pet_' + Date.now(),
-                name: addPetForm.petName.value,
-                breed: addPetForm.petBreed.value,
-                age: addPetForm.petAge.value,
-                photo: addPetForm.petPhoto.value,
-                needs: [] 
+                id: 'pet_' + Date.now(), name: addPetForm.petName.value, breed: addPetForm.petBreed.value,
+                age: addPetForm.petAge.value, photo: addPetForm.petPhoto.value, needs: [] 
             };
             pets.push(newPet);
             savePets();
             renderPetsList();
             addPetForm.reset();
+            addPetModal.classList.remove('show');
             showMessageModal(`${newPet.name} has been added successfully!`, 'success');
             showSection('myPets'); 
         });
@@ -566,88 +583,67 @@
             needProviderSelect.innerHTML = '<option value="">None (General Reminder)</option>';
             serviceProviders.forEach(provider => {
                 const option = document.createElement('option');
-                option.value = provider.id;
-                option.textContent = provider.name;
+                option.value = provider.id; option.textContent = provider.name;
                 needProviderSelect.appendChild(option);
             });
         }
 
-        function viewPetDetails(petId) {
+        function viewPetDetails(petId) { /* Same as before, but check for pet */ 
             const pet = pets.find(p => p.id === petId);
-            if (!pet) {
-                showMessageModal('Error: Pet not found.', 'error');
-                return;
-            }
-
-            currentEditingPetId = pet.id; 
-            currentPetIdInput.value = pet.id; 
-
+            if (!pet) { showMessageModal('Error: Pet not found.', 'error'); return; }
+            currentEditingPetId = pet.id; currentPetIdInput.value = pet.id; 
             detailsPetName.textContent = pet.name;
             detailsPetPhoto.src = pet.photo || `https://placehold.co/400x400/e0e7ff/4f46e5?text=${pet.name}`;
             detailsPetPhoto.onerror = function() { this.src = 'https://placehold.co/400x400/e2e8f0/94a3b8?text=Pet+Photo'; };
-            detailsPetBreed.textContent = pet.breed;
-            detailsPetAge.textContent = pet.age || 'N/A';
-            
-            populateProviderDropdown();
-            renderPetNeeds(pet.id);
-            showSection('petDetailsSection');
+            detailsPetBreed.textContent = pet.breed; detailsPetAge.textContent = pet.age || 'N/A';
+            populateProviderDropdown(); renderPetNeeds(pet.id);
+            sections.petDetails.classList.add('show'); // Directly show, not via showSection for modals
         }
         
-        function closePetDetails() {
-            sections.petDetails.classList.remove('show');
-            sections.petDetails.classList.add('hidden');
+        function closePetDetails() { 
+            sections.petDetails.classList.remove('show'); 
             currentEditingPetId = null;
         }
 
-        function handleDeletePet() {
+        function handleDeletePet() { /* Uses showConfirmationModal */ 
             if (!currentEditingPetId) return;
             const pet = pets.find(p => p.id === currentEditingPetId);
             if (!pet) return;
-
             showConfirmationModal(`Are you sure you want to delete ${pet.name}? This action cannot be undone.`, () => {
                 actuallyDeletePet();
             });
         }
 
-        function actuallyDeletePet() {
+        function actuallyDeletePet() { /* Same as before */ 
             if (!currentEditingPetId) return;
             pets = pets.filter(pet => pet.id !== currentEditingPetId);
-            savePets();
-            renderPetsList();
-            closePetDetails();
+            savePets(); renderPetsList(); closePetDetails();
             showMessageModal('Pet deleted successfully.', 'success');
-            showSection('myPets');
+            showSection('myPets'); // Ensure correct section is shown after modal closure
         }
 
-        function renderPetNeeds(petId) {
+        function renderPetNeeds(petId) { /* Same logic, improved styling slightly in HTML template if needed */ 
             const pet = pets.find(p => p.id === petId);
             needsList.innerHTML = ''; 
-
             if (!pet || !pet.needs || pet.needs.length === 0) {
-                noNeedsMessage.classList.remove('hidden');
-                return;
+                noNeedsMessage.classList.remove('hidden'); return;
             }
             noNeedsMessage.classList.add('hidden');
-
             const sortedNeeds = [...pet.needs].sort((a, b) => new Date(b.date) - new Date(a.date));
-
             sortedNeeds.forEach(need => {
                 const needElement = document.createElement('div');
                 needElement.className = 'p-3 bg-white rounded-md border border-gray-200 shadow-sm flex justify-between items-center';
-                
                 const needDate = new Date(need.date);
                 const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                let providerName = '';
-                let providerIcon = '';
+                let providerName = ''; let providerIcon = '';
                 if (need.providerId) {
                     const provider = serviceProviders.find(p => p.id === need.providerId);
                     if (provider) {
                         providerName = ` <span class="text-xs text-gray-500">(@ ${provider.name})</span>`;
-                        providerIcon = provider.icon ? `<span class="mr-2">${provider.icon.replace('w-8 h-8', 'w-5 h-5')}</span>` : '';
+                        if (provider.icon) providerIcon = `<span class="mr-2">${provider.icon.replace('w-8 h-8', 'w-5 h-5')}</span>`;
                     }
                 }
                 const isPast = needDate < new Date();
-
                 needElement.innerHTML = `
                     <div class="flex-grow">
                         <p class="font-medium text-indigo-700 flex items-center ${isPast ? 'line-through text-gray-400' : ''}">
@@ -664,52 +660,38 @@
             });
         }
 
-        addNeedForm.addEventListener('submit', (e) => {
+        addNeedForm.addEventListener('submit', (e) => { /* Same as before */ 
             e.preventDefault();
             const petId = currentPetIdInput.value; 
-            if (!petId) {
-                showMessageModal('Error: Could not find pet to add need to.', 'error');
-                return;
-            }
+            if (!petId) { showMessageModal('Error: Could not find pet to add need to.', 'error'); return; }
             const pet = pets.find(p => p.id === petId);
-            if (!pet) {
-                showMessageModal('Error: Pet not found.', 'error');
-                return;
-            }
+            if (!pet) { showMessageModal('Error: Pet not found.', 'error'); return; }
             const newNeed = {
-                id: 'need_' + Date.now(),
-                description: addNeedForm.needDescription.value,
-                date: addNeedForm.needDate.value,
-                providerId: addNeedForm.needProvider.value || null,
-                status: addNeedForm.needProvider.value ? 'Pending' : 'Scheduled' // Default status
+                id: 'need_' + Date.now(), description: addNeedForm.needDescription.value, date: addNeedForm.needDate.value,
+                providerId: addNeedForm.needProvider.value || null, status: addNeedForm.needProvider.value ? 'Pending' : 'Scheduled'
             };
             if (!pet.needs) pet.needs = []; 
-            pet.needs.push(newNeed);
-            savePets();
-            renderPetNeeds(pet.id);
-            addNeedForm.reset();
+            pet.needs.push(newNeed); savePets(); renderPetNeeds(pet.id); addNeedForm.reset();
             showMessageModal('Need added successfully!', 'success');
         });
 
-        function deleteNeed(petId, needId) {
+        function deleteNeed(petId, needId) { /* Same as before */ 
             const pet = pets.find(p => p.id === petId);
             if (!pet || !pet.needs) return;
             pet.needs = pet.needs.filter(need => need.id !== needId);
-            savePets();
-            renderPetNeeds(petId); 
+            savePets(); renderPetNeeds(petId); 
             showMessageModal('Need removed.', 'info');
         }
 
-        function renderProviders() {
-            providersListContainer.innerHTML = ''; 
+        function renderProviders() { /* Same as before */ 
+             providersListContainer.innerHTML = ''; 
             serviceProviders.forEach(provider => {
                 const providerCard = document.createElement('div');
                 providerCard.className = 'card p-6 space-y-3 flex flex-col items-center text-center';
-                
                 let servicesHTML = provider.services.map(service => `<span class="inline-block bg-gray-100 text-gray-600 text-xs font-medium mr-2 mb-2 px-2.5 py-1 rounded-full">${service}</span>`).join('');
-
+                let providerIconHTML = provider.icon ? provider.icon : '<svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>';
                 providerCard.innerHTML = `
-                    <div class="mb-3 text-gray-400">${provider.icon || '<svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>'}</div>
+                    <div class="mb-3 text-gray-400">${providerIconHTML}</div>
                     <h3 class="text-xl font-semibold text-green-600">${provider.name}</h3>
                     <p class="text-sm font-medium text-gray-500">${provider.type}</p>
                     <p class="text-sm text-gray-600"><span class="font-medium">Address:</span> ${provider.address || 'N/A'}</p>
@@ -725,40 +707,27 @@
                 providersListContainer.appendChild(providerCard);
             });
         }
-
-        function renderBookingsList() {
-            bookingsListContainer.innerHTML = '';
-            let hasBookings = false;
-            const now = new Date();
-            let upcomingBookings = [];
-
+        function renderBookingsList() { /* Same as before */ 
+            bookingsListContainer.innerHTML = ''; let hasBookings = false; const now = new Date(); let upcomingBookings = [];
             pets.forEach(pet => {
                 if (pet.needs && pet.needs.length > 0) {
                     pet.needs.forEach(need => {
                         const needDate = new Date(need.date);
-                        if (need.providerId && needDate > now) {
-                            upcomingBookings.push({ ...need, petName: pet.name, petId: pet.id });
-                        }
+                        if (need.providerId && needDate > now) upcomingBookings.push({ ...need, petName: pet.name, petId: pet.id });
                     });
                 }
             });
-            // Sort by date, soonest first
             upcomingBookings.sort((a,b) => new Date(a.date) - new Date(b.date));
-
             if (upcomingBookings.length > 0) hasBookings = true;
-
             upcomingBookings.forEach(need => {
                 const provider = serviceProviders.find(p => p.id === need.providerId);
                 const bookingItem = document.createElement('div');
                 bookingItem.className = 'list-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2';
-                
                 const needDate = new Date(need.date);
                 const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                const providerIcon = provider && provider.icon ? provider.icon.replace('w-8 h-8', 'w-6 h-6 text-blue-500') : '<svg class="icon-sm text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>';
-
+                const providerIconHTML = provider && provider.icon ? provider.icon.replace('w-8 h-8', 'w-6 h-6 text-blue-500') : '<svg class="icon-sm text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>';
                 bookingItem.innerHTML = `
-                    <div class="flex items-center">
-                        ${providerIcon}
+                    <div class="flex items-center"> ${providerIconHTML}
                         <div>
                             <p class="font-semibold text-blue-700">${need.description} <span class="text-sm text-gray-600 font-normal">for ${need.petName}</span></p>
                             <p class="text-xs text-gray-500">With: ${provider ? provider.name : 'Unknown Provider'}</p>
@@ -771,39 +740,27 @@
             });
             noBookingsMessage.classList.toggle('hidden', hasBookings);
         }
-
-        function renderPetHistoryList() {
-            petHistoryListContainer.innerHTML = '';
-            let hasHistory = false;
-            const now = new Date();
-            let allPastNeeds = [];
-
+        function renderPetHistoryList() { /* Same as before */ 
+            petHistoryListContainer.innerHTML = ''; let hasHistory = false; const now = new Date(); let allPastNeeds = [];
             pets.forEach(pet => {
                 if (pet.needs && pet.needs.length > 0) {
                     pet.needs.forEach(need => {
                         const needDate = new Date(need.date);
-                        if (needDate <= now) {
-                            allPastNeeds.push({ ...need, petName: pet.name, petId: pet.id });
-                        }
+                        if (needDate <= now) allPastNeeds.push({ ...need, petName: pet.name, petId: pet.id });
                     });
                 }
             });
             allPastNeeds.sort((a, b) => new Date(b.date) - new Date(a.date));
             if (allPastNeeds.length > 0) hasHistory = true;
-
             allPastNeeds.forEach(need => {
                 const provider = serviceProviders.find(p => p.id === need.providerId);
                 const historyItem = document.createElement('div');
                 historyItem.className = 'list-item flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 opacity-80 hover:opacity-100';
-                
                 const needDate = new Date(need.date);
                 const formattedDate = `${needDate.toLocaleDateString()} ${needDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
                 const itemIcon = '<svg class="icon-sm text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>';
-
-
                 historyItem.innerHTML = `
-                     <div class="flex items-center">
-                        ${itemIcon}
+                     <div class="flex items-center"> ${itemIcon}
                         <div>
                             <p class="font-semibold text-gray-700">${need.description} <span class="text-sm text-gray-500 font-normal">for ${need.petName}</span></p>
                             ${provider ? `<p class="text-xs text-gray-500">With: ${provider.name}</p>` : ''}
@@ -816,7 +773,101 @@
             });
             noHistoryMessage.classList.toggle('hidden', hasHistory);
         }
+        
+        // --- Render Functions for New Sections ---
+        function renderMissingPets() {
+            missingPetsListContainer.innerHTML = '';
+            if (missingPetsData.length === 0) {
+                noMissingPetsMessage.classList.remove('hidden'); return;
+            }
+            noMissingPetsMessage.classList.add('hidden');
+            missingPetsData.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'card p-5 flex flex-col md:flex-row gap-4 items-start';
+                card.innerHTML = `
+                    <img src="${pet.photo}" alt="${pet.name}" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/300x200/e2e8f0/94a3b8?text=Missing';">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-red-600">${pet.name} - MISSING</h3>
+                        <p class="text-sm text-gray-600"><strong>Breed:</strong> ${pet.breed}</p>
+                        <p class="text-sm text-gray-600"><strong>Last Seen:</strong> ${pet.lastSeen}</p>
+                        <p class="text-sm text-gray-600"><strong>Date Missing:</strong> ${new Date(pet.dateMissing).toLocaleDateString()}</p>
+                        <p class="text-sm text-gray-600 mt-1"><strong>Notes:</strong> ${pet.notes}</p>
+                        <p class="text-sm text-blue-600 font-semibold mt-2"><strong>Contact:</strong> ${pet.contact}</p>
+                    </div>
+                `;
+                missingPetsListContainer.appendChild(card);
+            });
+        }
 
+        function renderPetEvents() {
+            petEventsListContainer.innerHTML = '';
+            if (petEventsData.length === 0) {
+                noPetEventsMessage.classList.remove('hidden'); return;
+            }
+            noPetEventsMessage.classList.add('hidden');
+            petEventsData.forEach(event => {
+                const item = document.createElement('div');
+                item.className = 'list-item flex flex-col md:flex-row gap-4 items-start';
+                const eventDate = new Date(event.date);
+                const formattedDate = `${eventDate.toLocaleDateString()} ${eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                item.innerHTML = `
+                    <img src="${event.image || 'https://placehold.co/150x100/d1fae5/059669?text=Event'}" alt="${event.name}" class="w-full md:w-40 h-32 md:h-auto object-cover rounded-md shadow" onerror="this.onerror=null;this.src='https://placehold.co/150x100/d1fae5/059669?text=Event';">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-green-700">${event.name}</h3>
+                        <p class="text-xs text-gray-500 mb-1">
+                            <span class="font-medium">${formattedDate}</span> @ ${event.location}
+                        </p>
+                        <p class="text-sm text-gray-600">${event.description}</p>
+                        <p class="text-xs text-gray-500 mt-1">Organized by: ${event.organizer}</p>
+                    </div>
+                `;
+                petEventsListContainer.appendChild(item);
+            });
+        }
+
+        function renderDiscountsPromos() {
+            discountsPromosListContainer.innerHTML = '';
+            if (storePromosData.length === 0) {
+                noDiscountsPromosMessage.classList.remove('hidden'); return;
+            }
+            noDiscountsPromosMessage.classList.add('hidden');
+            storePromosData.forEach(promo => {
+                const card = document.createElement('div');
+                card.className = 'card p-5 flex items-start gap-4';
+                card.innerHTML = `
+                    <img src="${promo.image || 'https://placehold.co/80x80/fef3c7/f59e0b?text=Promo'}" alt="${promo.storeName}" class="w-20 h-20 object-contain rounded-md bg-gray-100 p-1" onerror="this.onerror=null;this.src='https://placehold.co/80x80/fef3c7/f59e0b?text=Promo';">
+                    <div class="flex-1">
+                        <h3 class="text-md font-semibold text-yellow-700">${promo.storeName}</h3>
+                        <p class="text-lg font-bold text-orange-600">${promo.promo}</p>
+                        <p class="text-xs text-gray-500 mt-1">Valid: ${promo.validity}</p>
+                    </div>
+                `;
+                discountsPromosListContainer.appendChild(card);
+            });
+        }
+
+        function renderAdoptionPets() {
+            adoptionListContainer.innerHTML = '';
+            if (adoptionPetsData.length === 0) {
+                noAdoptionMessage.classList.remove('hidden'); return;
+            }
+            noAdoptionMessage.classList.add('hidden');
+            adoptionPetsData.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'card p-5 flex flex-col items-center text-center group';
+                card.innerHTML = `
+                    <img src="${pet.photo}" alt="${pet.name}" class="w-full h-48 object-cover rounded-lg mb-3 shadow-md group-hover:shadow-lg transition-shadow" onerror="this.onerror=null;this.src='https://placehold.co/300x300/fce7f3/ec4899?text=AdoptMe';">
+                    <h3 class="text-xl font-semibold text-pink-600">${pet.name}</h3>
+                    <p class="text-sm text-gray-500">${pet.age} old, ${pet.gender} ${pet.breed}</p>
+                    <p class="text-xs text-gray-400 mt-1">From: ${pet.shelter}</p>
+                    <p class="text-sm text-gray-600 mt-2 px-2 h-16 overflow-hidden text-ellipsis">${pet.bio}</p>
+                    <button class="btn btn-primary btn-sm mt-3 py-1.5 px-4 text-xs" onclick="showMessageModal('Contact ${pet.shelter} to learn more about ${pet.name}.', 'info')">Learn More</button>
+                `;
+                adoptionListContainer.appendChild(card);
+            });
+        }
+
+        // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
             let storedPets = localStorage.getItem('pets');
             if (!storedPets || JSON.parse(storedPets).length === 0) {
@@ -831,12 +882,20 @@
             renderProviders();
             renderBookingsList(); 
             renderPetHistoryList(); 
+            // Render new sections
+            renderMissingPets();
+            renderPetEvents();
+            renderDiscountsPromos();
+            renderAdoptionPets();
 
             document.addEventListener('keydown', function (event) {
                 if (event.key === "Escape") {
-                    if (sections.petDetails.classList.contains('show')) closePetDetails();
-                    if (messageModal.classList.contains('show')) closeMessageModal();
-                    if (confirmationModal.classList.contains('show')) closeConfirmationModal();
+                    // Close any open modal
+                    [addPetModal, sections.petDetails, messageModal, confirmationModal].forEach(modal => {
+                        if(modal.classList.contains('show')) modal.classList.remove('show');
+                    });
+                    // If pet details was closed, ensure currentEditingPetId is reset
+                    if(!sections.petDetails.classList.contains('show')) currentEditingPetId = null;
                 }
             });
         });
