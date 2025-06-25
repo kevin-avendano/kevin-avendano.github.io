@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kev's Salesforce Developer Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --sf-blue-deep: #001639;
+            --sf-blue: #003972;
+            --sf-blue-light: #005fb2;
+            --sf-blue-bright: #0099de;
+            --sf-green: #378a3d;
+            --sf-orange: #ff9a3c;
+            --sf-red: #c23934;
+            --sf-gray: #54698d;
+            --sf-light-gray: #d8dde6;
+            --sf-bg-light: #f3f5f7;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--sf-bg-light); }
+        .header-bg { background-color: var(--sf-blue-deep); background-image: linear-gradient(135deg, var(--sf-blue-deep) 0%, var(--sf-blue) 100%); }
+        .recipe-card { background-color: white; padding: 1.5rem; margin-top: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); border: 1px solid var(--sf-light-gray); }
+        .code-block { background-color: #2d2d2d; color: #f8f8f2; border-radius: 8px; position: relative; margin-top: 0.75rem; }
+        .copy-button { position: absolute; top: 12px; right: 12px; background-color: #444; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; transition: background-color 0.2s; }
+        .copy-button:hover { background-color: #666; }
+        .well-architected-box { background-color: #f0f5ff; border: 1px solid #adc6ff; border-left: 4px solid var(--sf-blue-light); padding: 1rem; margin-top: 1.5rem; border-radius: 4px; }
+        .well-architected-box h5 { color: var(--sf-blue-deep); font-weight: 700; }
+        .well-architected-box .pillar { display: inline-block; background-color: var(--sf-blue); color: white; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; margin-right: 0.5rem; margin-top: 0.5rem; }
+        .tab-button { padding: 0.75rem 1rem; cursor: pointer; border-bottom: 3px solid transparent; color: var(--sf-gray); font-weight: 600; transition: all 0.3s ease; white-space: nowrap;}
+        .tab-button.active { color: var(--sf-blue-light); border-bottom-color: var(--sf-blue-light); }
+        .tab-button:hover { background-color: #eef2f9; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .critical-mark { color: var(--sf-red); font-weight: 700; }
+        .guideline-section h4 { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .guideline-section ul { list-style-type: disc; list-style-position: inside; margin-top: 0.5rem; margin-bottom: 1rem; }
+        .guideline-section li { margin-bottom: 1rem; }
+        .guideline-section li > ul { margin-top: 0.5rem; margin-left: 1.5rem;}
+        .resource-link { color: var(--sf-blue-light); text-decoration: none; font-weight: 500;}
+        .resource-link:hover { text-decoration: underline; }
+        table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
+        th, td { border: 1px solid var(--sf-light-gray); padding: 0.75rem; text-align: left; }
+        th { background-color: var(--sf-bg-light); font-weight: 600; color: var(--sf-blue-deep); }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="header-bg text-white p-6 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-3xl md:text-4xl font-bold">Kev's Salesforce Developer Library</h1>
+            <p class="mt-2 text-lg">Salesforce Dev Reference of Kevin Rhay Avendano</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6">
+        <nav class="bg-white rounded-lg shadow-sm flex flex-wrap">
+            <button class="tab-button active" onclick="changeTab('apex')" data-tab-id="apex">Apex</button>
+            <button class="tab-button" onclick="changeTab('core-dev')" data-tab-id="core-dev">Core Dev</button>
+            <button class="tab-button" onclick="changeTab('lwc')" data-tab-id="lwc">LWC & Front-End</button>
+            <button class="tab-button" onclick="changeTab('clouds')" data-tab-id="clouds">Clouds</button>
+            <button class="tab-button" onclick="changeTab('automations')" data-tab-id="automations">Automations</button>
+            <button class="tab-button" onclick="changeTab('api')" data-tab-id="api">API & Integrations</button>
+            <button class="tab-button" onclick="changeTab('security')" data-tab-id="security">Security</button>
+            <button class="tab-button" onclick="changeTab('alm')" data-tab-id="alm">ALM & ISV</button>
+            <button class="tab-button" onclick="changeTab('performance')" data-tab-id="performance">Performance & Tools</button>
+            <button class="tab-button" onclick="changeTab('reference')" data-tab-id="reference">Reference</button>
+             <button class="tab-button" onclick="changeTab('standards')" data-tab-id="standards">Standards</button>
+        </nav>
+
+        <div id="apex" class="tab-content active">
+             <div class="recipe-card"><h3 class="text-2xl font-bold mb-3 text-gray-800">Apex Enterprise Design Patterns</h3><p class="mb-4 text-gray-600">These patterns form the foundation of a scalable, maintainable, and testable codebase. They promote a separation of concerns, ensuring each part of your code has a distinct and predictable responsibility. A typical invocation flows from the Trigger -> Handler -> Service -> Domain -> Selector.</p><ul><li><b>Service Layer:</b> Encapsulates business logic. Service methods should be atomic and represent a single business operation (e.g., `escalateCases`). They coordinate calls to other layers but do not contain SOQL or DML themselves.</li><li><b>Domain Layer:</b> Encapsulates all logic for a single sObject, such as complex validation, default values, and record-specific calculations. It's the home for logic that belongs to the object itself, regardless of where it's called from.</li><li><b>Selector Layer:</b> The only place where SOQL queries should live. This pattern centralizes data access, making it easy to optimize, secure, and reuse queries. Selectors return lists or maps of sObjects.</li><li><b>Unit of Work:</b> Manages DML operations to ensure transactional integrity and respect governor limits. Instead of performing DML directly, you "register" records with the Unit of Work, which then performs a single, bulk DML operation at the end of the transaction.</li></ul><h4 class="font-semibold mt-6">Example: How Patterns Work Together</h4><div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>// 1. Service Layer orchestrates the operation
+public class OpportunityService {
+    public static void closeWonOpportunities(List&lt;Id&gt; oppIds) {
+        fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(/*schema*/);
+        // 2. Selector Layer fetches the data
+        List&lt;Opportunity&gt; opps = OpportunitiesSelector.selectByIds(new Set&lt;Id&gt;(oppIds));
+
+        // 3. Domain Layer contains the object-specific logic
+        Opportunities oppsDomain = new Opportunities(opps);
+        oppsDomain.handleCloseWon(uow); // Domain method registers DML with UoW
+
+        // 4. Unit of Work commits all changes at once
+        uow.commitWork();
+    }
+}
+
+// 3. Domain Class
+public class Opportunities {
+    private List&lt;Opportunity&gt; records;
+    public Opportunities(List&lt;Opportunity&gt; records) { this.records = records; }
+
+    public void handleCloseWon(fflib_SObjectUnitOfWork uow) {
+        List&lt;Task&gt; followUpTasks = new List&lt;Task&gt;();
+        for(Opportunity opp : this.records) {
+            opp.StageName = 'Closed Won';
+            opp.CloseDate = Date.today();
+            // Register the update with the Unit of Work
+            uow.registerDirty(opp); 
+            // Create related records
+            uow.registerNew(new Task(
+                Subject = 'Follow up on Won Opp: ' + opp.Name, 
+                WhatId = opp.Id
+            ));
+        }
+    }
+}</code></pre></div></div>
+             <div class="recipe-card"><h3 class="text-2xl font-bold mb-3 text-gray-800">Apex Trigger Frameworks</h3><p class="mb-4 text-gray-600">A robust trigger framework is essential for controlling execution order and managing complexity. The following patterns are standard in enterprise development.</p><h4 class="font-semibold mt-4">Handler/Dispatcher Pattern with ITriggerHandler</h4><p class="mb-2 text-gray-600">This is the most common and recommended pattern. A single trigger per object calls a dispatcher class. The dispatcher then invokes a specific handler class for that object, which must implement the `ITriggerHandler` interface. This enforces a consistent structure across all handlers.</p><div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>// ITriggerHandler Interface
+public interface ITriggerHandler {
+    void beforeInsert(List&lt;SObject&gt; newRecords);
+    void beforeUpdate(Map&lt;Id, SObject&gt; newMap, Map&lt;Id, SObject&gt; oldMap);
+    void afterInsert(Map&lt;Id, SObject&gt; newMap);
+    // ... other context methods
+}
+
+// AccountTriggerHandler implements the interface
+public class AccountTriggerHandler implements ITriggerHandler {
+    public void beforeInsert(List&lt;SObject&gt; newRecords){
+        // Logic here
+    }
+    // ... other required methods
+}
+
+// Trigger is still one line
+trigger AccountTrigger on Account (before insert) { TriggerDispatcher.dispatch(); }
+</code></pre></div><h4 class="font-semibold mt-6">Trigger Factory Pattern</h4><p class="mb-2 text-gray-600">An evolution of the handler pattern, the Factory pattern uses an interface (`ITriggerHandler`) and a factory class to create instances of handlers. This is highly scalable and excellent for dependency injection and testing.</p><div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>public class TriggerFactory {
+    public static ITriggerHandler createHandler(SObjectType t) {
+        if (t == Account.SObjectType) {
+            return new AccountTriggerHandler();
+        } // ... etc
+        return null;
+    }
+}
+
+// Trigger calls the factory
+ITriggerHandler handler = TriggerFactory.createHandler(Trigger.SObjectType);
+if(handler != null) { /* call appropriate method */ }
+</code></pre></div></div>
+            <div class="recipe-card"><h3 class="text-2xl font-bold mb-3 text-gray-800">Asynchronous Apex</h3><p class="mb-4 text-gray-600">Asynchronous Apex is used to run processes in the background for long-running operations, callouts, and to avoid hitting governor limits.</p><table><thead><tr><th>Type</th><th>When to Use</th><th>Advantages</th></tr></thead><tbody><tr><td><b>@future</b></td><td>Simple, fire-and-forget callouts or operations in a separate transaction.</td><td>Very simple to implement for basic async needs.</td></tr><tr><td><b>Queueable</b></td><td>Chaining jobs, complex operations, and when you need more control than `@future`.</td><td>Can chain one job to another. Can use non-primitive types. Gets a job ID for monitoring.</td></tr><tr><td><b>Batchable</b></td><td>Processing thousands or millions of records.</td><td>Breaks large data sets into manageable chunks, each with its own governor limits.</td></tr><tr><td><b>Schedulable</b></td><td>Running a job at a specific time or on a recurring schedule.</td><td>Reliable, declarative scheduling through the UI or can be scheduled programmatically.</td></tr></tbody></table><h4 class="font-semibold mt-6">Example: Queueable Apex for Chaining</h4><div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>public class ProcessAccountsQueueable implements Queueable {
+    private List&lt;Account&gt; accounts;
+    public ProcessAccountsQueueable(List&lt;Account&gt; records) { this.accounts = records; }
+
+    public void execute(QueueableContext context) {
+        // Perform processing on accounts
+        // ...
+        
+        // Chain to the next job if needed
+        if (!System.isBatch()) { // Avoid chaining from a batch context if not desired
+            System.enqueueJob(new NotifyContactsQueueable(accounts));
+        }
+    }
+}</code></pre></div></div>
+            <div class="recipe-card"><h3 class="text-2xl font-bold mb-3 text-gray-800">Apex Security Best Practices</h3><p class="mb-4 text-gray-600">Writing secure Apex is non-negotiable. The two primary pillars are respecting user permissions (Sharing, CRUD, FLS) and preventing injection vulnerabilities.</p>
+                <h4 class="font-semibold mt-4">Reusable FLSUtilities Class</h4><p class="mb-2 text-gray-600">Never perform DML or a query without first checking the user's permissions. This utility class makes this easy and reusable.</p>
+                <div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>public with sharing class FLSUtilities {
+
+    public static Boolean isCreateableRecord(String sObjectName, List&lt;String&gt; fieldsToCheck) {
+        SObjectType schemaType = Schema.getGlobalDescribe().get(sObjectName);
+        if(!schemaType.getDescribe().isCreateable()) return false;
+        
+        Map&lt;String, Schema.SObjectField&gt; fieldMap = schemaType.getDescribe().fields.getMap();
+        for (String fieldName : fieldsToCheck) {
+            if (!fieldMap.get(fieldName.toLowerCase()).getDescribe().isCreateable()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static Boolean isUpdateableRecord(String sObjectName, List&lt;String&gt; fieldsToCheck) {
+        SObjectType schemaType = Schema.getGlobalDescribe().get(sObjectName);
+        if(!schemaType.getDescribe().isUpdateable()) return false;
+
+        Map&lt;String, Schema.SObjectField&gt; fieldMap = schemaType.getDescribe().fields.getMap();
+        for (String fieldName : fieldsToCheck) {
+            if (!fieldMap.get(fieldName.toLowerCase()).getDescribe().isUpdateable()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static Boolean isDeletableRecord(String sObjectName) {
+        SObjectType schemaType = Schema.getGlobalDescribe().get(sObjectName);
+        return schemaType.getDescribe().isAccessible() && schemaType.getDescribe().isDeletable();
+    }
+}</code></pre></div>
+                <h4 class="font-semibold mt-6">SOQL with SECURITY_ENFORCED</h4><p class="mb-2 text-gray-600">This is the modern, preferred way to enforce Field-Level Security directly within a SOQL query. It automatically checks if the running user has access to the fields being queried and will throw an exception if they do not. This simplifies security checks significantly compared to manual describe checks for every field.</p>
+                <div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>// This query will FAIL if the user doesn't have FLS to see AnnualRevenue.
+try {
+    List&lt;Account&gt; accs = [
+        SELECT Id, Name, AnnualRevenue 
+        FROM Account 
+        WITH SECURITY_ENFORCED
+    ];
+} catch (System.QueryException e) {
+    // Handle the security exception gracefully
+    System.debug('User does not have permission to view all fields.');
+}</code></pre></div>
+            </div>
+             <div class="recipe-card"><h3 class="text-2xl font-bold mb-3 text-gray-800">Common Apex Utilities</h3>
+                <h4 class="font-semibold mt-4">Bypass Validation Rules Utility</h4><p class="mb-2 text-gray-600">This utility provides a framework for programmatically bypassing validation rules, typically for data migrations or system integrations. It relies on a custom checkbox field on the object (`ByPass_Validation_Rules__c`) and another date/time field (`Last_Bypass_Date__c`) to trigger the bypass.</p>
+                <div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>public with sharing class ByPassValidationRulesUtil {
+    public static void updateByPassValidationsFields(SObject oldObject, SObject newObject) {
+        Datetime lastByPassDate = (Datetime) newObject.get('Last_Bypass_date__c');
+        Datetime prevByPassDate = oldObject != null ? (Datetime) oldObject.get('Last_Bypass_date__c') : null;
+        Boolean byPassValidationRules = lastByPassDate != null && lastByPassDate != prevByPassDate;
+        newObject.put('ByPass_Validation_Rules__c', byPassValidationRules);
+    }
+}</code></pre></div>
+                <h4 class="font-semibold mt-6">General Utility Methods</h4><p class="mb-2 text-gray-600">A central class for common, reusable functions like reading Field Sets, getting picklist values, or checking for Custom Permission access. This avoids code duplication and centralizes logic.</p>
+                <div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>public with sharing class UtilityMethods {
+    public static List&lt;Schema.FieldSetMember&gt; readFieldSet(String fieldSetName, String objectName) {
+        Map&lt;String, Schema.SObjectType&gt; gd = Schema.getGlobalDescribe();
+        Schema.DescribeSObjectResult obj = gd.get(objectName).getDescribe();
+        return obj.FieldSets.getMap().get(fieldSetName).getFields();
+    }
+    
+    public static Boolean getFeatureControl(String controlName){
+        // Caching this result is a good practice
+        Feature_enablement__c setting = Feature_enablement__c.getInstance(controlName);
+        if(setting != null) {
+            return setting.is_Active__c;
+        }
+        return true; // Default to true if not found
+    }
+}</code></pre></div>
+            </div>
+             <div class="recipe-card"><h3 class="text-2xl font-bold mb-3 text-gray-800">Advanced Apex Concepts</h3>
+                <h4 class="font-semibold mt-4">Managing Trigger Recursion</h4><p class="mb-2 text-gray-600">Trigger recursion occurs when a DML operation inside a trigger causes the same trigger to fire again. A simple way to prevent this is a static boolean flag. The flag is set to `true` the first time the trigger runs, and subsequent executions in the same transaction are skipped. It's crucial to only set this for the specific trigger to avoid unintentionally disabling other automations.</p>
+                <div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>public class AccountTriggerHandler {
+    private static boolean hasRun = false;
+    public void afterUpdate(Map&lt;Id, SObject&gt; newMap, Map&lt;Id, SObject&gt; oldMap) {
+        if(hasRun){ return; }
+        hasRun = true;
+        // ... Logic that might cause recursion
+    }
+}</code></pre></div>
+                <h4 class="font-semibold mt-6">Managing Concurrency and Record Locking</h4><p class="mb-2 text-gray-600">When two separate transactions try to update the same record simultaneously, a race condition can occur. To prevent this, you can lock the record for update. The `FOR UPDATE` clause in a SOQL query places a lock on the queried records, preventing any other transaction from updating them until the current transaction is complete. This is critical for processes that update parent records based on child record changes.</p>
+                 <div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-apex overflow-x-auto"><code>// In a trigger on a child object (e.g. Opportunity)
+Set&lt;Id&gt; accountIds = new Set&lt;Id&gt;();
+for(Opportunity opp : (List&lt;Opportunity&gt;)Trigger.new) {
+    accountIds.add(opp.AccountId);
+}
+// Lock the parent accounts before updating them to prevent conflicts.
+List&lt;Account&gt; lockedAccounts = [SELECT Id FROM Account WHERE Id IN :accountIds FOR UPDATE];
+// Now it's safe to perform roll-up calculations and update the accounts.
+</code></pre></div>
+                 <h4 class="font-semibold mt-6">Writing Apex for Large Data Volumes (LDV)</h4><p class="mb-2 text-gray-600">When working with objects that have millions of records, performance is paramount. Every query must be highly selective. Use the Query Plan Tool to analyze query performance. Never query fields you don't need. For processing large sets of data, always use Batch Apex or `SOQL For Loops` to avoid hitting heap size limits.</p>
+                 <h4 class="font-semibold mt-6">Debugging Best Practices</h4><p class="mb-2 text-gray-600">Effective debugging goes beyond `System.debug`. Use **Checkpoints** in the Developer Console to inspect the heap at a specific point in your code. Set up **Debug Levels** to control the verbosity of logs. Use the **`Limits` class** to output governor limit consumption at various points in your transaction to pinpoint bottlenecks.</p>
+            </div>
+        </div>
+
+        <div id="core-dev" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">OOP: Inheritance, DI, GRASP</h3><p class="mb-4 text-gray-600">Strong architecture relies on Object-Oriented Programming (OOP) principles. <b>Inheritance</b> (`extends`) promotes code reuse. <b>Dependency Injection (DI)</b> decouples your code for easier testing by "injecting" dependencies rather than hardcoding them. <b>GRASP</b> (General Responsibility Assignment Software Patterns) provide guidelines for assigning responsibilities to classes and objects. A key GRASP principle is "Information Expert," which states that responsibility should be assigned to the class that has the information necessary to fulfill it.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_extending.htm" target="_blank" class="resource-link">Inheritance | Apex Developer Guide</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apex_patterns.meta/apex_patterns/apex_patterns_di.htm" target="_blank" class="resource-link">Dependency Injection in Apex</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">JavaScript: Async, Classes, Destructuring</h3><p class="mb-4 text-gray-600">Modern JavaScript is fundamental to LWC development. <b>Async/Await</b> and <b>Promises</b> are used to handle asynchronous operations like calling Apex. <b>Classes</b> with <b>Getters/Setters</b> provide the structure for LWC components and their computed properties. <b>Destructuring</b> offers a concise syntax to extract data from objects and arrays, which is useful when working with data from Apex or component events.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing" target="_blank" class="resource-link">Asynchronous JavaScript</a></li><li class="text-sm"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank" class="resource-link">Classes in JS</a></li><li class="text-sm"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" class="resource-link">Object Destructuring</a></li></ul></div>
+        </div>
+        
+        <div id="lwc" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">LWC Lifecycle Hooks & DOM Concepts</h3><p class="mb-4 text-gray-600">The LWC framework provides methods, called lifecycle hooks, that allow you to tie into the lifecycle of a component. Understanding these is critical for writing correct and performant code. The core concept is the <b>Shadow DOM</b>, which encapsulates the component's structure, style, and behavior, keeping it separate from other components.</p><ul class="mt-4 space-y-3"><li><b><code>constructor()</code></b>: Called when the component is first created. Use it for basic initialization. <b>You cannot access the component's public properties or the DOM here.</b></li><li><b><code>connectedCallback()</code></b>: Called when the component is inserted into the DOM. This is the main hook to perform initialization tasks, fetch data, or set up event listeners.</li><li><b><code>renderedCallback()</code></b>: Called after the component's template has been rendered. Use this hook to interact with the UI (the rendered DOM). Be careful, as this can get called many times; use a boolean flag to ensure logic runs only once if needed.</li><li><b><code>disconnectedCallback()</code></b>: Called when the component is removed from the DOM. Use this to clean up, e.g., by removing event listeners.</li><li><b><code>errorCallback(error, stack)</code></b>: A special hook that acts as a try-catch for all your component's child components. It captures errors that occur during any lifecycle hook of its descendants.</li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Advanced Recipe: Datatable with Chart.js</h3><p class="mb-4 text-gray-600">This recipe shows how to fetch data via Apex and visualize it in a chart alongside a standard datatable. First, upload the Chart.js library as a static resource named `chartjs_v3`. This component will display Opportunities grouped by stage and show a doughnut chart of the stage distribution.</p><div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- opportunityChartTable.html --&gt;
+&lt;template&gt;
+    &lt;lightning-card title="Opportunity Stage Analysis" icon-name="standard:dashboard"&gt;
+        &lt;div class="slds-grid slds-wrap slds-p-around_medium"&gt;
+            &lt;div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-p-right_medium"&gt;
+                &lt;lightning-datatable key-field="StageName" data={chartData} columns={columns}&gt;&lt;/lightning-datatable&gt;
+            &lt;/div&gt;
+            &lt;div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"&gt;
+                &lt;div class="chart-container" style="position: relative; height:250px; width:100%"&gt;
+                    &lt;canvas class="doughnut-chart"&gt;&lt;/canvas&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/lightning-card&gt;
+&lt;/template&gt;
+</code></pre></div><div class="code-block"><button class="copy-button" onclick="copyCode(this)">Copy</button><pre class="p-4 language-javascript overflow-x-auto"><code>// opportunityChartTable.js
+import { LightningElement, wire } from 'lwc';
+import { loadScript } from 'lightning/platformResourceLoader';
+import chartjs from '@salesforce/resourceUrl/chartjs_v3';
+import getOpptyStageSummary from '@salesforce/apex/OpportunityController.getOpptyStageSummary';
+
+const columns = [
+    { label: 'Stage', fieldName: 'StageName' },
+    { label: 'Total Amount', fieldName: 'TotalAmount', type: 'currency' },
+    { label: 'Record Count', fieldName: 'RecordCount', type: 'number' },
+];
+
+export default class OpportunityChartTable extends LightningElement {
+    columns = columns;
+    chartData;
+    chart;
+    chartjsInitialized = false;
+
+    @wire(getOpptyStageSummary)
+    wiredData({ error, data }) {
+        if (data) {
+            this.chartData = data;
+            if (this.chartjsInitialized) {
+                this.updateChart();
+            }
+        } else if (error) {
+            console.error(error);
+        }
+    }
+
+    renderedCallback() {
+        if (this.chartjsInitialized) {
+            return;
+        }
+        this.chartjsInitialized = true;
+
+        loadScript(this, chartjs)
+            .then(() => {
+                this.initializeChart();
+            })
+            .catch(error => {
+                console.error('Error loading Chart.js', error);
+            });
+    }
+
+    initializeChart() {
+        const ctx = this.template.querySelector('canvas.doughnut-chart').getContext('2d');
+        this.chart = new window.Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: ['#003972', '#005fb2', '#0099de', '#44a7e0', '#d8dde6'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: { position: 'right' }
+            }
+        });
+        if (this.chartData) {
+            this.updateChart();
+        }
+    }
+
+    updateChart(){
+        if (!this.chart || !this.chartData) return;
+        this.chart.data.labels = this.chartData.map(row => row.StageName);
+        this.chart.data.datasets[0].data = this.chartData.map(row => row.TotalAmount);
+        this.chart.update();
+    }
+}
+</code></pre></div></div>
+        </div>
+
+        <div id="clouds" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Sales Cloud</h3><p class="mb-4 text-gray-600">Sales Cloud centers on the lead-to-cash process. It includes <b>Lead & Opportunity Management</b> for tracking deals, and <b>Account Teams</b> for collaborative selling. The core data model includes Leads, Accounts, Contacts, Opportunities, Quotes, Contracts, and Orders.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.sales_cloud_basics.htm&type=5" target="_blank" class="resource-link">Sales Cloud Basics | Salesforce Help</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Service Cloud</h3><p class="mb-4 text-gray-600">Service Cloud focuses on customer service and support. Key features include the <b>Lightning Service Console</b> for agent productivity, and tools like <b>Quick Text</b> and <b>Macros</b> to automate common tasks. The core of Service Cloud is <b>Case Management</b>, supported by automation like <b>Assignment Rules</b> and <b>Auto-Response Rules</b>. It supports multiple channels, including <b>Email-to-Case</b>, <b>Chat</b> (with Einstein Bots), and voice via CTI, all routed intelligently using <b>Omni-Channel</b>.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://trailhead.salesforce.com/content/learn/modules/service-cloud-basics" target="_blank" class="resource-link">Service Cloud Basics | Trailhead</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.bots_service_overview.htm&type=5" target="_blank" class="resource-link">What are Einstein Bots? | Salesforce Help</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Experience Cloud (Communities)</h3><p class="mb-4 text-gray-600">Experience Cloud allows you to create branded digital experiences for your customers, partners, and employees. You can choose different <b>Community Types</b> (Customer, Partner) based on your audience and data access needs. Modern sites are built with <b>LWR</b> for performance. You can also use tools like <b>Chatter</b> for collaboration within these sites. Usage is monitored via API limits and page view allocations.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.community_usage_allocation.htm&type=5" target="_blank" class="resource-link">Experience Cloud Sites Usage Allocation</a></li></ul></div>
+        </div>
+
+        <div id="automations" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Flows</h3><p class="mb-4 text-gray-600">Salesforce Flow is the primary declarative automation tool for building complex business processes. It can be triggered by record events (like an Apex trigger), run on a schedule, or invoked by a user. Flows can query, create, and update records, call Apex Actions, display user-facing screens, and launch subflows. Understanding Flow best practices, debug tools, and when to use a trigger-based autolaunched flow is critical for modern Salesforce development.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://www.salesforceben.com/salesforce-flow-best-practices/" target="_blank" class="resource-link">Salesforce Flow Best Practices</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.flow_concepts_trigger_record.htm&type=5" target="_blank" class="resource-link">Triggers for Autolaunched Flows</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm" target="_blank" class="resource-link">Triggers and Order of Execution</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.flow_considerations.htm&type=5" target="_blank" class="resource-link">Flow Feature Considerations</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Duplicate & Matching Rules</h3><p class="mb-4 text-gray-600"><b>Matching Rules</b> define how to identify duplicate records by comparing field values, using either exact matching or fuzzy logic (e.g., for names and addresses). <b>Duplicate Rules</b> use these matching rules to determine what happens when a user tries to create a duplicate record. The rule can either block the save entirely or allow it but flag the record and fire a duplicate record report.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.admin_duplicate_prevention_rules.htm&type=5" target="_blank" class="resource-link">Duplicate Rules</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.admin_duplicate_prevention_matching_rules.htm&type=5" target="_blank" class="resource-link">Things to Know About Matching Rules</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Approval Processes in Apex</h3><p class="mb-4 text-gray-600">While most approval processes are configured declaratively, you can submit a record into an approval process or process an approval/rejection programmatically using the `Approval` class in Apex. This is useful when you need to kick off an approval from a complex trigger or a custom LWC that has its own business logic.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_process_example.htm" target="_blank" class="resource-link">Apex Approval Processing Example</a></li></ul></div>
+        </div>
+
+        <div id="api" class="tab-content">
+             <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Data Integration and APIs</h3><p class="mb-4 text-gray-600">Salesforce offers a rich suite of APIs. The <b>REST API</b> is a flexible, lightweight choice for mobile and web apps. The <b>SOAP API</b> is for formal, enterprise-level integrations. The <b>Streaming API</b> (using PushTopics or Generic/Platform Events) allows for event-driven notifications. The <b>Metadata API</b> and <b>Tooling API</b> are used to manage setup and development tasks. For integrating external data without storing it, <b>External Objects</b> with Salesforce Connect are a powerful option.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_what_is_rest_api.htm" target="_blank" class="resource-link">REST API Developer Guide</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.api_streaming.meta/api_streaming/intro_stream.htm" target="_blank" class="resource-link">What is Streaming API?</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_api.htm" target="_blank" class="resource-link">Understanding Metadata API</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/intro_tooling_api.htm" target="_blank" class="resource-link">Introducing Tooling API</a></li></ul></div>
+             <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Long-Running Callouts with Continuations</h3><p class="mb-4 text-gray-600">Standard Apex callouts have a timeout limit. For integrations with services that may take a long time to respond, the `Continuation` class is used. This pattern, primarily for Visualforce, allows you to hand off the callout to the server, freeing up the Apex thread. When the external service responds, it invokes a callback method in your controller to process the result, all without tying up resources or hitting timeouts.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_continuation_intro.htm" target="_blank" class="resource-link">Make Long-Running Callouts with Continuations</a></li></ul></div>
+             <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Integration Considerations</h3><p class="mb-4 text-gray-600">For any integration, security and reliability are paramount. <b>SSL Certificates</b> are used to establish secure, encrypted connections. For web integrations, understanding <b>CORS</b> (Cross-Origin Resource Sharing) is essential to allow a web page from one domain to access resources on another. For modern Single-Page Applications (SPAs) that are not hosted on Salesforce, a common pattern is to use a backend-for-frontend (BFF) that securely handles the OAuth flow and API calls to Salesforce.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_http.htm" target="_blank" class="resource-link">Using Certificates</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_cors.htm" target="_blank" class="resource-link">Cross-Origin Resource Sharing (CORS) Overview</a></li></ul></div>
+        </div>
+
+        <div id="security" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Data Privacy: GDPR, PCI, PII</h3><p class="mb-4 text-gray-600">Handling data securely is non-negotiable. <b>GDPR</b> (General Data Protection Regulation) is a European privacy law that grants individuals rights over their personal data. <b>PCI DSS</b> (Payment Card Industry Data Security Standard) is a set of security standards for handling credit card information. <b>PII</b> (Personally Identifiable Information) refers to any data that could be used to identify a specific individual. Salesforce provides tools like Shield and Enhanced Personal Information Management to help secure this data, but compliance also requires careful process and architecture design.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://www.salesforce.com/gdpr/overview/" target="_blank" class="resource-link">Complete Guide to GDPR Compliance</a></li><li class="text-sm"><a href="https://www.pcisecuritystandards.org/pci_security/" target="_blank" class="resource-link">PCI Compliance Guide</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.pii_enhanced_management.htm&type=5" target="_blank" class="resource-link">Protect User PII Data with Enhanced Personal Information Management</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Code Security: OWASP & ESAPI</h3><p class="mb-4 text-gray-600">Secure coding practices are essential to prevent vulnerabilities. The <b>OWASP Top 10</b> is a standard awareness document representing a broad consensus about the most critical security risks to web applications. Salesforce's own secure coding guidelines align closely with OWASP principles. The <b>ESAPI</b> (Enterprise Security API) is a library of security controls (now largely built into the platform, e.g., `String.escapeEcmaScript`) that helps prevent vulnerabilities like Cross-Site Scripting (XSS).</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://owasp.org/www-project-top-ten/" target="_blank" class="resource-link">What is OWASP Top 10?</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.secure_coding_guide.meta/secure_coding_guide/secure_coding_guidelines.htm" target="_blank" class="resource-link">Security Tips for Apex and Visualforce Development</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Shield Platform Encryption</h3><p class="mb-4 text-gray-600">Shield Platform Encryption is a premium Salesforce product that allows you to encrypt sensitive data at rest. Unlike classic encryption, which only protects the field on the database level, Shield encrypts data throughout the application, preserving most functionality like searching and validation rules. It gives customers control over their own encryption keys, adding a powerful layer of security and compliance.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.security_pe_overview.htm&type=5" target="_blank" class="resource-link">How Shield Platform Encryption Works | Salesforce Help</a></li></ul></div>
+        </div>
+
+        <div id="alm" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Application Lifecycle & Development Models</h3><p class="mb-4 text-gray-600">Salesforce Application Lifecycle Management (ALM) describes the process of managing an application's development from design to retirement. This involves choosing a development model (e.g., Org-based vs. Package-based), using source control (like Git), and establishing a release path through different sandbox environments before deploying to production. Understanding what metadata is supported for migration is key and can be checked in the Metadata Coverage Report.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://trailhead.salesforce.com/content/learn/modules/application-lifecycle-management" target="_blank" class="resource-link">ALM Overview</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/metadata-coverage" target="_blank" class="resource-link">Metadata Coverage Report</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Packaging: Managed vs. Unlocked</h3><p class="mb-4 text-gray-600">Packages are containers for deploying metadata. <b>First-Generation (1GP) Managed Packages</b> are the traditional format for ISVs, offering IP protection but a rigid upgrade path. <b>Unlocked Packages</b> are for internal enterprise development, allowing modular applications. <b>Second-Generation (2GP) Managed Packages</b> are the successor to 1GP, built entirely using SFDX and source control, offering better versioning, dependency management, and support for CI/CD.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://www.salesforceben.com/salesforce-1gp-vs-2gp/" target="_blank" class="resource-link">2GP vs 1GP</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">ISV Programs & Tools</h3><p class="mb-4 text-gray-600">Independent Software Vendors (ISVs) have access to specific programs and tools. The <b>ISV / OEM programs</b> provide different go-to-market models. A <b>Partner Business Organization (PBO)</b> is the master org ISVs use to manage their business. The <b>License Management App (LMA)</b> is used to track and manage licenses sold to customers. <b>Trialforce</b> allows ISVs to create pre-configured trial orgs for their prospects.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.isvforce.meta/isvforce/isvforce_welcome.htm" target="_blank" class="resource-link">Welcome to ISVforce Guide</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.isvforce.meta/isvforce/isvforce_tso_overview.htm" target="_blank" class="resource-link">What is Trialforce?</a></li></ul></div>
+        </div>
+
+        <div id="performance" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">App Performance</h3><p class="mb-4 text-gray-600">Salesforce application performance is a shared responsibility. Key areas to focus on include client-side performance in Lightning (using tools like Lighthouse and the Salesforce Page Analyzer), server-side Apex performance (writing efficient, selective SOQL), and org configuration (minimizing complex page layouts and automation). Understanding how to use the Developer Console's Query Plan tool is essential for optimizing slow queries.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/perf_intro.htm" target="_blank" class="resource-link">Lightning Components Performance Best Practices</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.dev_console_query_plan_tool_faq.htm&type=5" target="_blank" class="resource-link">Developer Console Query Plan Tool FAQ</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=000313654&type=1" target="_blank" class="resource-link">Make SOQL Query Selective</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">CI Tools & Principles</h3><p class="mb-4 text-gray-600">Continuous Integration is a practice where developers frequently merge code into a central repository, triggering automated builds and tests. Popular CI tools in the Salesforce ecosystem include <b>Jenkins</b>, <b>GitHub Actions</b>, and <b>GitLab Pipelines</b>. The core principle is to find and address bugs quicker, improve software quality, and reduce the time it takes to validate and release new updates.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://www.redhat.com/en/topics/devops/what-is-ci-cd" target="_blank" class="resource-link">Continuous Integration vs. Delivery vs. Deployment</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Data Loader & Workbench</h3><p class="mb-4 text-gray-600"><b>Data Loader</b> is a client application for bulk data import/export. Advanced features include using it from the command line for automation. <b>Workbench</b> is a powerful web-based tool for admins and developers. Beyond running SOQL queries, its advanced features include inspecting metadata, executing anonymous Apex, and managing deployments.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.data_loader.htm&type=5" target="_blank" class="resource-link">Data Loader</a></li><li class="text-sm"><a href="https://workbench.developerforce.com/login.php" target="_blank" class="resource-link">What is Workbench?</a></li></ul></div>
+        </div>
+        
+        <div id="reference" class="tab-content">
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Salesforce Editions & Licenses</h3><p class="mb-4 text-gray-600">Salesforce is sold in different <b>Editions</b> (Essentials, Professional, Enterprise, Unlimited), which determine feature and API access. Separately, <b>User Licenses</b> define a user's baseline level of access (e.g., Salesforce, Salesforce Platform). <b>Experience Cloud licenses</b> are for external users (customers/partners) and have their own tiers (Customer Community, CC Plus, Partner Community) that grant different levels of data access.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.admin_editions.htm&type=5" target="_blank" class="resource-link">Salesforce Editions</a></li><li class="text-sm"><a href="https://help.salesforce.com/s/articleView?id=sf.users_license_types_communities.htm&type=5" target="_blank" class="resource-link">Experience Cloud User Licenses</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Governor Limits</h3><p class="mb-4 text-gray-600">Salesforce is a multi-tenant platform, so it enforces Governor Limits to ensure resources are shared fairly. Key limits include per-transaction limits (e.g., 100 SOQL queries, 150 DML statements), size-specific limits (e.g., 6MB heap size), and daily limits (e.g., API calls). The `Limits` Apex class can be used to monitor consumption within a transaction.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm" target="_blank" class="resource-link">Apex Governor Limits</a></li><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_limits.htm" target="_blank" class="resource-link">Limits Class</a></li></ul></div>
+            <div class="recipe-card"><h3 class="text-xl font-semibold mb-3 text-gray-700">Reporting API & Limits</h3><p class="mb-4 text-gray-600">The Reports and Dashboards REST API allows you to programmatically run and filter reports to access summary and tabular data. It's useful for embedding report data into custom web pages or for integrations. However, it has its own limits, such as the number of synchronous report runs per hour and the fact that it can only return up to the first 2,000 rows of a report.</p><h5 class="font-semibold mt-4">Key Resources:</h5><ul class="list-disc list-inside mt-2 space-y-1"><li class="text-sm"><a href="https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/analytics_api_guide.htm" target="_blank" class="resource-link">Reports and Dashboards REST API Developer Guide</a></li></ul></div>
+        </div>
+
+        <div id="standards" class="tab-content">
+            <div class="recipe-card guideline-section">
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Code Guidelines: Apex</h3>
+                <h4>Introduction</h4>
+                <p>This document serves as the complete definition of VRP's coding standards for source code in the APEX™ Programming Language. Like other programming style guides, the issues covered span not only aesthetic issues of formatting but other types of conventions or coding standards as well. However, this document focuses primarily on the hard-and-fast rules that we follow universally and avoids giving advice that isn't clearly enforceable (whether by human or tool). Guideline items marked with <span class="critical-mark">(!)</span> are considered to be CRITICAL and obligatory to follow.</p>
+                
+                <h4>Formatting</h4>
+                <ul>
+                    <li><b>APEX class doc</b>
+                        <p>You can find all the instructions for creating apex-doc in Apex Doc github repository. For sure, almost no one uses doc generation to html nowadays. But leaving the comments in a documented format could be parsed by your IDE and shown in a more readable way. The text below is an example. Some notes about documenting</p>
+                        <ul class="list-decimal">
+                            <li>@description tag can be omitted</li>
+                            <li>There is a @see tag that can be parsed by IntelliJ's Illuminated Cloud that allows you to refer to another class (but not class methods) for details.</li>
+                            <li>For VS Code users: you can take a look at Apex Doc's inheritor, Apex Dox for vs code. It contains some more features and even supports inline {@link} tag.</li>
+                        </ul>
+                        <p>Further sample docs are created using the original Apex Doc notation to maintain overall usability.</p>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>/**
+ * @description Guitar Model Object. Various attributes of guitars, and related behavior.
+ * Note that Decimal is used to model the price - not Double or Float.
+ * @author Les Paul
+ * @version 2.0
+ */</code></pre></div>
+                    </li>
+                    <li><b>New lines, indent conventions, and spacing <span class="critical-mark">(!)</span></b>
+                        <ul>
+                            <li>Avoid concatenating two or more lines of code in one (more than one end of code-line symbol ';' per line).</li>
+                            <li>Wrap all operators =, >, <, -, +, etc. with exactly ONE space.</li>
+                            <li>Never use more than one space in the code.</li>
+                            <li>You can add one line after class/trigger initialization and one before the last curly bracket, just to make the class more readable.</li>
+                            <li>Every code block enclosed in curly brackets { } has to be marked with 4 spaces indent from parent level code block.</li>
+                        </ul>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+public class TestRunAs {
+    public static testMethod void testRunAs() {
+        ...
+    }
+}
+// Incorrect
+public class TestRunAs {public static testMethod void testRunAs() {...}}</code></pre></div>
+                        <ul>
+                            <li>Do use a single space after a comma between method arguments.</li>
+                            <li>Do not add a single space before the argument and after the parenthesis. The same is for the last argument - do not add space between the last argument and parenthesis.</li>
+                            <li>Do not use spaces between a method name and parenthesis in method execution.</li>
+                        </ul>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+Foo.bar(myChar, 0, 1);
+// Incorrect
+Foo.bar(myChar,0,1);
+Foo.bar( my Char, 0, 1 );
+Foo.bar (myChar, 0, 1);</code></pre></div>
+                    </li>
+                    <li><b>Use the multiline full version of getter and setter methods.</b> If both getter and setter are auto-generated, use the same line for them. Use single space between the getter/setter definition and braces.
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+public String name {
+    get {
+        Integer a = 100;
+        a++;
+        return 100-a;
+    }
+    set;
+}
+public String phone { get; private set; }
+// Incorrect
+public String name {get { Integer a = 100; a++; return 100-a;}  set;}</code></pre></div>
+                    </li>
+                    <li>Do use a single space before flow control statements. Do use a single space before and after comparison operators.
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+while (x == y) {
+    ...
+}
+// Incorrect
+while(x == y) {
+    ...
+}
+while (x==y) {
+    ...
+}</code></pre></div>
+                    </li>
+                    <li><b>Ternary operand formatting.</b>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// All three are acceptable
+Boolean alpha = (BooleanExpression) ? true : false;
+Boolean alpha = (BooleanExpression) ? true
+                                    : false;
+Boolean alpha = (BooleanExpression)
+                ? true
+                : false;</code></pre></div>
+                    </li>
+                    <li><b>Formatting object instance creation.</b>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+Contact testContact = new Contact(
+    LastName = 'testInterviewEvent',
+    FirstName = 'FirstNameInterviewEvent',
+    RecordtypeId = recordTypes[0].Id
+);</code></pre></div>
+                    </li>
+                    <li><b>Annotations.</b> Annotations applying to a class, method, or field appear immediately after the documentation block, and each annotation is listed on a line of its own (that is, one annotation per line). These line breaks do not constitute line-wrapping, so the indentation level is not increased.
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+@future
+public static void callService() {
+    ...
+}</code></pre></div>
+                    </li>
+                    <li><b>Curly brackets <span class="critical-mark">(!)</span></b>
+                        <ul>
+                            <li>Put the open curly bracket on the same line as the main statement.</li>
+                            <li>Put a close curly bracket on the new line vertically aligned with the first letter of the main statement.</li>
+                            <li>Put one space before open bracket.</li>
+                        </ul>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+public interface PurchaseOrder {
+    Double discount();
+}
+// Incorrect
+public interface PurchaseOrder{Double discount();}
+// Incorrect
+public interface PurchaseOrder{
+Double discount();
+}</code></pre></div>
+                    </li>
+                    <li><b>Comments</b>
+                        <p>Block comments are indented at the same level as the surrounding code. They may be in /* ... */ style or // ... style. For multi-line /* ... */ comments, subsequent lines must start with * aligned with the * on the previous line.</p>
+                        <p>It's a good practice to have comments for every single public method in a class.</p>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>/**
+ * @description Class calculates discounts for opportunities
+ */
+public with sharing class OpportunityCalculationService {
+    /**
+     * @description Calculates discount value for an opportunity
+     *
+     * @param anOpportunity Opportunity opportunity for which we need to calculate discount
+     * @returns discount value
+     */
+    public Decimal calculateDiscount(Opportunity anOpportunity) {
+        ...
+    }
+
+    /**
+     * @description Applies discount value for an opportunity
+     */
+    public void applyDiscount(Opportunity anOpportunity, Decimal discount) {
+        ...
+    }
+
+    private Decimal getDiscountValue() {
+        ...
+    }
+}</code></pre></div>
+                        <p>The // comment delimiter begins a comment that continues until the newline. It can comment out a complete line or only a partial line. It shouldn't be used on consecutive multiple lines for text comments; however, it can be used in consecutive multiple lines for commenting out sections of code. Examples of all three styles follow.</p>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>if (foo > 1) {
+    // Do a double-flip.
+    ...
+}
+else
+    return false;    // Explain why here.
+//if (bar > 1) {
+////    // Do a triple-flip.
+////    ...
+//}
+//else
+//    return false;</code></pre></div>
+                    </li>
+                    <li><b>SOQL and SOSL formatting</b>
+                        <ul>
+                            <li>Use 4 spaces for indent.</li>
+                            <li>Field names could be mentioned using several lines.</li>
+                            <li>Tiny simple and easily readable SOQLs could be writter in 1 row.</li>
+                        </ul>
+                        <div class="code-block"><pre class="p-4 language-sql overflow-x-auto"><code>// All 3 are Correct
+tempSoql = [
+    SELECT Community_Event__c, Community_Tag__c, Community_Tag__r.Community_Theme__c,
+        Community_Tag__r.Community_Theme__r.Name, Community_Tag__r.Name,
+        Community_Group_Control__c, Community_Group_Control__r.Name,
+        Community_Group_Control__r.Chatter_Group_ID__c
+    FROM Community_Event_Tag__c
+    WHERE Community_Event__c IN :eventsPageIds
+        AND Community_Tag__c = NULL
+    ORDER BY Community_Tag__r.Name
+];
+
+tempSoql = [
+    SELECT Community_Event__c, Community_Tag__c, Community_Tag__r.Community_Theme__c
+    FROM Community_Event_Tag__c
+    WHERE Community_Event__c IN :eventsPageIds
+    ORDER BY Community_Tag__r.Name
+];
+
+tempSoql = [SELECT Id FROM Community_Event_Tag__c];</code></pre></div>
+                    </li>
+                </ul>
+
+                <h4>Naming conventions <span class="critical-mark">(!)</span></h4>
+                <ul>
+                    <li><b>Rules by identifier type</b>
+                        <ul>
+                            <li><b>Class / Interface</b> - Names should be nouns, in UpperCamelCase. - Names should be simple and descriptive. - Use whole words - avoid acronyms and abbreviations (unless the abbreviation is much more widely used than the long form, such as URL or HTML).</li>
+                            <li><b>Method</b> - Names should be verbs, in lowerCamelCase. Examples: run();, getBackground();</li>
+                            <li><b>Variable</b> - Names should be short yet meaningful. - The choice of a variable name should be mnemonic - designed to indicate to the casual observer the intent of its use. - One-character variable names should be avoided except for temporary and looping variables.</li>
+                            <li><b>Constants</b> - Should be UPPER_CASE with words separated by an underscore character.</li>
+                            <li><b>Batch Apex Classes</b> - Should have Batch at the end. Example: AccountRefundBatch.</li>
+                            <li><b>Controllers</b> - Can have Controller or Ctr postfix. Example: SolarEnergyController, SolarEnergyCtr. - Can have Extension or Ext postfix. Example: SolarEnergyExtension, SolarEnergyExt.</li>
+                            <li><b>Triggers / Trigger Handlers</b> - Should have Trigger postfix. Example: AccountTrigger. - Handlers should have TriggerHandler postfix. Example: AccountTriggerHandler.</li>
+                            <li><b>Test Classes</b> - Should have Test postfix. Example: CreditAccountTest.</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h4>Code structure</h4>
+                <ul>
+                    <li><b>Sizes</b>
+                        <ul>
+                            <li>One statement per line.</li>
+                            <li>Preferable row length: 120 characters (could vary 80 ~ 140 characters).</li>
+                            <li>Identify duplicate code fragments and wrap them into methods.</li>
+                            <li>Preferable method size: up to 50 rows. Usually rule 'shorter method - better method' works fine.</li>
+                            <li>Preferable parameters amount in a method is up to 2. Use OOP and class variables. With this approach, you usually don't need methods with parameters!</li>
+                            <li>Avoid any references to strings or numbers in the methods. Use constants for that. Exceptions: Apex Class name, VF Page name, VF Component name, and other API / Developer names.</li>
+                            <li>All class fields should be placed at the top of the class definition.</li>
+                        </ul>
+                    </li>
+                    <li><b>Variables</b>
+                        <ul>
+                            <li>Try to keep variables scoped to the lowest level possible. Global variables should be avoided.</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h4>Refactoring <span class="critical-mark">(!)</span></h4>
+                <ul>
+                    <li>Refactoring is a mandatory part of development that should be performed after logic is ready (!).</li>
+                    <li>Remove unused code fragments.</li>
+                    <li>Before code release get rid of all "junk" code and temporary comments.</li>
+                    <li>Make sure variables' names are short clear and meaningful for a casual reader.</li>
+                    <li>Make sure the code style is fine.</li>
+                    <li>Make sure your algorithms are clear and not overwhelmed with logic.</li>
+                    <li>Reduce dependencies in the code. It's fine to create several small classes with clear logic to reduce dependencies.</li>
+                    <li>Avoid multi-purpose classes and methods.</li>
+                    <li>Avoid more than 3 level nesting in loops and conditions.</li>
+                    <li>Use the KISS (keep it simple, stupid) approach</li>
+                </ul>
+                
+                <h4>Exception handling</h4>
+                <ul>
+                    <li><b>Catching</b> - All the exceptions in Apex class that can be thrown should be covered to prevent the abnormal direction of execution flow.</li>
+                    <li><b>Throwing</b> - Standard exceptions should be used wherever it is possible. - Exceptions are not used to control application flow
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+if (String.isNotBlank(someString)) {
+    someString = someString.toLowerCase();
+} else {
+    someString = EMPTY_STRING;
+}
+
+// Incorrect
+try {
+    someString.toLowerCase();  // This will generate a null pointer exception...
+} catch (NullPointerException ex) {
+    someString = 'empty';
+}</code></pre></div>
+                    </li>
+                </ul>
+                
+                <h4>Performance</h4>
+                <ul>
+                    <li><b>Usage of bulk data processing <span class="critical-mark">(!)</span></b>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Correct
+trigger accountTestTrigger on Account (before insert, before update) {
+    List&lt;String&gt; accountNames = new List&lt;String&gt;{};
+    //Loop through all records in the Trigger.new collection
+    for (Account accItem : Trigger.new) {
+        //Concatenate the Name and billingState into the Description field
+        accItem.Description = accItem.Name + ':' + accItem.BillingState;
+    }
+}
+// Incorrect
+trigger accountTestTrigger on Account (before insert, before update) {
+    Trigger.new[0].Description = Trigger.new[0].Name + ':' + Trigger.new[0].BillingState;
+}</code></pre></div>
+                    </li>
+                    <li><b>No SOQL inside loops <span class="critical-mark">(!)</span></b></li>
+                    <li>Usage of efficient Queries (relationship queries) and minimizing the number of loops</li>
+                    <li>Minimising number of triggers (streamlining triggers for one object).</li>
+                    <li><b>Query large data sets in for loops</b>
+                        <p>Let the Force.com platform chunk your large query results into batches of 200 records by using this syntax where the SOQL query is in the for loop definition, and then handle the individual datasets in the for loop logic.</p>
+                        <div class="code-block"><pre class="p-4 language-apex overflow-x-auto"><code>// Use this format for efficiency if you are executing DML statements
+// within the for a loop.  Be careful not to exceed the 150 DML statement limit.
+for (List&lt;Account&gt; accounts : [SELECT Id, Name FROM Account WHERE Name LIKE 'Acme']) {
+    //  Your code here
+}
+update accounts;</code></pre></div>
+                    </li>
+                    <li><b>Query only data which is actually used (records, fields) <span class="critical-mark">(!)</span></b></li>
+                    <li>Break loops if the further iteration is not necessary</li>
+                    <li>Logic that always gets the same results does not occur within the body of loops</li>
+                    <li>Recursion should always have a "hand brake"</li>
+                </ul>
+                
+                <h4>Governor Limits</h4>
+                <ul>
+                    <li>Use of the Limits methods to avoid hitting Governor Limits.</li>
+                    <li><b>Soql</b> - Total queries issued: 100 (200 for async apex) - Total records retrieved: 50000 - Non-selective queries: The selectivity threshold is 10% of the records for the first million records and less than 5% of the records after the first million records, up to a maximum of 333,000 records. - Query length: 10000 symbols - Order by fields: 32 Limits on querying for ContentDocumentLink, NewsFeed, KnowledgeArticleVersion, UserProfileFeed, Vote</li>
+                    <li><b>Sosl</b> - Total number of SOSL queries issued: 20</li>
+                    <li><b>Dml</b> - Total number of DML: 150 - Total stack depth for Apex invocation after DML statement: 16</li>
+                    <li><b>Callouts</b> - Total number of Callouts (HTTP requests to external service): 100 - Maximum timeout for Callout: 120 seconds - Maximum size of callout request: 3Mb (use gZip compression if possible)</li>
+                    <li><b>Future calls</b> - Total number of future calls per Apex invocation: 50 - Do not call @future methods in loops . Invoke @future for batch of records instead - Should be bulkified - working with set / list of data instead of single record</li>
+                    <li><b>Email</b> - Total number of sendEmail method calls: 10</li>
+                    <li><b>Heap size</b> - Total heap size: 6Mb - Total heap size for async APEX: 12Mb - Email services heap size: 36Mb</li>
+                    <li><b>CPU</b> - Maximum CPU time on the Salesforce servers: 10 seconds (60 seconds for async apex) - Execution time spent in the database for DML, SOQL, SOSL, or waiting Apex callouts isn't counted as CPU time.</li>
+                </ul>
+                
+                <h4>Security</h4>
+                <ul>
+                    <li><b>Injections</b> - Check, validate, and escape (String.escapeSingleQuotes()) all the data in dynamic queries that are coming from client side.</li>
+                    <li><b>Storing secrets</b>
+                        <ul>
+                            <li><b>Private Class Solution.</b> - Class with the secret should be defined as private - Additional constructor should be defined with some parameters - they can be fake or real (calculations can be made based on this parameter or just check for "right" value) - No getter and setter for the secret key. - Method that will return boolean conditional check variable (input parameter pass validation or not) - so end users will be not able to store parameters (like hashes/keys) for further investigation.</li>
+                            <li><b>Private Custom Setting Solution</b> - Custom Setting should be pre-filled during package installation (Post Installation script) - All calculations should be done in private classes - Method that will return boolean conditional check variable (input parameter pass validation or not) - so end users will be not able to store parameters (like hashes/keys) for further investigation.</li>
+                            <li><b>Private Data</b> - All the private data on the Salesforce DB side (e.g CreditCard Data, Bank Account Data..) should be stored in encrypted fields</li>
+                        </ul>
+                    </li>
+                    <li><b>Access control</b> - Use with sharing model for controllers that retrieve user-related data from the database</li>
+                    <li><b>Cross-site scripting</b> - All standard Visualforce components, which start with&lt;apex&gt;, have anti-XSS filters in place. For example, the following code is normally vulnerable to an XSS attack because it takes user-supplied input and outputs it directly back to the user, but the &lt;apex:outputText&gt; tag is XSS-safe. All characters that appear to be HTML tags are converted to their literal form. For example, the &lt; character is converted to &lt; so that a literal &lt; displays on the user's screen. Use the escape parameter (escape="false") only in extreme cases because with this parameter your code becomes more vulnerable.</li>
+                    <li><b>With / without sharing</b> - Use the with sharing keywords when declaring a class to enforce the sharing rules that apply to the current user. Use the without sharing keywords when declaring a class to ensure that the sharing rules for the current user are not enforced. Using the with sharing keywords is preferable.</li>
+                </ul>
+
+                <h4>Unit tests</h4>
+                <ul>
+                    <li>Unit tests should check if the desired behavior is a case.</li>
+                    <li>Unit test should NOT bet just a list of controller methods for execution.</li>
+                    <li>Unit test should be created for a real-life scenario with appropriate logic - asserts should be used.</li>
+                    <li>Test data should be generated in separate methods.</li>
+                    <li><b>`isTest(SeeAllData = true)` attribute is prohibited. <span class="critical-mark">(!)</span></b></li>
+                    <li>Data generation logic should be reusable in all of the test-methods related to this class/group of classes - so you need to create methods that will generate desired data, instead of hardcoding data creation in each test method.</li>
+                    <li>Separate unit test classes are implemented instead of member test-methods in tested class</li>
+                    <li><b>Stress-tests</b> - Test classes should have stress-test methods when a huge amount of data will be generated - this scenario will help find the breaches in the logic for "real-life" scenarios.</li>
+                </ul>
+            </div>
+             <div class="recipe-card guideline-section">
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Code Guidelines: LWC (HTML / CSS)</h3>
+                <h4>Indentation</h4>
+                <ul>
+                    <li>Indent by 2 or 4 spaces depending on project.</li>
+                    <li>Don’t use tabs or mix tabs and spaces for indentation.</li>
+                </ul>
+                <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;ul&gt;
+  &lt;li&gt;Fantastic&lt;/li&gt;
+  &lt;li&gt;Great&lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+                <div class="code-block"><pre class="p-4 language-css overflow-x-auto"><code>.example {
+  color: blue;
+}</code></pre></div>
+                <h4>Capitalization</h4>
+                <ul>
+                    <li>Use only lowercase.</li>
+                    <li>All code has to be lowercase: This applies to HTML element names, attributes, attribute values (unless text/CDATA), CSS selectors, properties, and property values (with the exception of strings).</li>
+                </ul>
+                 <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- Recommended --&gt;
+&lt;img src="google.png" alt="Google"&gt;</code></pre></div>
+                 <div class="code-block"><pre class="p-4 language-css overflow-x-auto"><code>/* Not recommended */
+color: #E5E5E5;
+
+/* Recommended */
+color: #e5e5e5;</code></pre></div>
+                <h4>Trailing Whitespace</h4>
+                <ul>
+                    <li>Remove trailing white spaces.</li>
+                    <li>Trailing white spaces are unnecessary and can complicate diffs.</li>
+                </ul>
+                 <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- Recommended --&gt;
+&lt;p&gt;Yes please.&lt;/p&gt;
+
+&lt;!-- Not recommended --&gt;
+&lt;p&gt;What?_&lt;/p&gt;</code></pre></div>
+                <h4>HTML Validity</h4>
+                <ul>
+                    <li>Use valid HTML where possible.</li>
+                    <li>Use tools such as the W3C HTML validator to test HTML validity.</li>
+                </ul>
+                <h4>Semantics</h4>
+                <ul>
+                    <li>Use HTML according to its purpose.</li>
+                    <li>Using HTML according to its purpose. For example, use p elements for paragraphs, a elements for anchors, etc.</li>
+                </ul>
+                <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- Recommended --&gt;
+&lt;a href="recommendations/"&gt;All recommendations&lt;/a&gt;
+
+&lt;!-- Not recommended --&gt;
+&lt;div onclick="goToRecommendations();"&gt;All recommendations&lt;/div&gt;</code></pre></div>
+                <h4>Entity References</h4>
+                <ul>
+                    <li>Usually there is no need to use entity references like &amp;mdash; or &amp;#x263a;, assuming the same encoding (UTF-8) is used for files and editors as well as among teams. The only exceptions apply to characters with special meaning in HTML (like &lt; and &amp;) as well as control or "invisible" characters (like no-break spaces).</li>
+                </ul>
+                <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- Recommended --&gt;
+The currency symbol for the Euro is “€”.
+
+&lt;!-- Not recommended --&gt;
+The currency symbol for the Euro is &amp;ldquo;&amp;eur;&amp;rdquo;.</code></pre></div>
+                <h4>Line-Wrapping</h4>
+                <ul>
+                    <li>Preferable row length: 120 characters (could vary 80 ~ 140 characters).</li>
+                    <li>Use line wrapping if row is too long.</li>
+                </ul>
+                 <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- Possible way --&gt;
+&lt;md-progress-circular md-mode="indeterminate" class="md-accent"
+    ng-show="ctrl.loading" md-diameter="35"&gt;&lt;/md-progress-circular&gt;
+
+&lt;!-- Possible way --&gt;
+&lt;md-progress-circular
+    md-mode="indeterminate"
+    class="md-accent"
+    ng-show="ctrl.loading"
+    md-diameter="35"&gt;&lt;/md-progress-circular&gt;</code></pre></div>
+                <h4>HTML Quotation Marks</h4>
+                <ul>
+                    <li>Use double ("") rather than single quotation marks ('') around attribute values.</li>
+                </ul>
+                <div class="code-block"><pre class="p-4 language-html overflow-x-auto"><code>&lt;!-- Recommended --&gt;
+&lt;a class="maia-button maia-button-secondary"&gt;Login&lt;/a&gt;
+
+&lt;!-- Not recommended --&gt;
+&lt;a class='maia-button maia-button-secondary'&gt;Login&lt;/a&gt;</code></pre></div>
+            </div>
+            <div class="recipe-card guideline-section">
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Code Guidelines: LWC (JavaScript)</h3>
+                <h4>Introduction</h4>
+                <p>Here we're focused only on JS part of LWC. Plese refer HTML / CSS document additionally. Please find code rules for pure JS In this document we focus only on LWC specific cases.</p>
+                <h4>Formatting</h4>
+                <ul>
+                    <li>Add spaces inside single line blocks.
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Correct
+import { LightningElement, track } from 'lwc';
+// Incorrect
+import {LightningElement, track} from 'lwc';</code></pre></div>
+                    </li>
+                    <li>Decorator in most cases should be on the same row as a variable name.
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Correct
+@track contacts;
+// Incorrect
+@track
+contacts;</code></pre></div>
+                    </li>
+                    <li>Multiline syntax is allowed for @wire services variables as it could call apex method with parameters.
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>@wire(getOpptyOverAmount, { amount: '$amount' })
+opptiesOverAmount;</code></pre></div>
+                    </li>
+                    <li>Use blank lines as methods separator.</li>
+                    <li>Use multiline syntax with commas at the end of the row to define objects.
+                         <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Correct
+var obj = {
+    foo: 'foo',
+    bar: 'bar'
+}</code></pre></div>
+                    </li>
+                    <li>Use multiline style when defining array of objects.
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Correct
+const accounts = [
+    {
+        Name: 'Acme',
+        Id:'0010000a18F7hAAO'
+    },
+    {
+        Name: 'Salesforce',
+        Id:'0010000n05of7WAR'
+    }
+];
+// Incorrect
+const accounts = [{Name: 'Acme', Id:'0010000a18F7hAAO'}, {Name: 'Salesforce', Id:'0010000n05of7WAR'}];</code></pre></div>
+                    </li>
+                    <li>Single-line objects are allowed for defining the data if it is readable. For example - multiple simillar objects in an array
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Correct
+const picklistOptions = [
+    { label: '--None--', value: ''},
+    { label: 'Yes', value: 'Yes'},
+    { label: 'No', value: 'No'}
+];
+// Also Correct! But allocates more screen space and makes the code looking bigger than it might be and frustrating the reader
+const spaciousPicklistOptions = [
+    {
+        label: '--None--',
+        value: ''
+    },
+    {
+        label: 'Yes',
+        value: 'Yes'
+    },
+    {
+        label: 'No',
+        value: 'No'
+    }
+];</code></pre></div>
+                    </li>
+                    <li>Don't leave the closing brace of the object on the same line with the openning brace of the next one in the array
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Incorrect
+const accounts = [
+    {
+        Name: 'Acme',
+        Id:'0010000a18F7hAAO'
+    }, {
+        Name: 'Salesforce',
+        Id:'0010000n05of7WAR'
+    }
+];</code></pre></div>
+                    </li>
+                </ul>
+                <h4>Imports</h4>
+                <ul>
+                    <li>Group imported variables and separated by blank lines:
+                        <ol class="list-decimal list-inside">
+                            <li>Lightning decorators and helpers, then</li>
+                            <li>Apex controllers methods</li>
+                            <li>Custom component imports</li>
+                            <li>Salesforce Schema</li>
+                            <li>Labels</li>
+                        </ol>
+                    </li>
+                    <li>Try maintaining alphabetical order wherever possible</li>
+                    <li>Create a seperate file for bulk imports to avoid having extremely long JS files. In this file keep schema and label imports</li>
+                </ul>
+                 <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>// Correct
+import { LightningElement, api, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
+
+import imports from './imports'
+import register from '@salesforce/apex/ShiftRegistrationController.register';
+import pubsub from 'c/pubsub' ;
+
+// ./imports.js
+import OBJECT_ACCOUNT from '@salesforce/schema/Account';
+import FIELD_ACCOUNT_ID from '@salesforce/schema/Account.Id';
+import FIELD_ACCOUNT_NAME from '@salesforce/schema/Account.Name';
+import FIELD_ACCOUNT_INDUSTRY from '@salesforce/schema/Account.Industry';
+import LABEL_SHIFTREG_ENTER_PEOPLE from '@salesforce/label/c.ShiftReg_enterPeople';
+import LABEL_SHIFTREG_CANCEL from '@salesforce/label/c.ShiftReg_cancel';
+
+export default {
+    objects : {
+        Account : {
+            definition : OBJECT_ACCOUNT,
+            fields : {
+                Id : FIELD_ACCOUNT_ID,
+                Name : FIELD_ACCOUNT_NAME,
+                Industry : FIELD_ACCOUNT_INDUSTRY
+            }
+        }
+    },
+    labels : {
+        ShiftReg_enterPeople : LABEL_SHIFTREG_ENTER_PEOPLE,
+        ShiftReg_cancel : LABEL_SHIFTREG_CANCEL
+    }
+}
+
+// Incorrect
+import {LightningElement, api, track} from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
+import account from '@salesforce/schema/Account';
+import accountId from '@salesforce/schema/Account.Id';
+import accountName from '@salesforce/schema/Account.Name';
+import accountIndustry from '@salesforce/schema/Account.Industry';
+import register from '@salesforce/apex/ShiftRegistrationController.register';
+import ShiftReg_enterPeople from '@salesforce/label/c.ShiftReg_enterPeople';
+import ShiftReg_cancel from '@salesforce/label/c.ShiftReg_cancel';
+import pubsub from 'c/pubsub' ;</code></pre></div>
+                <h4>Apex Calls</h4>
+                <ul>
+                    <li>Use indents and multiline syntax when you call Apex from LWC.
+                        <div class="code-block"><pre class="p-4 language-javascript overflow-x-auto"><code>import { LightningElement, track } from 'lwc';
+import getContactList from '@salesforce/apex/ContactController.getContactList';
+
+export default class ApexImperativeMethod extends LightningElement {
+    @track contacts;
+    @track error;
+
+    handleLoad() {
+        getContactList()
+            .then(result => {
+                this.contacts = result;
+            })
+            .catch(error => {
+                this.error = error;
+            });
+    }
+}</code></pre></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-8 p-6 text-center text-gray-500">
+        <p>&copy; 2024 Salesforce Developer's Cookbook. A senior-level resource.</p>
+    </footer>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        function changeTab(tabId) {
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            const a = document.querySelector(`button[data-tab-id="${tabId}"]`);
+            if (a) a.classList.add('active');
+            const b = document.getElementById(tabId);
+            if(b) b.classList.add('active');
+        }
+        function copyCode(btn) {
+            const preElement = btn.closest('.code-block').querySelector('pre');
+            const code = preElement.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.innerText = 'Copied!';
+                setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+            }, (err) => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+        window.onload = () => changeTab('apex');
+    </script>
+</body>
+</html>
